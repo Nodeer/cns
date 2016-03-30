@@ -289,8 +289,32 @@
             <!-- ================== -->
 
             <div class="wraper container-fluid">
-                <div class="page-title">
-                    <h3 class="title">Contacts </h3>
+                <div class="page-title clearfix">
+                    <div class="col-lg-3">
+                        <h3 class="title">Contacts</h3>
+                    </div>
+                    <div class="col-lg-9">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#home" data-toggle="tab" aria-expanded="false">
+                                    <span class="visible-xs"><i class="fa fa-home"></i></span>
+                                    <span class="hidden-xs">Employees</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#profile" data-toggle="tab" aria-expanded="true">
+                                    <span class="visible-xs"><i class="fa fa-user"></i></span>
+                                    <span class="hidden-xs">Companies</span>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#messages" data-toggle="tab" aria-expanded="false">
+                                    <span class="visible-xs"><i class="fa fa-envelope-o"></i></span>
+                                    <span class="hidden-xs">Drivers</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="row">
@@ -312,49 +336,52 @@
 
                 <div class="row">
 
-                    <div class="col-sm-6">
-                        <div class="panel">
-                            <div class="panel-body p-t-10">
-                                <div class="media-main">
-                                    <a class="pull-left" href="#">
-                                        <img class="thumb-lg img-circle bx-s" src="/static/img/avatar-2.jpg" alt="">
-                                    </a>
-                                    <div class="pull-right btn-group-sm">
-                                        <a href="#" class="btn btn-success tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit">
-                                            <i class="fa fa-pencil"></i>
+                    {{ range $user := .users }}
+                        <div class="col-sm-6">
+                            <div class="panel">
+                                <div class="panel-body p-t-10">
+                                    <div class="media-main">
+                                        <a class="pull-left" href="#">
+                                            <img class="thumb-lg img-circle bx-s" src="/static/img/avatar-2.jpg" alt="">
                                         </a>
-                                        <a href="#" class="btn btn-danger tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete">
-                                            <i class="fa fa-close"></i>
-                                        </a>
+                                        <div class="pull-right btn-group-sm">
+                                            <a href="/profile/{{ $user.Id }}" class="btn btn-success tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-danger tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete">
+                                                <i class="fa fa-close"></i>
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>{{ $user.Name }}</h4>
+                                            <p class="text-muted">{{ $user.Email }}</p>
+                                        </div>
                                     </div>
-                                    <div class="info">
-                                        <h4>Jonathan Smith</h4>
-                                        <p class="text-muted">Graphics Designer</p>
-                                    </div>
+                                    <div class="clearfix"></div>
+                                    <hr/>
+                                    <ul class="social-links list-inline p-b-10">
+                                        <li>
+                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
+                                        </li>
+                                        <li>
+                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
+                                        </li>
+                                        <li>
+                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="LinkedIn"><i class="fa fa-linkedin"></i></a>
+                                        </li>
+                                        <li>
+                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a>
+                                        </li>
+                                        <li>
+                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Message"><i class="fa fa-envelope-o"></i></a>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <div class="clearfix"></div>
-                                <hr/>
-                                <ul class="social-links list-inline p-b-10">
-                                    <li>
-                                        <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
-                                    </li>
-                                    <li>
-                                        <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
-                                    </li>
-                                    <li>
-                                        <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="LinkedIn"><i class="fa fa-linkedin"></i></a>
-                                    </li>
-                                    <li>
-                                        <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a>
-                                    </li>
-                                    <li>
-                                        <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Message"><i class="fa fa-envelope-o"></i></a>
-                                    </li>
-                                </ul>
                             </div>
                         </div>
-                    </div>
+                    {{ end }}
 
+                    <!--
                     <div class="col-sm-6">
                         <div class="panel">
                             <div class="panel-body p-t-10">
@@ -480,9 +507,9 @@
                                         <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Message"><i class="fa fa-envelope-o"></i></a>
                                     </li>
                                 </ul>
-                            </div> <!-- panel-body -->
-                        </div> <!-- panel -->
-                    </div> <!-- end col -->
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-sm-6">
                         <div class="panel">
@@ -523,9 +550,9 @@
                                         <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Message"><i class="fa fa-envelope-o"></i></a>
                                     </li>
                                 </ul>
-                            </div> <!-- panel-body -->
-                        </div> <!-- panel -->
-                    </div> <!-- end col -->
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-sm-6">
                         <div class="panel">
@@ -566,9 +593,9 @@
                                         <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Message"><i class="fa fa-envelope-o"></i></a>
                                     </li>
                                 </ul>
-                            </div> <!-- panel-body -->
-                        </div> <!-- panel -->
-                    </div> <!-- end col -->
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-sm-6">
                         <div class="panel">
@@ -609,9 +636,9 @@
                                         <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Message"><i class="fa fa-envelope-o"></i></a>
                                     </li>
                                 </ul>
-                            </div> <!-- panel-body -->
-                        </div> <!-- panel -->
-                    </div> <!-- end col -->
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-sm-6">
                         <div class="panel">
@@ -652,9 +679,9 @@
                                         <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Message"><i class="fa fa-envelope-o"></i></a>
                                     </li>
                                 </ul>
-                            </div> <!-- panel-body -->
-                        </div> <!-- panel -->
-                    </div> <!-- end col -->
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-sm-6">
                         <div class="panel">
@@ -695,10 +722,10 @@
                                         <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Message"><i class="fa fa-envelope-o"></i></a>
                                     </li>
                                 </ul>
-                            </div> <!-- panel-body -->
-                        </div> <!-- panel -->
-                    </div> <!-- end col -->
-
+                            </div>
+                        </div>
+                    </div>
+                     -->
 
                 </div> <!-- End row -->
 
@@ -716,9 +743,9 @@
                             <li class="disabled"><a href="#">4</a></li>
                             <li><a href="#">5</a></li>
                             <li>
-                              <a href="#" aria-label="Next">
-                                <i class="fa fa-angle-right"></i>
-                              </a>
+                                <a href="#" aria-label="Next">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
                             </li>
                         </ul>
                     </div>

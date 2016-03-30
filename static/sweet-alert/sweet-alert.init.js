@@ -2,7 +2,7 @@
 /**
 * Theme: Velonic Admin Template
 * Author: Coderthemes
-* SweetAlert - 
+* SweetAlert -
 * Usage: $.SweetAlert.methodname
 */
 
@@ -11,9 +11,9 @@
 
     var SweetAlert = function() {};
 
-    //examples 
+    //examples
     SweetAlert.prototype.init = function() {
-        
+
     //Basic
     $('#sa-basic').click(function(){
         swal("Here's a message!");
@@ -31,56 +31,56 @@
 
     //Warning Message
     $('#sa-warning').click(function(){
-        swal({   
-            title: "Are you sure?",   
-            text: "You will not be able to recover this imaginary file!",   
-            type: "warning",   
-            showCancelButton: true,   
-            confirmButtonColor: "#DD6B55",   
-            confirmButtonText: "Yes, delete it!",   
-            closeOnConfirm: false 
-        }, function(){   
-            swal("Deleted!", "Your imaginary file has been deleted.", "success"); 
+        swal({
+            title: "Are you sure?",
+            text: "You will not be able to recover this imaginary file!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, delete it!",
+            closeOnConfirm: false
+        }, function(){
+            swal("Deleted!", "Your imaginary file has been deleted.", "success");
         });
     });
 
     //Parameter
     $('#sa-params').click(function(){
-        swal({   
-            title: "Are you sure?",   
-            text: "You will not be able to recover this imaginary file!",   
-            type: "warning",   
-            showCancelButton: true,   
-            confirmButtonColor: "#DD6B55",   
-            confirmButtonText: "Yes, delete it!",   
-            cancelButtonText: "No, cancel plx!",   
-            closeOnConfirm: false,   
-            closeOnCancel: false 
-        }, function(isConfirm){   
-            if (isConfirm) {     
-                swal("Deleted!", "Your imaginary file has been deleted.", "success");   
-            } else {     
-                swal("Cancelled", "Your imaginary file is safe :)", "error");   
-            } 
+        swal({
+            title: "Are you sure?",
+            text: "You will not be able to recover this imaginary file!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel plx!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        }, function(isConfirm){
+            if (isConfirm) {
+                swal("Deleted!", "Your imaginary file has been deleted.", "success");
+            } else {
+                swal("Cancelled", "Your imaginary file is safe :)", "error");
+            }
         });
     });
 
     //Custom Image
     $('#sa-image').click(function(){
-        swal({   
-            title: "Sweet!",   
-            text: "Here's a custom image.",   
-            imageUrl: "assets/sweet-alert/thumbs-up.jpg" 
+        swal({
+            title: "Sweet!",
+            text: "Here's a custom image.",
+            imageUrl: "assets/sweet-alert/thumbs-up.jpg"
         });
     });
 
     //Auto Close Timer
     $('#sa-close').click(function(){
-         swal({   
-            title: "Auto close alert!",   
-            text: "I will close in 2 seconds.",   
-            timer: 2000,   
-            showConfirmButton: false 
+         swal({
+            title: "Auto close alert!",
+            text: "I will close in 2 seconds.",
+            timer: 2000,
+            showConfirmButton: false
         });
     });
 
@@ -90,7 +90,7 @@
     $.SweetAlert = new SweetAlert, $.SweetAlert.Constructor = SweetAlert
 }(window.jQuery),
 
-//initializing 
+//initializing
 function($) {
     "use strict";
     $.SweetAlert.init()
