@@ -28,6 +28,8 @@
         <!--Morris Chart CSS -->
         <link rel="stylesheet" href="/static/morris/morris.css">
 
+        <!-- DataTables -->
+        <link href="/static/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
 
         <!-- Custom styles for this template -->
         <link href="/static/css/style.css" rel="stylesheet">
@@ -39,6 +41,18 @@
           <script src="/static/js/html5shiv.js"></script>
           <script src="/static/js/respond.min.js"></script>
         <![endif]-->
+
+        <style media="screen">
+            tr#search input {
+                width: 100%;
+                padding: 3px;
+                box-sizing: border-box;
+            }
+
+            tr#search th {
+                padding-right: 8px;
+            }
+        </style>
 
     </head>
 
@@ -295,20 +309,20 @@
                     </div>
                     <div class="col-lg-9">
                         <ul class="nav nav-tabs">
-                            <li class="active">
-                                <a href="#home" data-toggle="tab" aria-expanded="false">
+                            <li {{ if eq .role "employee" }}class="active"{{ end }}>
+                                <a href="/contact/employee" >
                                     <span class="visible-xs"><i class="fa fa-home"></i></span>
                                     <span class="hidden-xs">Employees</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="#profile" data-toggle="tab" aria-expanded="true">
+                            <li {{ if eq .role "company" }}class="active"{{ end }}>
+                                <a href="/contact/company" >
                                     <span class="visible-xs"><i class="fa fa-user"></i></span>
                                     <span class="hidden-xs">Companies</span>
                                 </a>
                             </li>
-                            <li class="">
-                                <a href="#messages" data-toggle="tab" aria-expanded="false">
+                            <li {{ if eq .role "driver" }}class="active"{{ end }}>
+                                <a href="/contact/driver" >
                                     <span class="visible-xs"><i class="fa fa-envelope-o"></i></span>
                                     <span class="hidden-xs">Drivers</span>
                                 </a>
@@ -335,51 +349,34 @@
                 </div> <!-- End row -->
 
                 <div class="row">
+                    <table id="users" class="table table-bordered table-hover" style="background-color:white;">
+                        <thead>
+                            <tr id="search">
+                                <th>id</th>
+                                <th>email</th>
+                                <th>name</th>
+                                <th>phone</th>
+                            </tr>
+                            <tr>
+                                <th>Id</th>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{ range $user := .users }}
+                                <tr id="{{ $user.Id }}" class="contact" style="cursor:pointer;">
+                                    <td>{{ $user.Id }}</td>
+                                    <td>{{ $user.Email }}</td>
+                                    <td>{{ $user.Name }}</td>
+                                    <td>{{ $user.Phone }}</td>
+                                </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>
 
-                    {{ range $user := .users }}
-                        <div class="col-sm-6">
-                            <div class="panel">
-                                <div class="panel-body p-t-10">
-                                    <div class="media-main">
-                                        <a class="pull-left" href="#">
-                                            <img class="thumb-lg img-circle bx-s" src="/static/img/avatar-2.jpg" alt="">
-                                        </a>
-                                        <div class="pull-right btn-group-sm">
-                                            <a href="/profile/{{ $user.Id }}" class="btn btn-success tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-danger tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete">
-                                                <i class="fa fa-close"></i>
-                                            </a>
-                                        </div>
-                                        <div class="info">
-                                            <h4>{{ $user.Name }}</h4>
-                                            <p class="text-muted">{{ $user.Email }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                    <hr/>
-                                    <ul class="social-links list-inline p-b-10">
-                                        <li>
-                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
-                                        </li>
-                                        <li>
-                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
-                                        </li>
-                                        <li>
-                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="LinkedIn"><i class="fa fa-linkedin"></i></a>
-                                        </li>
-                                        <li>
-                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a>
-                                        </li>
-                                        <li>
-                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Message"><i class="fa fa-envelope-o"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    {{ end }}
+
 
                     <!--
                     <div class="col-sm-6">
@@ -727,15 +724,15 @@
                     </div>
                      -->
 
-                </div> <!-- End row -->
+                </div>
 
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-sm-12">
                         <ul class="pagination pull-right">
                             <li>
-                              <a href="#" aria-label="Previous">
-                                <i class="fa fa-angle-left"></i>
-                              </a>
+                                <a href="#" aria-label="Previous">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
                             </li>
                             <li><a href="#">1</a></li>
                             <li class="active"><a href="#">2</a></li>
@@ -749,7 +746,7 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div> -->
 
 
             </div> <!-- END Wraper -->
@@ -775,6 +772,42 @@
 
         <script src="/static/js/jquery.app.js"></script>
 
+        <script src="/static/datatables/jquery.dataTables.min.js"></script>
+        <script src="/static/datatables/dataTables.bootstrap.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var table = $('#users').DataTable({
+					lengthMenu:[10,15,20],
+					"columnDefs": [
+						{ "orderable": false, "targets": [3] },
+						{ "name": "id",       "targets": 0 },
+						{ "name": "email",   "targets": 1 },
+						{ "name": "name",  "targets": 2 },
+						{ "name": "phone",   "targets": 3 },
+					]
+				});
+
+				$('#users tr#search th').each( function () {
+					var title = $(this).text();
+					if (title != '') {
+						$(this).html('<input id="search" data-column="' + title + '" type="text"/>');
+					}
+				} );
+
+				$('input#search').keyup(function() {
+					var name = $(this).attr('data-column');
+					var column = table.column(name + ':name');
+					if (column.search() !== this.value ) {
+						column.search(this.value).draw();
+					}
+				});
+
+                $('.contact').click(function() {
+                    window.location.href = '/profile/' + this.id;
+                });
+            } );
+        </script>
 
     </body>
 </html>

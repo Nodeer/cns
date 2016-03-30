@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/cagnosolutions/adb"
@@ -19,7 +20,7 @@ var db *adb.DB = adb.NewDB()
 // initialize routes
 func init() {
 	db.AddStore("user")
-	mx.AddRoutes(index, buttons, contact, makeEmployees, profile, makeCompanies)
+	mx.AddRoutes(index, buttons, contact, makeEmployees, profile, makeCompanies, dt)
 }
 
 // main http listener
@@ -38,17 +39,18 @@ var buttons = web.Route{"GET", "/buttons", func(w http.ResponseWriter, r *http.R
 
 var contact = web.Route{"GET", "/contact/:role", func(w http.ResponseWriter, r *http.Request) {
 	role := r.FormValue(":role")
-	if role == "" || role != "employee" || role != "company" || role != "driver" {
+	if role == "" || (role != "employee" && role != "company" && role != "driver") {
 		http.Redirect(w, r, "/contact/employee", 303)
 		return
 	}
 	var users []User
-	ok := db.Match("user", `"role":"`+role+`"`, &users)
+	ok := db.Match("user", `"role":"`+strings.ToUpper(role)+`"`, &users)
 	if !ok {
 		fmt.Println("error")
 	}
 	tc.Render(w, r, "contact.tmpl", web.Model{
 		"users": users,
+		"role":  role,
 	})
 }}
 
@@ -92,4 +94,8 @@ var profile = web.Route{"GET", "/profile/:id", func(w http.ResponseWriter, r *ht
 	tc.Render(w, r, "profile.tmpl", map[string]interface{}{
 		"user": user,
 	})
+}}
+
+var dt = web.Route{"GET", "/dt", func(w http.ResponseWriter, r *http.Request) {
+	tc.Render(w, r, "table-datatable.tmpl", nil)
 }}
