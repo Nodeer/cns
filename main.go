@@ -20,7 +20,7 @@ var db *adb.DB = adb.NewDB()
 // initialize routes
 func init() {
 	db.AddStore("user")
-	mx.AddRoutes(index, buttons, contact, makeEmployees, profile, makeCompanies, dt)
+	mx.AddRoutes(index, buttons, contact, makeEmployees, profile, makeCompanies, dt, contactRedirect)
 }
 
 // main http listener
@@ -35,6 +35,10 @@ var index = web.Route{"GET", "/", func(w http.ResponseWriter, r *http.Request) {
 
 var buttons = web.Route{"GET", "/buttons", func(w http.ResponseWriter, r *http.Request) {
 	tc.Render(w, r, "buttons.tmpl", web.Model{})
+}}
+
+var contactRedirect = web.Route{"GET", "/contact", func(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/contact/employee", 303)
 }}
 
 var contact = web.Route{"GET", "/contact/:role", func(w http.ResponseWriter, r *http.Request) {
