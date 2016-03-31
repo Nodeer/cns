@@ -774,7 +774,9 @@
 
         <script src="/static/datatables/jquery.dataTables.min.js"></script>
         <script src="/static/datatables/dataTables.bootstrap.js"></script>
-
+        <script type="text/javascript">
+            var role = '{{ .role }}';
+        </script>
         <script type="text/javascript">
             $(document).ready(function() {
                 var table = $('#users').DataTable({
@@ -803,7 +805,7 @@
 				});
 
                 $('.contact').click(function() {
-                    window.location.href = '/profile/' + this.id;
+                    window.location.href = '/' + role + '/' + this.id;
                 });
             } );
         </script>

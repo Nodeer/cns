@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/cagnosolutions/adb"
 	"github.com/cagnosolutions/web"
@@ -14,13 +12,17 @@ import (
 
 // global vars
 var mx *web.Mux = web.NewMux()
-var tc *web.TmplCache = web.NewTmplCache()
+var tc *web.TmplCache
 var db *adb.DB = adb.NewDB()
 
 // initialize routes
 func init() {
 	db.AddStore("user")
-	mx.AddRoutes(index, buttons, contact, makeEmployees, profile, makeCompanies, dt, contactRedirect)
+	mx.AddRoutes(index, buttons, contact, makeEmployees, profile, makeCompanies, makeDrivers, dt, contactRedirect)
+	mx.AddRoutes(viewCompany, viewDriver, viewEmployee)
+
+	web.Funcs["lower"] = strings.ToLower
+	tc = web.NewTmplCache()
 }
 
 // main http listener
@@ -58,44 +60,46 @@ var contact = web.Route{"GET", "/contact/:role", func(w http.ResponseWriter, r *
 	})
 }}
 
-var makeEmployees = web.Route{"GET", "/makeUsers", func(w http.ResponseWriter, r *http.Request) {
-	for i := 0; i < 10; i++ {
-		id := strconv.Itoa(int(time.Now().UnixNano()))
-		user := User{
-			Id:       id,
-			Email:    fmt.Sprintf("%d@%d.com", i, i),
-			Password: fmt.Sprintf("Password-%d", i),
-			Role:     "EMPLOYEE",
-			Active:   (i%2 == 0),
-			Name:     fmt.Sprintf("John Smith the %dth", (i + 4)),
-		}
-		db.Add("user", id, user)
-	}
-	web.SetSuccessRedirect(w, r, "/", "success")
-	return
-}}
-
-var makeCompanies = web.Route{"GET", "/makeComps", func(w http.ResponseWriter, r *http.Request) {
-	for i := 0; i < 10; i++ {
-		id := strconv.Itoa(int(time.Now().UnixNano()))
-		user := User{
-			Id:       id,
-			Email:    fmt.Sprintf("company@company%d.com", i+1),
-			Password: fmt.Sprintf("Password-%d", i),
-			Role:     "COMPANY",
-			Active:   (i%2 == 0),
-			Name:     fmt.Sprintf("Company #%d", (i + 1)),
-		}
-		db.Add("user", id, user)
-	}
-	web.SetSuccessRedirect(w, r, "/", "success")
-	return
-}}
-
 var profile = web.Route{"GET", "/profile/:id", func(w http.ResponseWriter, r *http.Request) {
 	var user User
 	db.Get("user", r.FormValue(":id"), &user)
-	tc.Render(w, r, "profile.tmpl", map[string]interface{}{
+	tc.Render(w, r, "profile.tmpl", web.Model{
+		"user": user,
+	})
+}}
+
+var viewEmployee = web.Route{"GET", "/employee/:id", func(w http.ResponseWriter, r *http.Request) {
+	var user User
+	ok := db.Get("user", r.FormValue(":id"), &user)
+	if !ok || user.Role != "EMPLOYEE" {
+		web.SetErrorRedirect(w, r, "/contact/employee", "Error finding employee")
+		return
+	}
+	tc.Render(w, r, "employee.tmpl", web.Model{
+		"user": user,
+	})
+}}
+
+var viewCompany = web.Route{"GET", "/company/:id", func(w http.ResponseWriter, r *http.Request) {
+	var user User
+	ok := db.Get("user", r.FormValue(":id"), &user)
+	if !ok || user.Role != "COMPANY" {
+		web.SetErrorRedirect(w, r, "/contact/company", "Error finding company")
+		return
+	}
+	tc.Render(w, r, "company.tmpl", web.Model{
+		"user": user,
+	})
+}}
+
+var viewDriver = web.Route{"GET", "/driver/:id", func(w http.ResponseWriter, r *http.Request) {
+	var user User
+	ok := db.Get("user", r.FormValue(":id"), &user)
+	if !ok || user.Role != "DRIVER" {
+		web.SetErrorRedirect(w, r, "/contact/driver", "Error finding driver")
+		return
+	}
+	tc.Render(w, r, "driver.tmpl", web.Model{
 		"user": user,
 	})
 }}
