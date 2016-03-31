@@ -60,16 +60,8 @@ var contact = web.Route{"GET", "/contact/:role", func(w http.ResponseWriter, r *
 	})
 }}
 
-var profile = web.Route{"GET", "/profile/:id", func(w http.ResponseWriter, r *http.Request) {
-	var user User
-	db.Get("user", r.FormValue(":id"), &user)
-	tc.Render(w, r, "profile.tmpl", web.Model{
-		"user": user,
-	})
-}}
-
 var viewEmployee = web.Route{"GET", "/employee/:id", func(w http.ResponseWriter, r *http.Request) {
-	var user User
+	var user Employee
 	ok := db.Get("user", r.FormValue(":id"), &user)
 	if !ok || user.Role != "EMPLOYEE" {
 		web.SetErrorRedirect(w, r, "/contact/employee", "Error finding employee")
@@ -81,7 +73,7 @@ var viewEmployee = web.Route{"GET", "/employee/:id", func(w http.ResponseWriter,
 }}
 
 var viewCompany = web.Route{"GET", "/company/:id", func(w http.ResponseWriter, r *http.Request) {
-	var user User
+	var user Company
 	ok := db.Get("user", r.FormValue(":id"), &user)
 	if !ok || user.Role != "COMPANY" {
 		web.SetErrorRedirect(w, r, "/contact/company", "Error finding company")
@@ -93,7 +85,7 @@ var viewCompany = web.Route{"GET", "/company/:id", func(w http.ResponseWriter, r
 }}
 
 var viewDriver = web.Route{"GET", "/driver/:id", func(w http.ResponseWriter, r *http.Request) {
-	var user User
+	var user Driver
 	ok := db.Get("user", r.FormValue(":id"), &user)
 	if !ok || user.Role != "DRIVER" {
 		web.SetErrorRedirect(w, r, "/contact/driver", "Error finding driver")
@@ -106,4 +98,12 @@ var viewDriver = web.Route{"GET", "/driver/:id", func(w http.ResponseWriter, r *
 
 var dt = web.Route{"GET", "/dt", func(w http.ResponseWriter, r *http.Request) {
 	tc.Render(w, r, "table-datatable.tmpl", nil)
+}}
+
+var profile = web.Route{"GET", "/profile/:id", func(w http.ResponseWriter, r *http.Request) {
+	var user User
+	db.Get("user", r.FormValue(":id"), &user)
+	tc.Render(w, r, "profile.tmpl", web.Model{
+		"user": user,
+	})
 }}

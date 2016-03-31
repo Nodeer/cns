@@ -1,6 +1,6 @@
 package main
 
-type User struct {
+type Auth struct {
 	Id       string `json:"id"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -9,7 +9,7 @@ type User struct {
 }
 
 type Employee struct {
-	User
+	Auth
 	FirstName string `json:"firstName,omitempty"`
 	LastName  string `json:"lastName,omitempty"`
 	Phone     string `json:"phone,omitempty"`
@@ -17,7 +17,7 @@ type Employee struct {
 }
 
 type Company struct {
-	User
+	Auth
 	Name    string `json:"name,omitempty"`
 	Contact string `json:"conatact,omityempty"`
 	Phone   string `json:"phone,omitempty"`
@@ -25,7 +25,7 @@ type Company struct {
 }
 
 type Driver struct {
-	User
+	Auth
 	FirstName    string `json:"firstName,omitempty"`
 	LastName     string `json:"lastName,omitempty"`
 	Phone        string `json:"phone,omitEmpty"`
@@ -42,6 +42,6 @@ type Address struct {
 	Zip    string `json:"zip,omitempty"`
 }
 
-func (a Address) String() string {
+func (a Address) AddrHTML() string {
 	return a.Street + "<br>" + a.City + ",  " + a.State + " " + a.Zip
 }

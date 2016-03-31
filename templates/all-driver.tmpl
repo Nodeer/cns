@@ -1,0 +1,62 @@
+<table id="users" class="table table-bordered table-hover" style="background-color:white;">
+    <thead>
+        <tr id="search">
+            <th></th>
+            <th>name</th>
+            <th>email</th>
+            <th>phone</th>
+        </tr>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range $user := .users }}
+            <tr id="{{ $user.Id }}" class="contact" style="cursor:pointer;">
+                <td>{{ $user.Id }}</td>
+                <td>{{ $user.FirstName }}{{ $user.LastName }}</td>
+                <td>{{ $user.Email }}</td>
+                <td>{{ $user.Phone }}</td>
+            </tr>
+        {{ end }}
+    </tbody>
+</table>
+<script src="/static/datatables/dataTables.bootstrap.js"></script>
+<script type="text/javascript">
+    var role = '{{ .role }}';
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var table = $('#users').DataTable({
+            lengthMenu:[10,15,20],
+            "columnDefs": [
+                { "orderable": false, "targets": [3] },
+                { "name": "email",   "targets": 2 },
+                { "name": "name",  "targets": 1 },
+                { "name": "phone",   "targets": 3 },
+            ]
+        });
+
+        $('#users tr#search th').each( function () {
+            var title = $(this).text();
+            if (title != '') {
+                $(this).html('<input id="search" data-column="' + title + '" type="text"/>');
+            }
+        } );
+
+        $('input#search').keyup(function() {
+            var name = $(this).attr('data-column');
+            var column = table.column(name + ':name');
+            if (column.search() !== this.value ) {
+                column.search(this.value).draw();
+            }
+        });
+
+        $('.contact').click(function() {
+            window.location.href = '/' + role + '/' + this.id;
+        });
+    } );
+</script>

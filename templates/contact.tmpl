@@ -349,34 +349,13 @@
                 </div> <!-- End row -->
 
                 <div class="row">
-                    <table id="users" class="table table-bordered table-hover" style="background-color:white;">
-                        <thead>
-                            <tr id="search">
-                                <th></th>
-                                <th>email</th>
-                                <th>name</th>
-                                <th>phone</th>
-                            </tr>
-                            <tr>
-                                <th>Id</th>
-                                <th>Email</th>
-                                <th>Name</th>
-                                <th>Phone</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{ range $user := .users }}
-                                <tr id="{{ $user.Id }}" class="contact" style="cursor:pointer;">
-                                    <td>{{ $user.Id }}</td>
-                                    <td>{{ $user.Email }}</td>
-                                    <td>{{ $user.Name }}</td>
-                                    <td>{{ $user.Phone }}</td>
-                                </tr>
-                            {{ end }}
-                        </tbody>
-                    </table>
-
-
+                    {{ if eq .role "employee" }}
+                        {{ template "all-employee.tmpl" . }}
+                    {{ else if eq .role "company" }}
+                        {{ template "all-company.tmpl" . }}
+                    {{ else if eq .role "driver" }}
+                        {{ template "all-driver.tmpl" . }}
+                    {{ end }}
 
                     <!--
                     <div class="col-sm-6">
@@ -773,12 +752,12 @@
         <script src="/static/js/jquery.app.js"></script>
 
         <script src="/static/datatables/jquery.dataTables.min.js"></script>
-        <script src="/static/datatables/dataTables.bootstrap.js"></script>
+        <!-- <script src="/static/datatables/dataTables.bootstrap.js"></script>
         <script type="text/javascript">
             var role = '{{ .role }}';
-        </script>
+        </script> -->
         <script type="text/javascript">
-            $(document).ready(function() {
+            /*$(document).ready(function() {
                 var table = $('#users').DataTable({
 					lengthMenu:[10,15,20],
 					"columnDefs": [
@@ -807,7 +786,7 @@
                 $('.contact').click(function() {
                     window.location.href = '/' + role + '/' + this.id;
                 });
-            } );
+            } );*/
         </script>
 
     </body>
