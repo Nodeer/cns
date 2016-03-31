@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -18,7 +17,7 @@ var db *adb.DB = adb.NewDB()
 // initialize routes
 func init() {
 	db.AddStore("user")
-	mx.AddRoutes(index, buttons, contact, makeEmployees, profile, makeCompanies, makeDrivers, dt, contactRedirect)
+	mx.AddRoutes(index, buttons, makeEmployees, makeCompanies, makeDrivers, dt, contactRedirect)
 	mx.AddRoutes(viewCompany, viewDriver, viewEmployee)
 
 	web.Funcs["lower"] = strings.ToLower
@@ -43,22 +42,22 @@ var contactRedirect = web.Route{"GET", "/contact", func(w http.ResponseWriter, r
 	http.Redirect(w, r, "/contact/employee", 303)
 }}
 
-var contact = web.Route{"GET", "/contact/:role", func(w http.ResponseWriter, r *http.Request) {
-	role := r.FormValue(":role")
-	if role == "" || (role != "employee" && role != "company" && role != "driver") {
-		http.Redirect(w, r, "/contact/employee", 303)
-		return
-	}
-	var users []User
-	ok := db.Match("user", `"role":"`+strings.ToUpper(role)+`"`, &users)
-	if !ok {
-		fmt.Println("error")
-	}
-	tc.Render(w, r, "contact.tmpl", web.Model{
-		"users": users,
-		"role":  role,
-	})
-}}
+// var contact = web.Route{"GET", "/contact/:role", func(w http.ResponseWriter, r *http.Request) {
+// 	role := r.FormValue(":role")
+// 	if role == "" || (role != "employee" && role != "company" && role != "driver") {
+// 		http.Redirect(w, r, "/contact/employee", 303)
+// 		return
+// 	}
+// 	var users []User
+// 	ok := db.Match("user", `"role":"`+strings.ToUpper(role)+`"`, &users)
+// 	if !ok {
+// 		fmt.Println("error")
+// 	}
+// 	tc.Render(w, r, "contact.tmpl", web.Model{
+// 		"users": users,
+// 		"role":  role,
+// 	})
+// }}
 
 var viewEmployee = web.Route{"GET", "/employee/:id", func(w http.ResponseWriter, r *http.Request) {
 	var user Employee
@@ -100,10 +99,10 @@ var dt = web.Route{"GET", "/dt", func(w http.ResponseWriter, r *http.Request) {
 	tc.Render(w, r, "table-datatable.tmpl", nil)
 }}
 
-var profile = web.Route{"GET", "/profile/:id", func(w http.ResponseWriter, r *http.Request) {
+/*var profile = web.Route{"GET", "/profile/:id", func(w http.ResponseWriter, r *http.Request) {
 	var user User
 	db.Get("user", r.FormValue(":id"), &user)
 	tc.Render(w, r, "profile.tmpl", web.Model{
 		"user": user,
 	})
-}}
+}}*/
