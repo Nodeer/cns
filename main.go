@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -17,7 +18,8 @@ var db *adb.DB = adb.NewDB()
 // initialize routes
 func init() {
 	db.AddStore("user")
-	mx.AddRoutes(index, buttons, makeEmployees, makeCompanies, makeDrivers, dt, contactRedirect)
+	mx.AddRoutes(index, buttons, allEmployee, allCompany, allDriver)
+	mx.AddRoutes(makeEmployees, makeCompanies, makeDrivers, dt)
 	mx.AddRoutes(viewCompany, viewDriver, viewEmployee)
 
 	web.Funcs["lower"] = strings.ToLower
@@ -38,71 +40,75 @@ var buttons = web.Route{"GET", "/buttons", func(w http.ResponseWriter, r *http.R
 	tc.Render(w, r, "buttons.tmpl", web.Model{})
 }}
 
-var contactRedirect = web.Route{"GET", "/contact", func(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/contact/employee", 303)
+var allEmployee = web.Route{"GET", "/employee", func(w http.ResponseWriter, r *http.Request) {
+	var employees []Employee
+	ok := db.Match("user", `"role":"EMPLOYEE"`, &employees)
+	if !ok {
+		fmt.Println("error")
+	}
+	tc.Render(w, r, "all-employee.tmpl", web.Model{
+		"employees": employees,
+	})
 }}
 
-// var contact = web.Route{"GET", "/contact/:role", func(w http.ResponseWriter, r *http.Request) {
-// 	role := r.FormValue(":role")
-// 	if role == "" || (role != "employee" && role != "company" && role != "driver") {
-// 		http.Redirect(w, r, "/contact/employee", 303)
-// 		return
-// 	}
-// 	var users []User
-// 	ok := db.Match("user", `"role":"`+strings.ToUpper(role)+`"`, &users)
-// 	if !ok {
-// 		fmt.Println("error")
-// 	}
-// 	tc.Render(w, r, "contact.tmpl", web.Model{
-// 		"users": users,
-// 		"role":  role,
-// 	})
-// }}
+var allCompany = web.Route{"GET", "/company", func(w http.ResponseWriter, r *http.Request) {
+	var companies []Company
+	ok := db.Match("user", `"role":"COMPANY"`, &companies)
+	if !ok {
+		fmt.Println("error")
+	}
+	tc.Render(w, r, "all-company.tmpl", web.Model{
+		"companies": companies,
+	})
+}}
+
+var allDriver = web.Route{"GET", "/driver", func(w http.ResponseWriter, r *http.Request) {
+	var drivers []Driver
+	ok := db.Match("user", `"role":"DRIVER"`, &drivers)
+	if !ok {
+		fmt.Println("error")
+	}
+	tc.Render(w, r, "all-driver.tmpl", web.Model{
+		"drivers": drivers,
+	})
+}}
 
 var viewEmployee = web.Route{"GET", "/employee/:id", func(w http.ResponseWriter, r *http.Request) {
-	var user Employee
-	ok := db.Get("user", r.FormValue(":id"), &user)
-	if !ok || user.Role != "EMPLOYEE" {
+	var employee Employee
+	ok := db.Get("user", r.FormValue(":id"), &employee)
+	if !ok || employee.Role != "EMPLOYEE" {
 		web.SetErrorRedirect(w, r, "/contact/employee", "Error finding employee")
 		return
 	}
 	tc.Render(w, r, "employee.tmpl", web.Model{
-		"user": user,
+		"employee": employee,
 	})
 }}
 
 var viewCompany = web.Route{"GET", "/company/:id", func(w http.ResponseWriter, r *http.Request) {
-	var user Company
-	ok := db.Get("user", r.FormValue(":id"), &user)
-	if !ok || user.Role != "COMPANY" {
+	var company Company
+	ok := db.Get("user", r.FormValue(":id"), &company)
+	if !ok || company.Role != "COMPANY" {
 		web.SetErrorRedirect(w, r, "/contact/company", "Error finding company")
 		return
 	}
 	tc.Render(w, r, "company.tmpl", web.Model{
-		"user": user,
+		"company": company,
 	})
 }}
 
 var viewDriver = web.Route{"GET", "/driver/:id", func(w http.ResponseWriter, r *http.Request) {
-	var user Driver
-	ok := db.Get("user", r.FormValue(":id"), &user)
-	if !ok || user.Role != "DRIVER" {
+	var driver Driver
+	ok := db.Get("user", r.FormValue(":id"), &driver)
+	if !ok || driver.Role != "DRIVER" {
 		web.SetErrorRedirect(w, r, "/contact/driver", "Error finding driver")
 		return
 	}
 	tc.Render(w, r, "driver.tmpl", web.Model{
-		"user": user,
+		"driver": driver,
 	})
 }}
 
 var dt = web.Route{"GET", "/dt", func(w http.ResponseWriter, r *http.Request) {
 	tc.Render(w, r, "table-datatable.tmpl", nil)
 }}
-
-/*var profile = web.Route{"GET", "/profile/:id", func(w http.ResponseWriter, r *http.Request) {
-	var user User
-	db.Get("user", r.FormValue(":id"), &user)
-	tc.Render(w, r, "profile.tmpl", web.Model{
-		"user": user,
-	})
-}}*/

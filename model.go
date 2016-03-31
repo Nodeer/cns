@@ -19,7 +19,7 @@ type Employee struct {
 type Company struct {
 	Auth
 	Name    string `json:"name,omitempty"`
-	Contact string `json:"conatact,omityempty"`
+	Contact string `json:"contact,omityempty"`
 	Phone   string `json:"phone,omitempty"`
 	Address
 }

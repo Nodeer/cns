@@ -353,31 +353,19 @@
                                             <tbody>
                                                 <tr>
                                                     <td><b>Name</b></td>
-                                                    <td>
-                                                        <a href="#" class="ng-binding">
-                                                            {{ .user.Name }}
-                                                        </a>
-                                                    </td>
+                                                    <td>{{ .user.FirstName }} {{ .user.LastName }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><b>Email</b></td>
-                                                    <td>
-                                                        <a href="/" class="ng-binding">
-                                                            {{ .user.Email }}
-                                                        </a>
-                                                    </td>
+                                                    <td>{{ .user.Email }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><b>Phone</b></td>
-                                                    <td class="ng-binding">(123)-456-7890</td>
+                                                    <td>(123)-456-7890</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><b>Role</b></td>
-                                                    <td>
-                                                        <a href="/" class="ng-binding">
-                                                            {{ .user.Role }}
-                                                        </a>
-                                                    </td>
+                                                    <td><b>Address</b></td>
+                                                    <td>{{ .user.AddrHTML }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
