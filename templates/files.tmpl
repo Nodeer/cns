@@ -337,16 +337,13 @@
               "#" : {
                 "max_children" : 1,
                 "max_depth" : 4,
-                "valid_children" : ["root"]
+                "valid_children" : ["dir", "file"]
               },
-              "root" : {
-                "icon" : "/static/3.3.0/assets/images/tree_icon.png",
-                "valid_children" : ["default"]
+              "dir" : {
+                "icon" : "glyphicon glyphicon-folder-open",
+                "valid_children" : ["dir", "file"]
               },
-              "default" : {
-                "valid_children" : ["default","file"]
-              },
-              "file" : {
+	      "file" : {
                 "icon" : "glyphicon glyphicon-file",
                 "valid_children" : []
               }

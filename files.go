@@ -36,6 +36,7 @@ var filesApi = web.Route{"GET", "/api/files", func(w http.ResponseWriter, r *htt
 			n := Node{}
 			n.Id = path + "/" + file.Name()
 			n.Text = file.Name()
+			n.Type = "file"
 			if file.IsDir() {
 				n.Type = "dir"
 				n.Children = true
