@@ -19,7 +19,7 @@ var db *adb.DB = adb.NewDB()
 func init() {
 	db.AddStore("user")
 	mx.AddRoutes(index, buttons, allEmployee, allCompany, allDriver)
-	mx.AddRoutes(makeEmployees, makeCompanies, makeDrivers, dt)
+	mx.AddRoutes(makeUsers, dt)
 	mx.AddRoutes(viewCompany, viewDriver, viewEmployee)
 
 	web.Funcs["lower"] = strings.ToLower
@@ -92,8 +92,11 @@ var viewCompany = web.Route{"GET", "/company/:id", func(w http.ResponseWriter, r
 		web.SetErrorRedirect(w, r, "/contact/company", "Error finding company")
 		return
 	}
+	var drivers []Driver
+	ok = db.Match("user", `"companyId":"`+company.Id+`"`, &drivers)
 	tc.Render(w, r, "company.tmpl", web.Model{
 		"company": company,
+		"drivers": drivers,
 	})
 }}
 

@@ -28,10 +28,11 @@ type Driver struct {
 	Auth
 	FirstName    string `json:"firstName,omitempty"`
 	LastName     string `json:"lastName,omitempty"`
-	Phone        string `json:"phone,omitEmpty"`
-	DOB          string `json:"dob,omitEmpty"`
-	LicenseNum   string `json:"licenseNum,omitEmpty"`
-	LicenseState string `json:"licenseState,omitEmpty"`
+	Phone        string `json:"phone,omitempty"`
+	DOB          string `json:"dob,omitempty"`
+	LicenseNum   string `json:"licenseNum,omitempty"`
+	LicenseState string `json:"licenseState,omitempty"`
+	CompanyId    string `json:"companyId,omitempty"`
 	Address
 }
 
