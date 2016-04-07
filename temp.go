@@ -21,16 +21,22 @@ var login = web.Route{"GET", "/login", func(w http.ResponseWriter, r *http.Reque
 
 var loginPost = web.Route{"POST", "/login", func(w http.ResponseWriter, r *http.Request) {
 	email, pass := r.FormValue("email"), r.FormValue("password")
-	var employees []Employee
+
+	/*var employees []Employee
 	q := fmt.Sprintf(`"email":%q,"password":%q,"active":true`, email, pass)
-	fmt.Println(q)
-	ok := db.Match("employee", q, &employees)
+	ok := db.Match("user", q, &employees)
 	if !ok || len(employees) != 1 {
-		fmt.Println(len(employees))
 		web.SetErrorRedirect(w, r, "/login", "Login failed")
 		return
 	}
-	employee := employees[0]
+	employee := employees[0]*/
+
+	var employee Employee
+	if !db.Auth("user", email, pass, &employee) {
+		web.SetErrorRedirect(w, r, "/login", "Login failed")
+		return
+	}
+
 	sess := web.Login(w, r, employee.Role)
 	sess["id"] = employee.Id
 	sess["email"] = employee.Email

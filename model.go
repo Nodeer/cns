@@ -1,10 +1,17 @@
 package main
 
+import (
+	"fmt"
+	"math"
+	"strings"
+	"time"
+)
+
 type Auth struct {
 	Id       string `json:"id"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Active   bool   `json:"active"`
+	Email    string `json:"email" auth:"username"`
+	Password string `json:"password" auth:"password"`
+	Active   bool   `json:"active" auth:"active"`
 	Role     string `json:"role"`
 }
 
@@ -34,6 +41,21 @@ type Driver struct {
 	LicenseState string `json:"licenseState,omitempty"`
 	CompanyId    string `json:"companyId,omitempty"`
 	Address
+}
+
+func (d Driver) FormatDOB() string {
+	ds := strings.Split(d.DOB, "-")
+	return fmt.Sprintf("%s/%s/%s", ds[1], ds[2], ds[0])
+}
+
+func (d Driver) GetAge() int32 {
+	dobT, err := time.Parse("2006-1-02", d.DOB)
+	if err != nil {
+		return 0
+	}
+	dob := dobT.UnixNano()
+	diff := time.Now().UnixNano() - dob
+	return int32(math.Floor((float64(diff) / float64(1000) / float64(1000) / float64(1000) / float64(60) / float64(60) / float64(24) / float64(365.25))))
 }
 
 type Address struct {

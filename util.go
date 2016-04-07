@@ -1,183 +1,110 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"net/url"
+	"reflect"
 	"strconv"
-	"time"
-
-	"github.com/cagnosolutions/web"
+	"strings"
 )
 
-var makeUsers = web.Route{"GET", "/makeUsers", func(w http.ResponseWriter, r *http.Request) {
-	MakeEmployees()
-	compIds := MakeCompanies()
-	MakeDrivers(compIds)
-	web.SetSuccessRedirect(w, r, "/", "Successfully made drivers")
-	return
-}}
-
-func MakeEmployees() {
-	for i := 0; i < 10; i++ {
-		id := strconv.Itoa(int(time.Now().UnixNano()))
-
-		user := Employee{
-			FirstName: "John",
-			LastName:  fmt.Sprintf("Smith the %dth", (i + 4)),
-			Phone:     fmt.Sprintf("717-777-777%d", i),
+func FormToStruct(ptr interface{}, vals url.Values, start string) {
+	var strct reflect.Value
+	if reflect.TypeOf(ptr) == reflect.TypeOf(reflect.Value{}) {
+		strct = ptr.(reflect.Value)
+	} else {
+		strct = reflect.ValueOf(ptr).Elem()
+	}
+	strctType := strct.Type()
+	for i := 0; i < strct.NumField(); i++ {
+		fld := strct.Field(i)
+		if ok, v := GetVal(ToLowerFirst(start+strctType.Field(i).Name), vals); ok || fld.Kind() == reflect.Struct {
+			switch fld.Kind() {
+			case reflect.String:
+				strct.Field(i).SetString(v)
+			case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+				in, _ := strconv.ParseInt(v, 10, 64)
+				strct.Field(i).SetInt(in)
+			case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+				u, _ := strconv.ParseUint(v, 10, 64)
+				strct.Field(i).SetUint(u)
+			case reflect.Float32, reflect.Float64:
+				f, _ := strconv.ParseFloat(v, 64)
+				strct.Field(i).SetFloat(f)
+			case reflect.Bool:
+				b, _ := strconv.ParseBool(v)
+				strct.Field(i).SetBool(b)
+			case reflect.Map:
+				strct.Field(i).Set(reflect.MakeMap(strct.Field(i).Type()))
+			case reflect.Slice:
+				ss := reflect.MakeSlice(strct.Field(i).Type(), 0, 0)
+				strct.Field(i).Set(genSlice(ss, v))
+			case reflect.Struct:
+				//st := reflect.Indirect(reflect.New(strct.Field(i).Type()))
+				st := reflect.Indirect(strct.Field(i))
+				FormToStruct(st, vals, start+ToLowerFirst(strctType.Field(i).Name)+".")
+				strct.Field(i).Set(st)
+			}
 		}
-
-		user.Id = id
-		user.Email = fmt.Sprintf("%d@cns.com", i)
-		user.Password = fmt.Sprintf("Password-%d", i)
-		user.Active = (i%2 == 0)
-		user.Role = "EMPLOYEE"
-
-		user.Street = fmt.Sprintf("12%d Main Street", 1)
-		user.City = fmt.Sprintf("%dville", i)
-		user.State = fmt.Sprintf("%d state", i)
-		user.Zip = fmt.Sprintf("1234%d", i)
-
-		db.Add("user", id, user)
 	}
 }
 
-func MakeCompanies() [10]string {
-	compIds := [10]string{}
-	for i := 0; i < 10; i++ {
-		id := strconv.Itoa(int(time.Now().UnixNano()))
-		compIds[i] = id
-		user := Company{
-			Name:    fmt.Sprintf("Company %d", i),
-			Contact: fmt.Sprintf("Bobbi Sue the %dth", (i + 4)),
-			Phone:   fmt.Sprintf("717-777-777%d", i),
+func genSlice(sl reflect.Value, val string) reflect.Value {
+	vs := strings.Split(val, ",")
+	for _, v := range vs {
+		switch sl.Type().String() {
+		case "[]string":
+			sl = reflect.Append(sl, reflect.ValueOf(v))
+		case "[]int":
+			in, _ := strconv.ParseInt(v, 10, 0)
+			sl = reflect.Append(sl, reflect.ValueOf(int(in)))
+		case "[]int8":
+			in, _ := strconv.ParseInt(v, 10, 8)
+			sl = reflect.Append(sl, reflect.ValueOf(int8(in)))
+		case "[]int16":
+			in, _ := strconv.ParseInt(v, 10, 16)
+			sl = reflect.Append(sl, reflect.ValueOf(int16(in)))
+		case "[]int32":
+			in, _ := strconv.ParseInt(v, 10, 32)
+			sl = reflect.Append(sl, reflect.ValueOf(int32(in)))
+		case "[]int64":
+			in, _ := strconv.ParseInt(v, 10, 64)
+			sl = reflect.Append(sl, reflect.ValueOf(int64(in)))
+		case "[]uint":
+			in, _ := strconv.ParseUint(v, 10, 0)
+			sl = reflect.Append(sl, reflect.ValueOf(uint(in)))
+		case "[]uint8":
+			in, _ := strconv.ParseUint(v, 10, 8)
+			sl = reflect.Append(sl, reflect.ValueOf(uint8(in)))
+		case "[]uint16":
+			in, _ := strconv.ParseUint(v, 10, 16)
+			sl = reflect.Append(sl, reflect.ValueOf(uint16(in)))
+		case "[]uint32":
+			in, _ := strconv.ParseUint(v, 10, 32)
+			sl = reflect.Append(sl, reflect.ValueOf(uint32(in)))
+		case "[]uint64":
+			in, _ := strconv.ParseUint(v, 10, 64)
+			sl = reflect.Append(sl, reflect.ValueOf(uint64(in)))
+		case "[]float32":
+			in, _ := strconv.ParseFloat(v, 32)
+			sl = reflect.Append(sl, reflect.ValueOf(float32(in)))
+		case "[]float64":
+			in, _ := strconv.ParseFloat(v, 64)
+			sl = reflect.Append(sl, reflect.ValueOf(float64(in)))
+		case "[]bool":
+			b, _ := strconv.ParseBool(v)
+			sl = reflect.Append(sl, reflect.ValueOf(b))
 		}
-
-		user.Id = id
-		user.Email = fmt.Sprintf("%d@company%d.com", i, i)
-		user.Password = fmt.Sprintf("Password-%d", i)
-		user.Active = (i%2 == 0)
-		user.Role = "COMPANY"
-
-		user.Street = fmt.Sprintf("12%d Main Street", 1)
-		user.City = fmt.Sprintf("%dville", i)
-		user.State = fmt.Sprintf("%d state", i)
-		user.Zip = fmt.Sprintf("1234%d", i)
-
-		db.Add("user", id, user)
 	}
-	return compIds
+	return sl
 }
 
-func MakeDrivers(compIds [10]string) {
-	for i := 0; i < 10; i++ {
-		id := strconv.Itoa(int(time.Now().UnixNano()))
-
-		user := Driver{
-			FirstName:    "Daniel",
-			LastName:     fmt.Sprintf("Jones the %dth", (i + 4)),
-			Phone:        fmt.Sprintf("717-777-777%d", i),
-			DOB:          fmt.Sprintf("198%d-03-1%d", i, i),
-			LicenseNum:   fmt.Sprintf("1234567%d", i),
-			LicenseState: fmt.Sprintf("%d state", i),
-			CompanyId:    compIds[i],
-		}
-
-		user.Id = id
-		user.Email = fmt.Sprintf("%d@%d.com", i, i)
-		user.Password = fmt.Sprintf("Password-%d", i)
-		user.Active = (i%2 == 0)
-		user.Role = "DRIVER"
-
-		user.Street = fmt.Sprintf("12%d Main Street", 1)
-		user.City = fmt.Sprintf("%dville", i)
-		user.State = fmt.Sprintf("%d state", i)
-		user.Zip = fmt.Sprintf("1234%d", i)
-
-		db.Add("user", id, user)
+func GetVal(key string, v url.Values) (bool, string) {
+	if v == nil {
+		return false, ""
 	}
+	vs, ok := v[key]
+	if !ok || len(vs) == 0 {
+		return false, ""
+	}
+	return true, vs[0]
 }
-
-var makeEmployees = web.Route{"GET", "/makeEmployees", func(w http.ResponseWriter, r *http.Request) {
-	for i := 0; i < 10; i++ {
-		id := strconv.Itoa(int(time.Now().UnixNano()))
-
-		user := Employee{
-			FirstName: "John",
-			LastName:  fmt.Sprintf("Smith the %dth", (i + 4)),
-			Phone:     fmt.Sprintf("717-777-777%d", i),
-		}
-
-		user.Id = id
-		user.Email = fmt.Sprintf("%d@cns.com", i)
-		user.Password = fmt.Sprintf("Password-%d", i)
-		user.Active = (i%2 == 0)
-		user.Role = "EMPLOYEE"
-
-		user.Street = fmt.Sprintf("12%d Main Street", 1)
-		user.City = fmt.Sprintf("%dville", i)
-		user.State = fmt.Sprintf("%d state", i)
-		user.Zip = fmt.Sprintf("1234%d", i)
-
-		db.Add("user", id, user)
-	}
-	web.SetSuccessRedirect(w, r, "/", "success")
-	return
-}}
-
-var makeCompanies = web.Route{"GET", "/makeComps", func(w http.ResponseWriter, r *http.Request) {
-	for i := 0; i < 10; i++ {
-		id := strconv.Itoa(int(time.Now().UnixNano()))
-
-		user := Company{
-			Name:    fmt.Sprintf("Company %d", i),
-			Contact: fmt.Sprintf("Bobbi Sue the %dth", (i + 4)),
-			Phone:   fmt.Sprintf("717-777-777%d", i),
-		}
-
-		user.Id = id
-		user.Email = fmt.Sprintf("%d@company%d.com", i, i)
-		user.Password = fmt.Sprintf("Password-%d", i)
-		user.Active = (i%2 == 0)
-		user.Role = "COMPANY"
-
-		user.Street = fmt.Sprintf("12%d Main Street", 1)
-		user.City = fmt.Sprintf("%dville", i)
-		user.State = fmt.Sprintf("%d state", i)
-		user.Zip = fmt.Sprintf("1234%d", i)
-
-		db.Add("user", id, user)
-	}
-	web.SetSuccessRedirect(w, r, "/", "success")
-	return
-}}
-
-var makeDrivers = web.Route{"GET", "/makeDrive", func(w http.ResponseWriter, r *http.Request) {
-	for i := 0; i < 10; i++ {
-		id := strconv.Itoa(int(time.Now().UnixNano()))
-
-		user := Driver{
-			FirstName:    "Daniel",
-			LastName:     fmt.Sprintf("Jones the %dth", (i + 4)),
-			Phone:        fmt.Sprintf("717-777-777%d", i),
-			DOB:          fmt.Sprintf("198%d-03-1%d", i, i),
-			LicenseNum:   fmt.Sprintf("1234567%d", i),
-			LicenseState: fmt.Sprintf("%d state", i),
-		}
-
-		user.Id = id
-		user.Email = fmt.Sprintf("%d@%d.com", i, i)
-		user.Password = fmt.Sprintf("Password-%d", i)
-		user.Active = (i%2 == 0)
-		user.Role = "DRIVER"
-
-		user.Street = fmt.Sprintf("12%d Main Street", 1)
-		user.City = fmt.Sprintf("%dville", i)
-		user.State = fmt.Sprintf("%d state", i)
-		user.Zip = fmt.Sprintf("1234%d", i)
-
-		db.Add("user", id, user)
-	}
-	web.SetSuccessRedirect(w, r, "/", "success")
-	return
-}}

@@ -22,6 +22,9 @@
 
                 <div class="row m-t-30">
                     <div class="col-sm-12">
+
+                        {{ template "alerts.tmpl" . }}
+
                         <div class="panel panel-default p-0">
                             <div class="panel-body p-0">
                                 <ul class="nav nav-tabs profile-tabs">
@@ -56,44 +59,44 @@
 
                                     <div id="settings" class="tab-pane">
                                         <div class="user-profile-content">
-                                            <form role="form">
+                                            <form role="form" action="/employee/{{ .employee.Id }}" method="post">
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="form-group">
-                                                            <label for="FullName">First Name</label>
-                                                            <input type="text" value="{{ .employee.FirstName }}" id="FullName" class="form-control">
+                                                            <label>First Name</label>
+                                                            <input type="text" value="{{ .employee.FirstName }}" name="firstName" class="form-control">
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="FullName">Last Name</label>
-                                                            <input type="text" value="{{ .employee.LastName }}" id="FullName" class="form-control">
+                                                            <labelLast Name</label>
+                                                            <input type="text" value="{{ .employee.LastName }}" name="lastName" class="form-control">
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="Email">Email</label>
-                                                            <input type="email" value="{{ .employee.Email }}" id="Email" class="form-control">
+                                                            <label>Email</label>
+                                                            <input type="email" value="{{ .employee.Email }}" name="email" class="form-control">
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="FullName">Phone</label>
-                                                            <input type="text" value="{{ .employee.Phone }}" id="FullName" class="form-control">
+                                                            <label>Phone</label>
+                                                            <input type="text" value="{{ .employee.Phone }}" name="phone" class="form-control">
                                                         </div>
                                                         <button class="btn btn-primary" type="submit">Save</button>
                                                     </form>
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
-                                                        <label for="FullName">Street</label>
-                                                        <input type="text" value="{{ .employee.Street }}" id="FullName" class="form-control">
+                                                        <label>Street</label>
+                                                        <input type="text" value="{{ .employee.Street }}" name="address.Street" class="form-control">
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="FullName">City</label>
-                                                        <input type="text" value="{{ .employee.City }}" id="FullName" class="form-control">
+                                                        <label>City</label>
+                                                        <input type="text" value="{{ .employee.City }}" name="address.City" class="form-control">
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="Email">State</label>
-                                                        <input type="email" value="{{ .employee.State }}" id="Email" class="form-control">
+                                                        <label>State</label>
+                                                        <input type="text" value="{{ .employee.State }}" name="address.City" class="form-control">
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="Email">Zip</label>
-                                                        <input type="email" value="{{ .employee.Zip }}" id="Email" class="form-control">
+                                                        <label>Zip</label>
+                                                        <input type="text" value="{{ .employee.Zip }}" name="address.Zip" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
