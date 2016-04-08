@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	mx.AddRoutes(makeUsers, upload)
+	mx.AddRoutes(makeUsers, upload, buttons, uploader)
 }
 
 var makeUsers = web.Route{"GET", "/makeUsers", func(w http.ResponseWriter, r *http.Request) {
@@ -188,4 +188,17 @@ var makeDrivers = web.Route{"GET", "/makeDrive", func(w http.ResponseWriter, r *
 
 var upload = web.Route{"GET", "/upload", func(w http.ResponseWriter, r *http.Request) {
 	tc.Render(w, r, "form-uploads.tmpl", nil)
+}}
+
+var buttons = web.Route{"GET", "/buttons", func(w http.ResponseWriter, r *http.Request) {
+	tc.Render(w, r, "buttons.tmpl", web.Model{})
+}}
+
+var uploader = web.Route{"POST", "/upd", func(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseMultipartForm(32 << 20)
+	if err != nil {
+		println("ERROR")
+	}
+	fmt.Printf("%v\n", r.MultipartForm.File)
+	fmt.Println(r.FormValue("id"))
 }}

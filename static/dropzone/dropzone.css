@@ -52,11 +52,12 @@
 .dropzone .dz-preview .dz-details,
 .dropzone-previews .dz-preview .dz-details {
   width: 100px;
-  height: 100px;
+  /*height: 100px;*/
   position: relative;
   background: #ebebeb;
   padding: 5px;
   margin-bottom: 22px;
+  text-align: center;
 }
 .dropzone .dz-preview .dz-details .dz-filename,
 .dropzone-previews .dz-preview .dz-details .dz-filename {
@@ -155,7 +156,7 @@
 }
 .dropzone {
   border: 1px solid rgba(0,0,0,0.03);
-  min-height: 360px;
+  min-height: 150px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
   background: rgba(0,0,0,0.03);

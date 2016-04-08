@@ -6,6 +6,9 @@
 
         <!-- sweet alerts -->
         <link href="/static/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+        <link href="/static/dropzone/dropzone.css" rel="stylesheet" type="text/css" />
+        <!-- DataTables -->
+        <link href="/static/datatables/data-tables-bootstrap.css" rel="stylesheet" type="text/css" />
 
     </head>
 
@@ -19,7 +22,6 @@
             {{ template "nav.tmpl" . }}
 
             <div class="wraper container-fluid">
-                <div class="row m-t-30">
                     <div class="col-sm-12">
 
                         {{ template "alerts.tmpl" . }}
@@ -27,15 +29,15 @@
                         <div class="panel panel-default p-0">
                             <div class="panel-body p-0">
                                 <ul class="nav nav-tabs profile-tabs">
-                                    <li class="active"><a data-toggle="tab" href="#aboutme">Information</a></li>
-                                    <li class=""><a data-toggle="tab" href="#user-activities">Activities</a></li>
-                                    <li class=""><a data-toggle="tab" href="#projects">Projects</a></li>
-                                    <li class=""><a data-toggle="tab" href="#edit-profile">Settings</a></li>
+                                    <li class="active"><a data-toggle="tab" href="#info">Information</a></li>
+                                    <li class=""><a data-toggle="tab" href="#forms">Forms</a></li>
+                                    <li class=""><a data-toggle="tab" href="#files">Uploaded Files</a></li>
+                                    <li class=""><a data-toggle="tab" href="#settings">Settings</a></li>
                                 </ul>
 
                                 <div class="tab-content m-0">
 
-                                    <div id="aboutme" class="tab-pane active">
+                                    <div id="info" class="tab-pane active">
                                         <div class="profile-desk">
                                             <h1>{{ .driver.FirstName }} {{ .driver.LastName}}</h1>
 
@@ -43,8 +45,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td><b>Email</b></td>
-                                                        <td>{{ .driver.Email }}</a>
-                                                        </td>
+                                                        <td>{{ .driver.Email }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td><b>Phone</b></td>
@@ -53,152 +54,70 @@
 
                                                     <tr>
                                                         <td><b>Address</b></td>
-                                                        <td>
-                                                            {{ .driver.Street }}<br>
-                                                            {{ .driver.City }}, {{ .driver.State }} {{ .driver.Zip }}
-                                                        </td>
+                                                        <td>{{ .driver.AddrHTML }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td><b>Date of Birth</b></td>
-                                                        <td>
-                                                            {{ .driver.FormatDOB }}
-                                                        </td>
+                                                        <td>{{ .driver.FormatDOB }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td><b>Age</b></td>
-                                                        <td>
-                                                            {{ .driver.GetAge }}
-                                                        </td>
+                                                        <td>{{ .driver.GetAge }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                        </div> <!-- end profile-desk -->
-                                    </div> <!-- about-me -->
+                                        </div>
+                                    </div>
 
-                                    <!-- Activities -->
-                                    <div id="user-activities" class="tab-pane">
-                                        <div class="timeline-2">
-                                            <div class="time-item">
-                                                <div class="item-info">
-                                                    <div class="text-muted">5 minutes ago</div>
-                                                    <p><strong><a href="#" class="text-info">John Doe</a></strong> Uploaded a photo <strong>"DSC000586.jpg"</strong></p>
-                                                </div>
-                                            </div>
+                                    <div id="forms" class="tab-pane">
+                                        <div class="row m-t-10">
+                                            <div class="col-md-12">
 
-                                            <div class="time-item">
-                                                <div class="item-info">
-                                                    <div class="text-muted">30 minutes ago</div>
-                                                    <p><a href="/" class="text-info">Lorem</a> commented your post.</p>
-                                                    <p><em>"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam laoreet tellus ut tincidunt euismod. "</em></p>
-                                                </div>
-                                            </div>
-
-                                            <div class="time-item">
-                                                <div class="item-info">
-                                                    <div class="text-muted">59 minutes ago</div>
-                                                    <p><a href="/" class="text-info">Jessi</a> attended a meeting with<a href="#" class="text-success">John Doe</a>.</p>
-                                                    <p><em>"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam laoreet tellus ut tincidunt euismod. "</em></p>
-                                                </div>
-                                            </div>
-
-                                            <div class="time-item">
-                                                <div class="item-info">
-                                                    <div class="text-muted">5 minutes ago</div>
-                                                    <p><strong><a href="#" class="text-info">John Doe</a></strong>Uploaded 2 new photos</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="time-item">
-                                                <div class="item-info">
-                                                    <div class="text-muted">30 minutes ago</div>
-                                                    <p><a href="/" class="text-info">Lorem</a> commented your post.</p>
-                                                    <p><em>"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam laoreet tellus ut tincidunt euismod. "</em></p>
-                                                </div>
-                                            </div>
-
-                                            <div class="time-item">
-                                                <div class="item-info">
-                                                    <div class="text-muted">59 minutes ago</div>
-                                                    <p><a href="/" class="text-info">Jessi</a> attended a meeting with<a href="#" class="text-success">John Doe</a>.</p>
-                                                    <p><em>"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam laoreet tellus ut tincidunt euismod. "</em></p>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <!-- profile -->
-                                    <div id="projects" class="tab-pane">
+                                    <div id="files" class="tab-pane">
                                         <div class="row m-t-10">
-                                            <div class="col-md-12">
-                                                <div class="portlet"><!-- /primary heading -->
-                                                    <div id="portlet2" class="panel-collapse collapse in">
-                                                        <div class="portlet-body">
-                                                            <div class="table-responsive">
-                                                                <table class="table">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>#</th>
-                                                                            <th>Project Name</th>
-                                                                            <th>Start Date</th>
-                                                                            <th>Due Date</th>
-                                                                            <th>Status</th>
-                                                                            <th>Assign</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td>1</td>
-                                                                            <td>Velonic Admin</td>
-                                                                            <td>01/01/2015</td>
-                                                                            <td>07/05/2015</td>
-                                                                            <td><span class="label label-info">Work in Progress</span></td>
-                                                                            <td>Coderthemes</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>2</td>
-                                                                            <td>Velonic Frontend</td>
-                                                                            <td>01/01/2015</td>
-                                                                            <td>07/05/2015</td>
-                                                                            <td><span class="label label-success">Pending</span></td>
-                                                                            <td>Coderthemes</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>3</td>
-                                                                            <td>Velonic Admin</td>
-                                                                            <td>01/01/2015</td>
-                                                                            <td>07/05/2015</td>
-                                                                            <td><span class="label label-pink">Done</span></td>
-                                                                            <td>Coderthemes</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>4</td>
-                                                                            <td>Velonic Frontend</td>
-                                                                            <td>01/01/2015</td>
-                                                                            <td>07/05/2015</td>
-                                                                            <td><span class="label label-purple">Work in Progress</span></td>
-                                                                            <td>Coderthemes</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>5</td>
-                                                                            <td>Velonic Admin</td>
-                                                                            <td>01/01/2015</td>
-                                                                            <td>07/05/2015</td>
-                                                                            <td><span class="label label-warning">Coming soon</span></td>
-                                                                            <td>Coderthemes</td>
-                                                                        </tr>
+                                            <div class="col-lg-6">
 
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                <div class="table-responsive">
+                                                    <table id="file" class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Name</th>
+                                                                <th>Size</th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {{ $driver := .driver }}
+                                                            {{ range $file := .files }}
+                                                                <tr>
+                                                                    <td>{{ $file }}</td>
+                                                                    <td></td>
+                                                                    <td><a href="/driver/file/{{ $driver.Id }}/{{ $file }}" target="_blank">View</a><br></td>
+                                                                </tr>
+                                                            {{ end }}
+                                                        </tbody>
+                                                    </table>
                                                 </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <form action="/driver/upload" method="post" class="dropzone" id="dropzone">
+                                                    <div class="fallback">
+                                                        <input name="file" type="file" multiple />
+                                                    </div>
+                                                    <input type="hidden" name="id" value="{{ .driver.Id }}">
+                                                </form>
+
                                             </div>
                                         </div>
                                     </div>
 
                                     <!-- settings -->
-                                    <div id="edit-profile" class="tab-pane">
+                                    <div id="settings" class="tab-pane">
                                         <div class="user-profile-content">
                                             <form role="form" action="/driver/{{ .driver.Id }}" method="post">
                                                 <div class="row">
@@ -253,6 +172,15 @@
                                                 </div>
                                                 <button class="btn btn-primary" type="submit">Save</button>
                                             </form>
+                                            <br>
+
+                                            <form action="/driver/upload" method="post" class="dropzone" id="settingsDropzone">
+                                                <div class="fallback">
+                                                    <input name="file" type="file" multiple />
+                                                </div>
+                                                <input type="hidden" name="id" value="{{ .driver.Id }}">
+                                            </form>
+
                                         </div>
                                     </div>
 
@@ -260,7 +188,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
 
             {{ template "footer.tmpl" . }}
@@ -270,6 +197,88 @@
         {{ template "scripts.tmpl" . }}
 
         <script src="/static/js/jquery.scrollTo.min.js"></script>
+        <script src="/static/dropzone/dropzone.min.js"></script>
+        <script src="/static/datatables/jquery.dataTables.min.js"></script>
+        <script src="/static/datatables/dataTables.bootstrap.js"></script>
+
+        <script>
+            Dropzone.options.dropzone = false;
+            var myDropzone = new Dropzone('#dropzone', {
+                addRemoveLinks: true,
+                createImageThumbnails: false,
+                filesixeBase: 1024,
+                init: function() {
+                    this.on('success', function(file, msg) {
+                        if (msg.status !== 'success')  {
+                            alert('error');
+                            return
+                        }
+                        //alert('Successfully uploaded ' + file.name);
+                        $.ajax({
+                            url: '/api/upload?path=upload/driver/{{ .driver.Id }}',
+                            success: function(d) {
+                                renderFiles(d);
+                                //displayFiles(d)
+                            },
+                            error: function(d) {
+                                alert('error');
+                            }
+                        });
+                    });
+                    this.on('removedfile', function(file) {
+                        alert(file.name);
+                    });
+                },
+            });
+
+
+            function renderFiles(files) {
+                /*var fileTable = $('table#files tbody');
+                fileTable.html('');
+                console.log(files);
+                for (var i = 0; i < files.length; i++) {
+                    var row = $('<tr>'+
+                        '<td>' + files[i].name + '</td>'+
+                        '<td></td>'+
+                        '<td><a href="/driver/file/{{ .driver.Id }}/' + files[i].name + '" target="_blank">View</a><br></td>'+
+                    '</tr>');
+                    fileTable.append(row);
+                }*/
+                dataTable.rows('tbody tr').remove();
+                for (var i = 0; i < files.length; i++) {
+                    dataTable.row.add([
+                        files[i].name,
+                        '',
+                        '<a href="/driver/file/{{ .driver.Id }}/' + files[i].name + '" target="_blank">View</a>'
+                    ]);
+                }
+                dataTable.draw();
+            }
+
+            function displayFiles() {
+                $.ajax({
+                    url: '/api/upload?path=upload/driver/{{ .driver.Id }}',
+                    success: function(d) {
+                        setFiles(d);
+                    },
+                    error: function(d) {
+                        alert('error');
+                    }
+                })
+            }
+
+            function setFiles(files) {
+                $('#previews').html('');
+                for (var i = 0; i < files.length; i++) {
+                    myDropzone.emit("addedfile", files[i]);
+                    myDropzone.emit("complete", files[i]);
+                }
+            }
+            //displayFiles();
+            var dataTable = $('#file').DataTable({
+                lengthMenu:[5,10,15,20]
+            });
+        </script>
 
     </body>
 </html>

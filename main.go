@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/cagnosolutions/adb"
@@ -17,13 +20,14 @@ var db *adb.DB = adb.NewDB()
 
 // initialize routes
 func init() {
+
 	db.AddStore("user")
 
-	mx.AddRoutes(index, buttons)
+	mx.AddSecureRoutes(EMPLOYEE, index)
 
-	mx.AddRoutes(allCompany, viewCompany, saveCompany)
-	mx.AddRoutes(allEmployee, viewEmployee, saveEmployee)
-	mx.AddRoutes(allDriver, viewDriver, savedriver)
+	mx.AddSecureRoutes(EMPLOYEE, allCompany, viewCompany, saveCompany)
+	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee)
+	mx.AddSecureRoutes(EMPLOYEE, allDriver, uploadDriverFile, viewDriver, savedriver, viewDriverFile)
 
 	web.Funcs["lower"] = strings.ToLower
 	tc = web.NewTmplCache()
@@ -37,10 +41,6 @@ func main() {
 // current route controllers
 var index = web.Route{"GET", "/", func(w http.ResponseWriter, r *http.Request) {
 	tc.Render(w, r, "index.tmpl", web.Model{})
-}}
-
-var buttons = web.Route{"GET", "/buttons", func(w http.ResponseWriter, r *http.Request) {
-	tc.Render(w, r, "buttons.tmpl", web.Model{})
 }}
 
 var allEmployee = web.Route{"GET", "/employee", func(w http.ResponseWriter, r *http.Request) {
@@ -133,13 +133,21 @@ var allDriver = web.Route{"GET", "/driver", func(w http.ResponseWriter, r *http.
 
 var viewDriver = web.Route{"GET", "/driver/:id", func(w http.ResponseWriter, r *http.Request) {
 	var driver Driver
-	ok := db.Get("user", r.FormValue(":id"), &driver)
+	driverId := r.FormValue(":id")
+	ok := db.Get("user", driverId, &driver)
 	if !ok || driver.Role != "DRIVER" {
 		web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
 		return
 	}
+	var files []string
+	if fileInfos, err := ioutil.ReadDir("upload/driver/" + driverId); err == nil {
+		for _, fileInfo := range fileInfos {
+			files = append(files, fileInfo.Name())
+		}
+	}
 	tc.Render(w, r, "driver.tmpl", web.Model{
 		"driver": driver,
+		"files":  files,
 	})
 }}
 
@@ -157,6 +165,46 @@ var savedriver = web.Route{"POST", "/driver/:id", func(w http.ResponseWriter, r 
 	return
 }}
 
-func ToLowerFirst(s string) string {
-	return strings.ToLower(string(s[0])) + s[1:len(s)]
+var uploadDriverFile = web.Route{"POST", "/driver/upload", func(w http.ResponseWriter, r *http.Request) {
+	driverId := r.FormValue("id")
+	if driverId == "" {
+		log.Printf("main.go -> uploadDriverFile() -> os.MkdirAll() -> no dirver id specified")
+		uploadResponse(w, `{"status":"error","msg":"Error uploading files"}`)
+		return
+	}
+	path := "upload/driver/" + driverId + "/"
+	if err := os.MkdirAll(path, 0755); err != nil {
+		log.Printf("main.go -> uploadDriverFile() -> os.MkdirAll() -> %v\n", err)
+		uploadResponse(w, `{"status":"error","msg":"Error uploading files"}`)
+		return
+	}
+	file, handler, err := r.FormFile("file")
+	if err != nil {
+		log.Printf("main.go -> uploadDriverFile() -> r.FormFile() -> %v\n", err)
+		uploadResponse(w, `{"status":"error","msg":"Error uploading files"}`)
+		return
+	}
+	defer file.Close()
+	f, err := os.OpenFile(path+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		log.Printf("main.go -> uploadDriverFile() -> os.OpenFile() -> %v\n", err)
+		uploadResponse(w, `{"status":"error","msg":"Error uploading files"}`)
+		return
+	}
+	defer f.Close()
+	io.Copy(f, file)
+	uploadResponse(w, `{"status":"success","msg":"Successfully uploaded file"}`)
+	return
+
+}}
+
+var viewDriverFile = web.Route{"GET", "/driver/file/:id/:file", func(w http.ResponseWriter, r *http.Request) {
+	server := http.StripPrefix("/driver/file/", http.FileServer(http.Dir("upload/driver/")))
+	server.ServeHTTP(w, r)
+}}
+
+func uploadResponse(w http.ResponseWriter, msg string) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, msg)
 }

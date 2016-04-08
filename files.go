@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	mx.AddRoutes(files, filesApi)
+	mx.AddRoutes(files, filesApi, uploadApi)
 }
 
 type Node struct {
@@ -47,6 +47,27 @@ var filesApi = web.Route{"GET", "/api/files", func(w http.ResponseWriter, r *htt
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(nodes); err != nil {
+		panic(err)
+	}
+	return
+}}
+
+var uploadApi = web.Route{"GET", "/api/upload", func(w http.ResponseWriter, r *http.Request) {
+	path := r.FormValue("path")
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		panic(err)
+	}
+	var fileInfo []map[string]interface{}
+	for _, file := range files {
+		f := make(map[string]interface{})
+		f["name"] = file.Name()
+		f["size"] = file.Size()
+		fileInfo = append(fileInfo, f)
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(fileInfo); err != nil {
 		panic(err)
 	}
 	return

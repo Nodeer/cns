@@ -108,3 +108,7 @@ func GetVal(key string, v url.Values) (bool, string) {
 	}
 	return true, vs[0]
 }
+
+func ToLowerFirst(s string) string {
+	return strings.ToLower(string(s[0])) + s[1:len(s)]
+}

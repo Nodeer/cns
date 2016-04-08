@@ -10,6 +10,6 @@ var ADMIN = web.Auth{
 
 var EMPLOYEE = web.Auth{
 	Roles:    []string{"ADMIN", "EMPLOYEE"},
-	Redirect: "/login/employee",
-	Msg:      "Please register",
+	Redirect: "/login",
+	Msg:      "Please Login",
 }
