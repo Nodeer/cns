@@ -1,13 +1,16 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/cagnosolutions/adb"
 	"github.com/cagnosolutions/web"
@@ -22,14 +25,16 @@ var db *adb.DB = adb.NewDB()
 func init() {
 
 	db.AddStore("user")
+	db.AddStore("document")
 
 	mx.AddSecureRoutes(EMPLOYEE, index)
 
 	mx.AddSecureRoutes(EMPLOYEE, allCompany, viewCompany, saveCompany)
 	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee)
-	mx.AddSecureRoutes(EMPLOYEE, allDriver, uploadDriverFile, viewDriver, savedriver, viewDriverFile)
+	mx.AddSecureRoutes(EMPLOYEE, allDriver, uploadDriverFile, addDriverDocument, viewDriver, savedriver, viewDriverFile)
 
 	web.Funcs["lower"] = strings.ToLower
+	web.Funcs["size"] = PrettySize
 	tc = web.NewTmplCache()
 }
 
@@ -139,15 +144,19 @@ var viewDriver = web.Route{"GET", "/driver/:id", func(w http.ResponseWriter, r *
 		web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
 		return
 	}
-	var files []string
+	var files []map[string]interface{}
 	if fileInfos, err := ioutil.ReadDir("upload/driver/" + driverId); err == nil {
 		for _, fileInfo := range fileInfos {
-			files = append(files, fileInfo.Name())
+			var info = make(map[string]interface{})
+			info["name"] = fileInfo.Name()
+			info["size"] = fileInfo.Size()
+			files = append(files, info)
 		}
 	}
 	tc.Render(w, r, "driver.tmpl", web.Model{
 		"driver": driver,
 		"files":  files,
+		"dqfs":   DQFS,
 	})
 }}
 
@@ -203,8 +212,44 @@ var viewDriverFile = web.Route{"GET", "/driver/file/:id/:file", func(w http.Resp
 	server.ServeHTTP(w, r)
 }}
 
-func uploadResponse(w http.ResponseWriter, msg string) {
+var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.ResponseWriter, r *http.Request) {
+	driverId := r.FormValue(":id")
+	fmt.Println("driverId:", driverId)
+	var driver Driver
+	if !db.Get("user", driverId, &driver) {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, `{"status":"error", "msg":"Error adding documents"}`)
+		return
+	}
+	docIds := strings.Split(r.FormValue("docIds"), ",")
+	for _, docId := range docIds {
+		id := strconv.Itoa(int(time.Now().UnixNano()))
+		doc := Document{
+			Id:         id,
+			Name:       "dqf-" + docId,
+			DocumentId: docId,
+			Complete:   false,
+			CompanyId:  driver.CompanyId,
+			DriverId:   driver.Id,
+		}
+		db.Add("document", id, doc)
+	}
+	var docs []Document
+	db.Match("document", `"driverId":"`+driver.Id+`"`, &docs)
+	resp := make(map[string]interface{}, 0)
+	resp["status"] = "success"
+	resp["msg"] = "Successfully added documents"
+	resp["docs"] = docs
+	b, err := json.Marshal(resp)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, `{"status":"error","type":"marshal","msg":"Successfully added documents. Please refresh the page to view"}`)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, msg)
-}
+	fmt.Fprintf(w, "%s", b)
+	return
+}}

@@ -68,3 +68,28 @@ type Address struct {
 func (a Address) AddrHTML() string {
 	return a.Street + "<br>" + a.City + ",  " + a.State + " " + a.Zip
 }
+
+type Document struct {
+	Id         string `json:"id,omitempty"`
+	Name       string `json:"name,omitempty"`
+	DocumentId string `json:"documentId,omitempty"`
+	Complete   bool   `json:"complete,omitempty"`
+	Data       string `json:"data,omitempty"`
+	CompanyId  string `json:"companyId,omitempty"`
+	DriverId   string `json:"driverId,omitempty"`
+}
+
+var DQFS = [][]string{
+	[]string{"100", "Driver's Application"},
+	[]string{"180", "Certification of Violations"},
+	//[]string{"200", "Annual Inquery & Review"},
+	//[]string{"250", "Road Test Certication"},
+	[]string{"300", "Previous Driver Inquires"},
+	[]string{"400", "Drug & Alcohol Records Request"},
+	//[]string{"450", "Drug & Alcohol Certified Receipt"},
+	[]string{"500", "Certification Compliance"},
+	[]string{"600", "Confictions for a Driver Violation"},
+	[]string{"700", "New Hire Stmt On Duty Hours"},
+	[]string{"750", "Other Ompensated Work"},
+	[]string{"775", "Fair Credit Reporting Act"},
+}

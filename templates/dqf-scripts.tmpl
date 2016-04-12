@@ -1,0 +1,12 @@
+<script src="/static/js/input-tools.js"></script>
+<script src="/static/js/document.js"></script>
+<script>
+    {{ if .admin }}
+        var url = '{{ template "url" . }}/admin/driver/{{ .driver.Id }}/document/';
+    {{ else }}
+        var url = '{{ template "url" . }}/{{ .company.Slug }}/document/';
+    {{ end }}
+    var id = '{{ .document.Id }}';
+    var slug = '{{ .company.Slug }}';
+    var data = '{{ .document.Data }}';
+</script>

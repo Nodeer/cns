@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
 	"net/url"
 	"reflect"
 	"strconv"
@@ -111,4 +113,31 @@ func GetVal(key string, v url.Values) (bool, string) {
 
 func ToLowerFirst(s string) string {
 	return strings.ToLower(string(s[0])) + s[1:len(s)]
+}
+
+func PrettySize(size int64) string {
+	c := 0
+	var sizef float64 = float64(size)
+	for sizef > 1024 {
+		sizef = sizef / 1024
+		c++
+	}
+	ind := ""
+	switch c {
+	case 0:
+		ind = "B"
+	case 1:
+		ind = "KB"
+	case 2:
+		ind = "MB"
+	case 3:
+		ind = "GB"
+	}
+	return fmt.Sprintf("%.1f %s", sizef, ind)
+}
+
+func uploadResponse(w http.ResponseWriter, msg string) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, msg)
 }
