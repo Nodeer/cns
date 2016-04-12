@@ -11,6 +11,14 @@
         <link href="/static/datatables/data-tables-bootstrap.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/static/datatables/search.css" charset="utf-8">
 
+        <link href="/static/notifications/notification.css" rel="stylesheet" />
+
+        <style media="screen">
+            .clickable {
+                cursor: pointer;
+            }
+        </style>
+
     </head>
 
     <body>
@@ -78,7 +86,7 @@
                             					{{ range $dqf := .dqfs }}
                                                     <p>
                                                         DQF{{ index $dqf 0 }} - {{ index $dqf 1 }}
-                            							<button id="addDoc" data-added="0" data-docId="{{ index $dqf 0 }}" class="btn-default btn btn-xs pull-right">
+                            							<button id="addDoc" data-added="0" data-docId="{{ index $dqf 0 }}" class="btn-default btn btn-xs pull-right check">
                             								<i class="fa fa-check"></i>
                             							</button>
                             						</p>
@@ -96,26 +104,25 @@
                                 		</div>
                                         <div class="col-lg-8">
                                             <div class="table-responsive">
-                                                <table id="docs" class="table table-bordered">
+                                                <table id="docs" class="table table-bordered table-hover">
                                                     <thead>
                                                         <tr id="docsSearch" class="search">
                                                             <th>dqf</th>
-                                                            <th></th>
                                                             <th></th>
                                                         </tr>
                                                         <tr>
                                                             <th>DQF</th>
                                                             <th>Complete</th>
-                                                            <th></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         {{ $driver := .driver }}
-                                                        <tr>
-                                                            <td>DQF</td>
-                                                            <td>COMPLETE</td>
-                                                            <td></td>
-                                                        </tr>
+                                                        {{ range $doc := .docs }}
+                                                            <tr class="clickable" data-url="/document/{{ $doc.Id }}">
+                                                                <td>{{ $doc.DocumentId }}</td>
+                                                                <td>{{ $doc.Complete }}</td>
+                                                            </tr>
+                                                        {{ end }}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -128,26 +135,23 @@
                                     <div class="row m-t-10">
                                         <div class="col-lg-6">
                                             <div class="table-responsive">
-                                                <table id="file" class="table table-bordered">
+                                                <table id="file" class="table table-bordered table-hover">
                                                     <thead>
                                                         <tr id="filesSearch" class="search">
                                                             <th>name</th>
                                                             <th>size</th>
-                                                            <th></th>
                                                         </tr>
                                                         <tr>
                                                             <th>Name</th>
                                                             <th>Size</th>
-                                                            <th></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         {{ $driver := .driver }}
                                                         {{ range $file := .files }}
-                                                            <tr>
+                                                            <tr class="clickable" data-url="/driver/file/{{ $driver.Id }}/{{ $file.name }}">
                                                                 <td>{{ $file.name }}</td>
                                                                 <td>{{ size $file.size }}</td>
-                                                                <td class="text-center"><a href="/driver/file/{{ $driver.Id }}/{{ $file.name }}" target="_blank">View</a></td>
                                                             </tr>
                                                         {{ end }}
                                                     </tbody>
@@ -223,14 +227,6 @@
                                             <button class="btn btn-primary" type="submit">Save</button>
                                         </form>
                                         <br>
-
-                                        <form action="/driver/upload" method="post" class="dropzone" id="settingsDropzone">
-                                            <div class="fallback">
-                                                <input name="file" type="file" multiple />
-                                            </div>
-                                            <input type="hidden" name="id" value="{{ .driver.Id }}">
-                                        </form>
-
                                     </div>
                                 </div>
 
@@ -251,6 +247,9 @@
         <script src="/static/datatables/jquery.dataTables.min.js"></script>
         <script src="/static/datatables/dataTables.bootstrap.js"></script>
 
+        <script src="/static/notifications/notify.min.js"></script>
+        <script src="/static/notifications/notify-metro.js"></script>
+
         <script>
             $(document).ready(function() {
                 // #files
@@ -259,21 +258,17 @@
                     createImageThumbnails: false,
                     filesixeBase: 1024,
                     init: function() {
-                        this.on('success', function(file, msg) {
-                            if (msg.status !== 'success')  {
-                                alert('error');
+                        this.on('success', function(file, resp) {
+                            if (resp.status === 'success')  {
+                                renderFiles(resp.files);
+                                $.Notification.autoHideNotify('success', 'top right', resp.msg);
                                 return
                             }
-                            //alert('Successfully uploaded ' + file.name);
-                            $.ajax({
-                                url: '/api/upload?path=upload/driver/{{ .driver.Id }}',
-                                success: function(d) {
-                                    renderFiles(d);
-                                },
-                                error: function(d) {
-                                    alert('error');
-                                }
-                            });
+                            if (status === 'error' && (resp.type === 'marshal' || resp.type === 'readDir')) {
+                                $.Notification.autoHideNotify('success', 'top right', resp.msg);
+                                return
+                            }
+                            $.Notification.autoHideNotify('error', 'top right', resp.msg);
                         });
                         this.on('removedfile', function(file) {
                             alert(file.name);
@@ -288,29 +283,15 @@
                     for (var i = 0; i < files.length; i++) {
                         filesTable.row.add([
                             files[i].name,
-                            prettySize(files[i].size),
-                            '<a href="/driver/file/{{ .driver.Id }}/' + files[i].name + '" target="_blank">View</a>'
+                            prettySize(files[i].size)
                         ]);
                     }
                     filesTable.draw();
                 }
 
-                function displayFiles() {
-                    $.ajax({
-                        url: '/api/upload?path=upload/driver/{{ .driver.Id }}',
-                        success: function(d) {
-                            setFiles(d);
-                        },
-                        error: function(d) {
-                            alert('error');
-                        }
-                    });
-                }
-
                 var filesTable = $('#file').DataTable({
                     lengthMenu:[5,10,15,20],
                     "columnDefs": [
-                        { "orderable": false, "targets": [2] },
                         { "name": "name",   "targets": 0 },
                         { "name": "size",  "targets": 1 },
                     ]
@@ -389,22 +370,34 @@
 
     			$('button[id="done"]').click(function(e){
     				e.preventDefault();
-                    //var fd = new FormData();
-                    //fd.append('docIds', docId.join(','));
-                    //fd.append('id', {{ .driver.Id }});
-    				//$('input[id="docIds"]').val(docId);
-    				//$('form[id="documentForm"]').submit();
                     $.ajax({
-                        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
                         url: '/driver/document',
                         method: 'POST',
                         data: {
-                            'docIds':docId.join(','),
-                            'id': {{ .driver.Id }}
+                            docIds :docId.join(','),
+                            id: '{{ .driver.Id }}'
                         },
-                        success: function(d) {
-                            //setFiles(d);
-                            console.log(d);
+                        success: function(resp) {
+                            if (resp.status === 'success')  {
+                                renderForms(resp.docs);
+                                docId = [];
+                                $('button.check').removeClass('btn-success');
+                                $('button.check').addClass('btn-default');
+                                $('button#done').attr('disabled', 'disabled');
+        						$('button#done').text('Please Select Documents');
+                                $.Notification.autoHideNotify('success', 'top right', resp.msg);
+                                return
+                            }
+                            if (resp.status === 'error' && resp.type == 'marshal') {
+                                docId = [];
+                                $('button.check').removeClass('btn-success');
+                                $('button.check').addClass('btn-default');
+                                $('button#done').attr('disabled', 'disabled');
+        						$('button#done').text('Please Select Documents');
+                                $.Notification.confirm('success', 'top right', resp.msg);
+                                return
+                            }
+                            $.Notification.autoHideNotify('error', 'top right', resp.msg);
                         },
                         error: function(d) {
                             alert('error');
@@ -412,14 +405,22 @@
                     })
     			});
 
-                function displayForms(forms) {
-
+                function renderForms(forms) {
+                    docsTable.data = [];
+                    docsTable.rows('*').remove();
+                    for (var i = 0; i < forms.length; i++) {
+                        docsTable.row.add([
+                            forms[i].documentId,
+                            forms[i].complete
+                        ]);
+                    }
+                    docsTable.draw();
                 }
 
                 var docsTable = $('#docs').DataTable({
                     lengthMenu:[5,10,15,20],
                     "columnDefs": [
-                        { "orderable": false, "targets": [1,2] },
+                        { "orderable": false, "targets": [1] },
                         { "name": "dqf",   "targets": 0 }
                     ]
                 });
@@ -439,9 +440,99 @@
                     }
                 });
 
+                function registerTRClick() {
+                    $('tr.clickable').click(function() {
+                        window.location.href = this.getAttribute('data-url');
+                    });
+                }
+                registerTRClick();
+
     		});
 
+            !function($) {
+                "use strict";
 
+                var Notification = function() {};
+
+                //auto hide notification
+                Notification.prototype.autoHideNotify = function (style,position, title, text) {
+                    var icon = "fa fa-adjust";
+                    if(style == "error"){
+                        icon = "fa fa-exclamation";
+                    }else if(style == "warning"){
+                        icon = "fa fa-warning";
+                    }else if(style == "success"){
+                        icon = "fa fa-check";
+                    }else if(style == "info"){
+                        icon = "fa fa-question";
+                    }else{
+                        icon = "fa fa-adjust";
+                    }
+                    $.notify({
+                        title: title,
+                        text: text,
+                        image: "<i class='"+icon+"'></i>"
+                    }, {
+                        style: 'metro',
+                        className: style,
+                        globalPosition:position,
+                        showAnimation: "show",
+                        showDuration: 0,
+                        hideDuration: 0,
+                        autoHideDelay: 5000,
+                        autoHide: true,
+                        clickToHide: true
+                    });
+                },
+                //confirmation notification
+                Notification.prototype.confirm = function(style,position, title) {
+                    var icon = "fa fa-adjust";
+                    if(style == "error"){
+                        icon = "fa fa-exclamation";
+                    }else if(style == "warning"){
+                        icon = "fa fa-warning";
+                    }else if(style == "success"){
+                        icon = "fa fa-check";
+                    }else if(style == "info"){
+                        icon = "fa fa-question";
+                    }else{
+                        icon = "fa fa-adjust";
+                    }
+                    $.notify({
+                        title: title,
+                        text: '<a class="btn btn-sm btn-default yes">Reload Now</a> <a class="btn btn-sm btn-danger no">Close</a>',
+                        image: "<i class='"+icon+"'></i>"
+                    }, {
+                        style: 'metro',
+                        className: style,
+                        globalPosition:position,
+                        showAnimation: "show",
+                        showDuration: 0,
+                        hideDuration: 0,
+                        autoHide: false,
+                        clickToHide: false
+                    });
+                    //listen for click events from this style
+                    $(document).on('click', '.notifyjs-metro-base .no', function() {
+                        $(this).trigger('notify-hide');
+                    });
+                    $(document).on('click', '.notifyjs-metro-base .yes', function() {
+                        location.reload();
+                    });
+                },
+                //init - examples
+                Notification.prototype.init = function() {
+
+                },
+                //init
+                $.Notification = new Notification, $.Notification.Constructor = Notification
+            }(window.jQuery),
+
+            //initializing
+            function($) {
+                "use strict";
+                $.Notification.init()
+            }(window.jQuery);
 
         </script>
 

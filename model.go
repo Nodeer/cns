@@ -73,7 +73,7 @@ type Document struct {
 	Id         string `json:"id,omitempty"`
 	Name       string `json:"name,omitempty"`
 	DocumentId string `json:"documentId,omitempty"`
-	Complete   bool   `json:"complete,omitempty"`
+	Complete   bool   `json:"complete"`
 	Data       string `json:"data,omitempty"`
 	CompanyId  string `json:"companyId,omitempty"`
 	DriverId   string `json:"driverId,omitempty"`

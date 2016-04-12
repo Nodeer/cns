@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	mx.AddRoutes(makeUsers, upload, buttons, uploader)
+	mx.AddRoutes(makeUsers, upload, buttons, uploader, notify)
 }
 
 var makeUsers = web.Route{"GET", "/makeUsers", func(w http.ResponseWriter, r *http.Request) {
@@ -201,4 +201,8 @@ var uploader = web.Route{"POST", "/upd", func(w http.ResponseWriter, r *http.Req
 	}
 	fmt.Printf("%v\n", r.MultipartForm.File)
 	fmt.Println(r.FormValue("id"))
+}}
+
+var notify = web.Route{"GET", "/notify", func(w http.ResponseWriter, r *http.Request) {
+	tc.Render(w, r, "notification.tmpl", nil)
 }}

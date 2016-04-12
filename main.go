@@ -153,10 +153,14 @@ var viewDriver = web.Route{"GET", "/driver/:id", func(w http.ResponseWriter, r *
 			files = append(files, info)
 		}
 	}
+	var docs []Document
+	db.Match("document", `"driverId":"`+driver.Id+`"`, &docs)
+
 	tc.Render(w, r, "driver.tmpl", web.Model{
 		"driver": driver,
 		"files":  files,
 		"dqfs":   DQFS,
+		"docs":   docs,
 	})
 }}
 
@@ -178,31 +182,58 @@ var uploadDriverFile = web.Route{"POST", "/driver/upload", func(w http.ResponseW
 	driverId := r.FormValue("id")
 	if driverId == "" {
 		log.Printf("main.go -> uploadDriverFile() -> os.MkdirAll() -> no dirver id specified")
-		uploadResponse(w, `{"status":"error","msg":"Error uploading files"}`)
+		ajaxErrorResponse(w, `{"status":"error","msg":"Error uploading file"}`)
 		return
 	}
 	path := "upload/driver/" + driverId + "/"
 	if err := os.MkdirAll(path, 0755); err != nil {
 		log.Printf("main.go -> uploadDriverFile() -> os.MkdirAll() -> %v\n", err)
-		uploadResponse(w, `{"status":"error","msg":"Error uploading files"}`)
+		ajaxErrorResponse(w, `{"status":"error","msg":"Error uploading file"}`)
 		return
 	}
 	file, handler, err := r.FormFile("file")
 	if err != nil {
 		log.Printf("main.go -> uploadDriverFile() -> r.FormFile() -> %v\n", err)
-		uploadResponse(w, `{"status":"error","msg":"Error uploading files"}`)
+		ajaxErrorResponse(w, `{"status":"error","msg":"Error uploading file `+handler.Filename+`"}`)
 		return
 	}
 	defer file.Close()
 	f, err := os.OpenFile(path+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		log.Printf("main.go -> uploadDriverFile() -> os.OpenFile() -> %v\n", err)
-		uploadResponse(w, `{"status":"error","msg":"Error uploading files"}`)
+		ajaxErrorResponse(w, `{"status":"error","msg":"Error uploading file `+handler.Filename+`}`)
 		return
 	}
 	defer f.Close()
 	io.Copy(f, file)
-	uploadResponse(w, `{"status":"success","msg":"Successfully uploaded file"}`)
+
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		ajaxErrorResponse(w, `{"status":"error","msg":"Successfully uploaded file `+handler.Filename+`. Please refresh the page to view","type":"readDir"}`)
+		return
+	}
+
+	var fileInfo []map[string]interface{}
+
+	for _, file := range files {
+		f := make(map[string]interface{})
+		f["name"] = file.Name()
+		f["size"] = file.Size()
+		fileInfo = append(fileInfo, f)
+	}
+
+	resp := make(map[string]interface{}, 0)
+	resp["status"] = "success"
+	resp["msg"] = "Successfully uploaded file " + handler.Filename
+	resp["files"] = fileInfo
+	b, err := json.Marshal(resp)
+	if err != nil {
+		ajaxErrorResponse(w, `{"status":"error","msg":"Successfully uploaded file `+handler.Filename+`. Please refresh the page to view","type":"marshal"}`)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "%s", b)
 	return
 
 }}
@@ -213,13 +244,10 @@ var viewDriverFile = web.Route{"GET", "/driver/file/:id/:file", func(w http.Resp
 }}
 
 var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.ResponseWriter, r *http.Request) {
-	driverId := r.FormValue(":id")
-	fmt.Println("driverId:", driverId)
+	driverId := r.FormValue("id")
 	var driver Driver
 	if !db.Get("user", driverId, &driver) {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, `{"status":"error", "msg":"Error adding documents"}`)
+		ajaxErrorResponse(w, `{"status":"error", "msg":"Error adding documents"}`)
 		return
 	}
 	docIds := strings.Split(r.FormValue("docIds"), ",")
@@ -243,9 +271,7 @@ var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.Respon
 	resp["docs"] = docs
 	b, err := json.Marshal(resp)
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, `{"status":"error","type":"marshal","msg":"Successfully added documents. Please refresh the page to view"}`)
+		ajaxErrorResponse(w, `{"status":"error","type":"marshal","msg":"Successfully added documents. Please refresh the page to view"}`)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
