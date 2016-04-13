@@ -96,3 +96,16 @@ var DQFS = [][]string{
 	[]string{"750", "Other Ompensated Work"},
 	[]string{"775", "Fair Credit Reporting Act"},
 }
+
+type Event struct {
+	Id        string    `json:"id,omitempty"`
+	Name      string    `json:"name"`
+	Title     string    `json:"title",omitempty`
+	AllDay    bool      `json:"allDay,omitempty"`
+	Start     time.Time `json:"start"`
+	End       time.Time `json:"end,omitempty"`
+	URL       string    `json:"url,omitempty"`
+	ClassName string    `json:"className,omitempty"`
+	Editable  bool      `json:"editable"`
+	Overlap   bool      `json:"overlap,omitempty"`
+}

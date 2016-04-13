@@ -26,12 +26,15 @@ func init() {
 
 	db.AddStore("user")
 	db.AddStore("document")
+	db.AddStore("event")
 
 	mx.AddSecureRoutes(EMPLOYEE, index)
 
 	mx.AddSecureRoutes(EMPLOYEE, allCompany, viewCompany, saveCompany)
 	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee)
 	mx.AddSecureRoutes(EMPLOYEE, allDriver, uploadDriverFile, addDriverDocument, viewDriver, savedriver, viewDriverFile)
+
+	mx.AddRoutes(calendar, calendarEvents, calendarEvent)
 
 	web.Funcs["lower"] = strings.ToLower
 	web.Funcs["size"] = PrettySize
@@ -277,5 +280,49 @@ var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.Respon
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "%s", b)
+	return
+}}
+
+var calendar = web.Route{"GET", "/calendar", func(w http.ResponseWriter, r *http.Request) {
+	tc.Render(w, r, "calendar.tmpl", nil)
+	return
+}}
+
+var calendarEvents = web.Route{"GET", "/calendar/events", func(w http.ResponseWriter, r *http.Request) {
+	/*
+		var events []string
+		for i := 0; i < 5; i++ {
+			events = append(events, fmt.Sprintf(`{"title":"Event #%d","start":%q,"allDay":true}`, i, time.Now().AddDate(0, 0, i).Format(time.RFC3339)))
+		}
+	*/
+	var events []Event
+	db.All("event", &events)
+	b, err := json.Marshal(events)
+	if err != nil {
+		panic(err)
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	fmt.Fprintf(w, "%s", b)
+	return
+}}
+
+var calendarEvent = web.Route{"POST", "/calendar/event", func(w http.ResponseWriter, r *http.Request) {
+	event := Event{
+		Id:     r.FormValue("id"),
+		Title:  r.FormValue("title"),
+		AllDay: true,
+	}
+	t, err := time.Parse("2006-01-02", r.FormValue("start"))
+	if err != nil {
+		log.Println("error parsing the time...")
+		ajaxErrorResponse(w, `{"err":true,"code":500,"msg":"There was an issue saving the event to the database"}`)
+		return
+	}
+	event.Start = t
+	if !db.Add("event", event.Id, event) {
+		ajaxErrorResponse(w, `{"err":true,"code":500,"msg":"There was an issue saving the event to the database"}`)
+		return
+	}
+	ajaxErrorResponse(w, `{"err":false,"code":200,"msg":"Successfully added the event to the database"}`)
 	return
 }}
