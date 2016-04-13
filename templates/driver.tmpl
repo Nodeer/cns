@@ -31,8 +31,6 @@
             <div class="wraper container-fluid">
                 <div class="col-sm-12">
 
-                    {{ template "alerts.tmpl" . }}
-
                     <p class="lead">
                         {{ (printf "Driver: %s %s" .driver.FirstName .driver.LastName) }}
                     </p>
@@ -125,7 +123,7 @@
                                                             <tr class="clickable" data-url="/document/{{ $doc.Id }}">
                                                                 <td>{{ $doc.DocumentId }}</td>
                                                                 <td>{{ $doc.Complete }}</td>
-                                                                <td class="text-center"><button class="btn btn-danger btn-xs">Delete</button></td>
+                                                                <td class="text-center"><a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ $doc.Id }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
                                                             </tr>
                                                         {{ end }}
                                                     </tbody>
@@ -159,7 +157,7 @@
                                                             <tr class="clickable" data-url="/driver/file/{{ $driver.Id }}/{{ $file.name }}">
                                                                 <td>{{ $file.name }}</td>
                                                                 <td>{{ size $file.size }}</td>
-                                                                <td class="text-center"><button class="btn btn-danger btn-xs">Delete</button></td>
+                                                                <td class="text-center"><a data-message="Are you sure you would like to delete this file?" data-color="red" data-url="/driver/file/{{ $driver.Id}}/{{ $file.name }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
                                                             </tr>
                                                         {{ end }}
                                                     </tbody>
@@ -181,7 +179,7 @@
                                 <!-- settings -->
                                 <div id="settings" class="tab-pane">
                                     <div class="user-profile-content">
-                                        <form role="form" action="/driver/{{ .driver.Id }}" method="post">
+                                        <form id="set" role="form" action="/driver/{{ .driver.Id }}" method="post">
                                             <div class="row">
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
@@ -254,15 +252,14 @@
         <script src="/static/dropzone/dropzone.min.js"></script>
         <script src="/static/datatables/jquery.dataTables.min.js"></script>
         <script src="/static/datatables/dataTables.bootstrap.js"></script>
+        <script src="/static/js/confirm.js" charset="utf-8"></script>
 
-        <script src="/static/notifications/notify.min.js"></script>
-        <script src="/static/notifications/notify-metro.js"></script>
-        <script src="/static/notifications/notifications.js"></script>
+        {{ template "alerts.tmpl" . }}
 
         <script>
-        var selectedTable = '';
             $(document).ready(function() {
 
+                var selectedTable = '';
                 var tableState = {
                     'docsTable':'',
                     'filesTable': '',
@@ -470,7 +467,7 @@
                 });
 
                 function registerTRClick() {
-                    $('tr.clickable').click(function() {
+                    $('tr.clickable').click(function(e) {
                         window.location.href = this.getAttribute('data-url');
                     });
                 }
@@ -485,7 +482,6 @@
                 });
 
     		});
-
 
             $(document).on('click', '.notifyjs-metro-base .yes', function() {
                 location.reload();

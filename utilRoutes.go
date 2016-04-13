@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	mx.AddRoutes(makeUsers, upload, buttons, uploader, notify)
+	mx.AddRoutes(makeUsers, upload, buttons, uploader, notify, alert)
 }
 
 var makeUsers = web.Route{"GET", "/makeUsers", func(w http.ResponseWriter, r *http.Request) {
@@ -205,4 +205,8 @@ var uploader = web.Route{"POST", "/upd", func(w http.ResponseWriter, r *http.Req
 
 var notify = web.Route{"GET", "/notify", func(w http.ResponseWriter, r *http.Request) {
 	tc.Render(w, r, "notification.tmpl", nil)
+}}
+
+var alert = web.Route{"GET", "/alert", func(w http.ResponseWriter, r *http.Request) {
+	tc.Render(w, r, "sweet-alert.tmpl", nil)
 }}
