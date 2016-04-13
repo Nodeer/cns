@@ -45,6 +45,9 @@ type Driver struct {
 
 func (d Driver) FormatDOB() string {
 	ds := strings.Split(d.DOB, "-")
+	if ds[1][0] == '0' {
+		ds[1] = ds[1][1:]
+	}
 	return fmt.Sprintf("%s/%s/%s", ds[1], ds[2], ds[0])
 }
 

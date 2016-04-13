@@ -71,7 +71,7 @@
         });
     },
     //confirmation notification
-    Notification.prototype.confirm = function(style,position, title) {
+    Notification.prototype.confirm = function(style,position, title, conf) {
         var icon = "fa fa-adjust";
         if(style == "error"){
             icon = "fa fa-exclamation";
@@ -86,7 +86,7 @@
         }
         $.notify({
             title: title,
-            text: '<a class="btn btn-sm btn-default yes">Reload Now</a> <a class="btn btn-sm btn-danger no">Close</a>',
+            text: '<a class="btn btn-sm btn-default yes">' + conf + '</a> <a class="btn btn-sm btn-danger no">Close</a>',
             image: "<i class='"+icon+"'></i>"
         }, {
             style: 'metro',
@@ -100,14 +100,7 @@
         });
         //listen for click events from this style
         $(document).on('click', '.notifyjs-metro-base .no', function() {
-          //programmatically trigger propogating hide event
-          $(this).trigger('notify-hide');
-        });
-        $(document).on('click', '.notifyjs-metro-base .yes', function() {
-          //show button text
-          alert($(this).text() + " clicked!");
-          //hide notification
-          $(this).trigger('notify-hide');
+            $(this).trigger('notify-hide');
         });
     },
     //init - examples
