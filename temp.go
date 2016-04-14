@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	mx.AddRoutes(test, login, loginPost, logout)
+	mx.AddRoutes(test, login, loginPost, logout, driverDocuments)
 }
 
 var test = web.Route{"GET", "/test", func(w http.ResponseWriter, r *http.Request) {
@@ -36,4 +36,24 @@ var loginPost = web.Route{"POST", "/login", func(w http.ResponseWriter, r *http.
 var logout = web.Route{"GET", "/logout", func(w http.ResponseWriter, r *http.Request) {
 	web.Logout(w)
 	web.SetSuccessRedirect(w, r, "/login", "Successfully logged out")
+}}
+
+var driverDocuments = web.Route{"GET", "/document/:id", func(w http.ResponseWriter, r *http.Request) {
+	var document Document
+	var driver Driver
+	ok := db.Get("document", r.FormValue(":id"), &document)
+	if !ok {
+		web.SetErrorRedirect(w, r, "/", "Error, retrieving document")
+		return
+	}
+	ok = db.Get("user", document.DriverId, &driver)
+	if !ok {
+		web.SetErrorRedirect(w, r, "/", "Error, document is not associated with a driver.")
+		return
+	}
+	tc.Render(w, r, "dqf-"+document.DocumentId+".tmpl", web.Model{
+		"document": document,
+		"driver":   driver,
+	})
+	return
 }}
