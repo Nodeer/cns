@@ -32,7 +32,7 @@ func init() {
 
 	mx.AddSecureRoutes(EMPLOYEE, allCompany, viewCompany, saveCompany)
 	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee)
-	mx.AddSecureRoutes(EMPLOYEE, allDriver, uploadDriverFile, addDriverDocument, viewDriver, savedriver, viewDriverFile)
+	mx.AddSecureRoutes(EMPLOYEE, allDriver, uploadDriverFile, addDriverDocument, viewDriver, savedriver, viewDriverFile, documentDel)
 
 	mx.AddRoutes(calendar, calendarEvents, calendarEvent)
 
@@ -277,6 +277,30 @@ var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.Respon
 		ajaxErrorResponse(w, `{"status":"error","type":"marshal","msg":"Successfully added documents. Please refresh the page to view"}`)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "%s", b)
+	return
+}}
+
+var documentDel = web.Route{"POST", "/document/del/:driverId/:docId", func(w http.ResponseWriter, r *http.Request) {
+	db.Del("document", r.FormValue(":docId"))
+
+	var docs []Document
+
+	db.Match("document", `"driverId":"`+r.FormValue(":driverId")+`"`, &docs)
+
+	resp := make(map[string]interface{}, 0)
+	resp["status"] = "success"
+	resp["msg"] = "Successfully deleted document"
+	resp["docs"] = docs
+	b, err := json.Marshal(resp)
+
+	if err != nil {
+		ajaxErrorResponse(w, `{"status":"error","type":"marshal","msg":"Successfully deleted document. Please refresh the page to view"}`)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "%s", b)

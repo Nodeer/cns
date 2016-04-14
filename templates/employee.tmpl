@@ -19,9 +19,12 @@
             {{ template "nav.tmpl" . }}
 
             <div class="wraper container-fluid">
-
-                <div class="row m-t-30">
+                <div class="row">
                     <div class="col-sm-12">
+
+                        <p class="lead">
+                            {{ (printf "Employee: %s %s" .employee.FirstName .employee.LastName) }}
+                        </p>
 
                         <div class="panel panel-default p-0">
                             <div class="panel-body p-0">

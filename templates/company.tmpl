@@ -8,23 +8,13 @@
         <link href="/static/sweet-alert/sweet-alert.min.css" rel="stylesheet">
         <!-- DataTables -->
         <link href="/static/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
+
         <title>Company</title>
     </head>
     <body>
 
         {{ template "side-nav.tmpl" . }}
-
-        <style media="screen">
-            tr#search input {
-                width: 100%;
-                padding: 3px;
-                box-sizing: border-box;
-            }
-
-            tr#search th {
-                padding-right: 8px;
-            }
-        </style>
 
         <!--Main Content Start -->
         <section class="content">
@@ -32,8 +22,12 @@
             {{ template "nav.tmpl" . }}
 
             <div class="wraper container-fluid">
-                <div class="row m-t-30">
+                <div class="row">
                     <div class="col-sm-12">
+
+                        <p class="lead">
+                            {{ (printf "Company: %s" .company.Name) }}
+                        </p>
 
                         <div class="panel panel-default p-0">
                             <div class="panel-body p-0">
@@ -75,7 +69,7 @@
                                     <div id="driver" class="tab-pane">
                                         <table id="drivers" class="table table-bordered table-hover" style="background-color:white;">
                                             <thead>
-                                                <tr id="search">
+                                                <tr class="search">
                                                     <th></th>
                                                     <th>name</th>
                                                     <th>email</th>
@@ -90,7 +84,7 @@
                                             </thead>
                                             <tbody>
                                                 {{ range $driver := .drivers }}
-                                                    <tr id="{{ $driver.Id }}" class="contact" style="cursor:pointer;">
+                                                    <tr id="{{ $driver.Id }}" class="clickable" data-url="/driver/{{ $driver.Id }}">
                                                         <td>{{ $driver.Id }}</td>
                                                         <td>{{ $driver.FirstName }} {{ $driver.LastName }}</td>
                                                         <td>{{ $driver.Email }}</td>
@@ -168,6 +162,8 @@
         <script src="/static/js/jquery.scrollTo.min.js"></script>
         <script src="/static/datatables/jquery.dataTables.min.js"></script>
         <script src="/static/datatables/dataTables.bootstrap.js"></script>
+        <script src="/static/js/confirm.js" charset="utf-8"></script>
+        <script src="/static/datatables/custom.js" charset="utf-8"></script>
 
         <script type="text/javascript">
             $(document).ready(function() {
@@ -181,7 +177,7 @@
                     ]
                 });
 
-                $('#drivers tr#search th').each( function () {
+                $('#drivers tr.search th').each( function () {
                     var title = $(this).text();
                     if (title != '') {
                         $(this).html('<input id="search" data-column="' + title + '" type="text"/>');
@@ -194,10 +190,6 @@
                     if (column.search() !== this.value ) {
                         column.search(this.value).draw();
                     }
-                });
-
-                $('.contact').click(function() {
-                    window.location.href = '/driver/' + this.id;
                 });
             });
         </script>

@@ -24,17 +24,18 @@
             {{ template "nav.tmpl" . }}
 
             <div class="wraper container-fluid">
-                <div class="page-title clearfix">
-                    <div class="col-lg-3">
-                        <h3 class="title">Drivers</h3>
-                    </div>
-                </div>
+
 
                 <div class="row">
                     <div class="col-lg-12">
+
+                        <p class="lead">
+                            Drivers
+                        </p>
+
                         <table id="drivers" class="table table-bordered table-hover" style="background-color:white;">
                             <thead>
-                                <tr id="search">
+                                <tr class="search">
                                     <th></th>
                                     <th>name</th>
                                     <th>email</th>
@@ -85,7 +86,7 @@
                     ]
                 });
 
-                $('#drivers tr#search th').each( function () {
+                $('#drivers tr.search th').each( function () {
                     var title = $(this).text();
                     if (title != '') {
                         $(this).html('<input id="search" data-column="' + title + '" type="text"/>');

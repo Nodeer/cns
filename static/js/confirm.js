@@ -19,6 +19,9 @@ function Confirm() {
 }
 Confirm.prototype = {
 	color: '',
+	yes: function(btn) {
+		alert('success');
+	},
 	registerDisplay: function() {
 
 		$(document).on('click', '.confirm-action', function(e) {
@@ -33,7 +36,7 @@ Confirm.prototype = {
                 confirmButtonText: "Yes",
                 closeOnConfirm: false
             }, function(){
-                swal("Deleted!", "Your imaginary file has been deleted.", "success");
+				confirm.yes(btn);
             });
 		});
 	}
