@@ -41,9 +41,10 @@ var logout = web.Route{"GET", "/logout", func(w http.ResponseWriter, r *http.Req
 var driverDocuments = web.Route{"GET", "/document/:id", func(w http.ResponseWriter, r *http.Request) {
 	var document Document
 	var driver Driver
+	var company Company
 	ok := db.Get("document", r.FormValue(":id"), &document)
 	if !ok {
-		web.SetErrorRedirect(w, r, "/", "Error, retrieving document")
+		web.SetErrorRedirect(w, r, "/", "Error, retrieving document.")
 		return
 	}
 	ok = db.Get("user", document.DriverId, &driver)
@@ -51,9 +52,15 @@ var driverDocuments = web.Route{"GET", "/document/:id", func(w http.ResponseWrit
 		web.SetErrorRedirect(w, r, "/", "Error, document is not associated with a driver.")
 		return
 	}
+	ok = db.Get("user", document.CompanyId, &company)
+	if !ok {
+		web.SetErrorRedirect(w, r, "/", "Error, document is not associated with a company.")
+		return
+	}
 	tc.Render(w, r, "dqf-"+document.DocumentId+".tmpl", web.Model{
 		"document": document,
 		"driver":   driver,
+		"company":  company,
 	})
 	return
 }}
