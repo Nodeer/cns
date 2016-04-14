@@ -115,7 +115,7 @@
                                                         <tbody>
                                                             {{ $driver := .driver }}
                                                             {{ range $doc := .docs }}
-                                                                <tr class="clickable" data-url="/document/{{ $doc.Id }}">
+                                                                <tr class="clickable" data-url="/document/{{ $doc.Id }}" data-target="_blank">
                                                                     <td>{{ $doc.DocumentId }}</td>
                                                                     <td>{{ $doc.Complete }}</td>
                                                                     <td class="text-center"><a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ $driver.Id }}/{{ $doc.Id }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
@@ -149,7 +149,7 @@
                                                         <tbody>
                                                             {{ $driver := .driver }}
                                                             {{ range $file := .files }}
-                                                                <tr class="clickable" data-url="/driver/file/{{ $driver.Id }}/{{ $file.name }}">
+                                                                <tr class="clickable" data-url="/driver/file/{{ $driver.Id }}/{{ $file.name }}" data-target="_blank">
                                                                     <td>{{ $file.name }}</td>
                                                                     <td>{{ size $file.size }}</td>
                                                                     <td class="text-center"><a data-message="Are you sure you would like to delete this file?" data-color="red" data-url="/driver/file/{{ $driver.Id}}/{{ $file.name }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
@@ -340,7 +340,7 @@
                             '<a data-message="Are you sure you would like to delete this file?" data-color="red" data-url="/driver/file/{{ .driver.Id}}/' + files[i].name + '" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a>'
                         ]).draw().node()
                         var jRowNode = $(rowNode);
-                        jRowNode.addClass('clickable').attr('data-url', '/driver/file/{{ .driver.Id }}/' + files[i].name);
+                        jRowNode.addClass('clickable').attr('data-url', '/driver/file/{{ .driver.Id }}/' + files[i].name).attr('data-target', '_blank');
                         jRowNode.children().last().addclass('text-center');
                     }
                 }
@@ -473,7 +473,7 @@
                             '<a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ .driver.Id }}/' + forms[i].id + '" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a>'
                         ]).draw().node()
                         var jRowNode = $(rowNode);
-                        jRowNode.addClass('clickable').attr('data-url', '/document/' + forms[0].id);
+                        jRowNode.addClass('clickable').attr('data-url', '/document/' + forms[i].id).attr('data-target', '_blank');
                         jRowNode.children().last().addClass('text-center');
 
                     }
