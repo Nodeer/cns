@@ -20,7 +20,8 @@ function Confirm() {
 Confirm.prototype = {
 	color: '',
 	registerDisplay: function() {
-		$('.confirm-action').click(function(e) {
+
+		$(document).on('click', '.confirm-action', function(e) {
             e.stopPropagation();
             var btn = $(this);
             swal({

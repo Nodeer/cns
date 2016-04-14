@@ -7,3 +7,7 @@ tr.search input {
 tr.search th {
     padding-right: 8px;
 }
+
+.clickable {
+    cursor: pointer;
+}

@@ -8,7 +8,7 @@
 
         <!-- DataTables -->
         <link href="/static/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="/static/datatables/search.css" charset="utf-8">
+        <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
 
         <title>All Drivers</title>
 
@@ -49,7 +49,7 @@
                             </thead>
                             <tbody>
                                 {{ range $driver := .drivers }}
-                                    <tr id="{{ $driver.Id }}" class="contact" style="cursor:pointer;">
+                                    <tr id="{{ $driver.Id }}" class="clickable" data-url="/driver/{{ $driver.Id }}">
                                         <td>{{ $driver.Id }}</td>
                                         <td>{{ $driver.FirstName }} {{ $driver.LastName }}</td>
                                         <td>{{ $driver.Email }}</td>
@@ -71,6 +71,7 @@
 
         <script src="/static/datatables/jquery.dataTables.min.js"></script>
         <script src="/static/datatables/dataTables.bootstrap.js"></script>
+        <script src="/static/datatables/custom.js" charset="utf-8"></script>
 
         <script type="text/javascript">
             $(document).ready(function() {
@@ -97,10 +98,6 @@
                     if (column.search() !== this.value ) {
                         column.search(this.value).draw();
                     }
-                });
-
-                $('.contact').click(function() {
-                    window.location.href = '/driver/' + this.id;
                 });
             } );
         </script>

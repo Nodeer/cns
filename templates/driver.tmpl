@@ -9,13 +9,7 @@
         <link href="/static/dropzone/dropzone.css" rel="stylesheet" type="text/css" />
         <!-- DataTables -->
         <link href="/static/datatables/data-tables-bootstrap.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="/static/datatables/search.css" charset="utf-8">
-
-        <style media="screen">
-            .clickable {
-                cursor: pointer;
-            }
-        </style>
+        <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
 
     </head>
 
@@ -253,6 +247,7 @@
         <script src="/static/datatables/jquery.dataTables.min.js"></script>
         <script src="/static/datatables/dataTables.bootstrap.js"></script>
         <script src="/static/js/confirm.js" charset="utf-8"></script>
+        <script src="/static/datatables/custom.js" charset="utf-8"></script>
 
         {{ template "alerts.tmpl" . }}
 
@@ -304,12 +299,15 @@
                     filesTable.data = [];
                     filesTable.rows('*').remove();
                     for (var i = 0; i < files.length; i++) {
-                        filesTable.row.add([
+                        var rowNode = filesTable.row.add([
                             files[i].name,
-                            prettySize(files[i].size)
-                        ]);
+                            prettySize(files[i].size),
+                            '<a data-message="Are you sure you would like to delete this file?" data-color="red" data-url="/driver/file/{{ .driver.Id}}/' + files[i].name + '" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a>'
+                        ]).draw().node()
+                        var jRowNode = $(rowNode);
+                        jRowNode.addClass('clickable').attr('data-url', '/driver/file/{{ .driver.Id }}/' + files[i].name);
+                        jRowNode.children().last().addclass('text-center');
                     }
-                    filesTable.draw();
                 }
 
                 var filesTable = $('#file').DataTable({
@@ -339,7 +337,7 @@
 
                 function prettySize(size) {
                     var c = 0;
-                    while (size > 1024) {
+                    while (size >= 1024) {
                         size = size / 1024;
                         c++;
                     }
@@ -363,8 +361,8 @@
                 }
 
                 function round(n, place) {
-                    var t = 10 * place;
-                    return Math.floor(Math.round(n *t)) / t;
+                    var t = Math.pow(10, place)
+                    return Math.round(n *t) / t;
                 }
 
                 // #forms
@@ -434,12 +432,16 @@
                     docsTable.data = [];
                     docsTable.rows('*').remove();
                     for (var i = 0; i < forms.length; i++) {
-                        docsTable.row.add([
+                        var rowNode = docsTable.row.add([
                             forms[i].documentId,
-                            forms[i].complete
-                        ]);
+                            forms[i].complete,
+                            '<a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/' + forms[i].id + '" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a>'
+                        ]).draw().node()
+                        var jRowNode = $(rowNode);
+                        jRowNode.addClass('clickable').attr('data-url', '/document/' + forms[0].id + '/');
+                        jRowNode.children().last().addClass('text-center');
+
                     }
-                    docsTable.draw();
                 }
 
                 var docsTable = $('#docs').DataTable({
@@ -465,13 +467,6 @@
                         column.search(this.value).draw();
                     }
                 });
-
-                function registerTRClick() {
-                    $('tr.clickable').click(function(e) {
-                        window.location.href = this.getAttribute('data-url');
-                    });
-                }
-                registerTRClick();
 
                 $('#filter').on( 'keyup', function () {
                     if (selectedTable === 'docsTable') {

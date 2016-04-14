@@ -33,7 +33,7 @@
                 });
 
             });
-            
+
             /* initialize the calendar */
             var date = new Date();
             var d = date.getDate();
@@ -57,7 +57,7 @@
                 },
 		eventSources: ['/calendar/events','/calendar']
 	    });
-            
+
              /*Add new event*/
             $("#add_event_form").on('submit', function(ev) {
                 ev.preventDefault();
@@ -77,15 +77,19 @@
 			method: 'POST',
 			data: eventObject,
 			success: function(d) {
-				if(d.err)
-					alert('code:' + d.code + ', ' + 'msg: ' + d.msg);
+				if (d.err) {
+					//alert('code:' + d.code + ', ' + 'msg: ' + d.msg);
+                    $.Notification.autoHideNotify('error', 'top right', d.msg);
+                    return
+                }
+                $.Notification.autoHideNotify('success', 'top right', d.msg);
 			},
 			error: function() {
 				alert('some client side issue most likely...');
 			}
 		});
 		// reset form
-		this.reset();		
+		this.reset();
             });
         } else {
             alert("Calendar plugin is not installed");
@@ -95,10 +99,8 @@
     $.CalendarPage = new CalendarPage, $.CalendarPage.Constructor = CalendarPage
 }(window.jQuery),
 
-//initializing 
+//initializing
 function($) {
     "use strict";
     $.CalendarPage.init()
 }(window.jQuery);
-
-

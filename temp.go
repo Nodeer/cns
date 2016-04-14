@@ -22,7 +22,7 @@ var loginPost = web.Route{"POST", "/login", func(w http.ResponseWriter, r *http.
 	email, pass := r.FormValue("email"), r.FormValue("password")
 	var employee Employee
 	if !db.Auth("user", email, pass, &employee) {
-		web.SetErrorRedirect(w, r, "/login", "Login failed")
+		web.SetErrorRedirect(w, r, "/login", "Incorrect username or password")
 		return
 	}
 	sess := web.Login(w, r, employee.Role)
