@@ -254,264 +254,261 @@
         {{ template "alerts.tmpl" . }}
 
         <script>
-            $(document).ready(function() {
 
-                confirm.yes = function(btn) {
-                    $.ajax({
-    					method:'POST',
-    					url: btn.attr('data-url'),
-    					success: function(resp) {
-    						if (resp.status == 'success') {
-    							swal("Deleted!", resp.msg, "success");
-                                renderForms(resp.docs);
-    							return
-    						}
-    						if (status === 'error' && (resp.type === 'marshal' || resp.type === 'readDir')) {
-    							swal({
-    				                title: '',
-    				                text: resp.msg,
-    				                type: 'success',
-    				                showCancelButton: true,
-    				                confirmButtonColor: 'green',
-    				                confirmButtonText: 'Reload Now',
-    				                closeOnConfirm: false
-    				            }, function(){
-    								location.reload();
-    								return
-    							})
-    							return
-    						}
-    					},
-    					error: function() {
-    						swal("Error!", resp.msg, "error");
-    						return
-    					}
-    				});
+            confirm.yes = function(btn) {
+                $.ajax({
+					method:'POST',
+					url: btn.attr('data-url'),
+					success: function(resp) {
+						if (resp.status == 'success') {
+							swal("Deleted!", resp.msg, "success");
+                            renderForms(resp.docs);
+							return
+						}
+						if (status === 'error' && (resp.type === 'marshal' || resp.type === 'readDir')) {
+							swal({
+				                title: '',
+				                text: resp.msg,
+				                type: 'success',
+				                showCancelButton: true,
+				                confirmButtonColor: 'green',
+				                confirmButtonText: 'Reload Now',
+				                closeOnConfirm: false
+				            }, function(){
+								location.reload();
+								return
+							})
+							return
+						}
+					},
+					error: function() {
+						swal("Error!", resp.msg, "error");
+						return
+					}
+				});
+            }
+
+            var selectedTable = '';
+            var tableState = {
+                'docsTable':'',
+                'filesTable': '',
+            }
+
+            $('a.view').click(function() {
+                newTable = ($(this).attr('data-table') === undefined) ? '' : $(this).attr('data-table');
+
+                if (newTable !== selectedTable) {
+                    tableState[selectedTable] = $('input#filter').val();
+                    $('input#filter').val(tableState[newTable]);
+                    selectedTable = newTable;
                 }
+            });
 
-                var selectedTable = '';
-                var tableState = {
-                    'docsTable':'',
-                    'filesTable': '',
+            // #files
+            Dropzone.options.dropzone = false;
+            var myDropzone = new Dropzone('#dropzone', {
+                createImageThumbnails: false,
+                filesixeBase: 1024,
+                init: function() {
+                    this.on('success', function(file, resp) {
+                        if (resp.status === 'success')  {
+                            renderFiles(resp.files);
+                            $.Notification.autoHideNotify('success', 'top right', resp.msg);
+                            return
+                        }
+                        if (status === 'error' && (resp.type === 'marshal' || resp.type === 'readDir')) {
+                            $.Notification.confirm('success', 'top right', resp.msg, 'Reload Now');
+                            return
+                        }
+                        $.Notification.autoHideNotify('error', 'top right', resp.msg);
+                    });
+                    this.on('removedfile', function(file) {
+                        alert(file.name);
+
+                    });
+                },
+            });
+
+            function renderFiles(files) {
+                filesTable.data = [];
+                filesTable.rows('*').remove();
+                for (var i = 0; i < files.length; i++) {
+                    var rowNode = filesTable.row.add([
+                        files[i].name,
+                        prettySize(files[i].size),
+                        '<a data-message="Are you sure you would like to delete this file?" data-color="red" data-url="/driver/file/{{ .driver.Id}}/' + files[i].name + '" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a>'
+                    ]).draw().node()
+                    var jRowNode = $(rowNode);
+                    jRowNode.addClass('clickable').attr('data-url', '/driver/file/{{ .driver.Id }}/' + files[i].name).attr('data-target', '_blank');
+                    jRowNode.children().last().addclass('text-center');
                 }
+            }
 
-                $('a.view').click(function() {
-                    newTable = ($(this).attr('data-table') === undefined) ? '' : $(this).attr('data-table');
+            var filesTable = $('#file').DataTable({
+                "lengthMenu":[5,10,15,20],
+                "dom": 'lrtip',
+                "columnDefs": [
+                    { "orderable": false, "targets": [2] },
+                    { "name": "name",   "targets": 0 },
+                    { "name": "size",  "targets": 1 },
+                ]
+            });
 
-                    if (newTable !== selectedTable) {
-                        tableState[selectedTable] = $('input#filter').val();
-                        $('input#filter').val(tableState[newTable]);
-                        selectedTable = newTable;
+            $('#file tr#filesSearch th').each( function () {
+                var title = $(this).text();
+                if (title != '') {
+                    $(this).html('<input id="filesSearch" data-column="' + title + '" type="text"/>');
+                }
+            });
+
+            $('input#filesSearch').keyup(function() {
+                var name = $(this).attr('data-column');
+                var column = filesTable.column(name + ':name');
+                if (column.search() !== this.value ) {
+                    column.search(this.value).draw();
+                }
+            });
+
+            function prettySize(size) {
+                var c = 0;
+                while (size >= 1024) {
+                    size = size / 1024;
+                    c++;
+                }
+                var ind = '';
+                switch (c) {
+                    case 0:
+                        ind = 'B';
+                        break;
+                    case 1:
+                        ind = 'KB';
+                        break;
+                    case 2:
+                        ind = 'MB';
+                        break;
+                    case 3:
+                        ind = 'GB';
+                        break;
+                }
+                var s =+ round(size, 1);
+                return s + ' ' + ind;
+            }
+
+            function round(n, place) {
+                var t = Math.pow(10, place)
+                return Math.round(n *t) / t;
+            }
+
+            // #forms
+    		var docId = [];
+			$('button[id="addDoc"]').click(function() {
+                var b = $(this);
+                if (b.attr('data-added') == '0') {
+					docId.push(b.attr('data-docId'));
+                    b.removeClass('btn-default');
+                    b.addClass('btn-success');
+					b.attr('data-added', '1');
+					$('button[id="done"]').removeAttr('disabled');
+					$('button[id="done"]').text('Add Documents To Driver');
+				} else {
+                    var idx = docId.indexOf(b.attr('data-docId'));
+                    if (idx > -1) {
+                        docId.splice(idx, 1);
                     }
-                });
+                    b.removeClass('btn-success');
+					b.addClass('btn-default');
+					b.attr('data-added', '0');
+					if(docId.length < 1) {
+						$('button[id="done"]').attr('disabled', 'disabled');
+						$('button[id="done"]').text('Please Select Documents');
+					}
+				}
+			});
 
-                // #files
-                Dropzone.options.dropzone = false;
-                var myDropzone = new Dropzone('#dropzone', {
-                    createImageThumbnails: false,
-                    filesixeBase: 1024,
-                    init: function() {
-                        this.on('success', function(file, resp) {
-                            if (resp.status === 'success')  {
-                                renderFiles(resp.files);
-                                $.Notification.autoHideNotify('success', 'top right', resp.msg);
-                                return
-                            }
-                            if (status === 'error' && (resp.type === 'marshal' || resp.type === 'readDir')) {
-                                $.Notification.confirm('success', 'top right', resp.msg, 'Reload Now');
-                                return
-                            }
-                            $.Notification.autoHideNotify('error', 'top right', resp.msg);
-                        });
-                        this.on('removedfile', function(file) {
-                            alert(file.name);
-
-                        });
+			$('button[id="done"]').click(function(e){
+				e.preventDefault();
+                $.ajax({
+                    url: '/driver/document',
+                    method: 'POST',
+                    data: {
+                        docIds :docId.join(','),
+                        id: '{{ .driver.Id }}'
                     },
-                });
-
-                function renderFiles(files) {
-                    filesTable.data = [];
-                    filesTable.rows('*').remove();
-                    for (var i = 0; i < files.length; i++) {
-                        var rowNode = filesTable.row.add([
-                            files[i].name,
-                            prettySize(files[i].size),
-                            '<a data-message="Are you sure you would like to delete this file?" data-color="red" data-url="/driver/file/{{ .driver.Id}}/' + files[i].name + '" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a>'
-                        ]).draw().node()
-                        var jRowNode = $(rowNode);
-                        jRowNode.addClass('clickable').attr('data-url', '/driver/file/{{ .driver.Id }}/' + files[i].name).attr('data-target', '_blank');
-                        jRowNode.children().last().addclass('text-center');
-                    }
-                }
-
-                var filesTable = $('#file').DataTable({
-                    "lengthMenu":[5,10,15,20],
-                    "dom": 'lrtip',
-                    "columnDefs": [
-                        { "orderable": false, "targets": [2] },
-                        { "name": "name",   "targets": 0 },
-                        { "name": "size",  "targets": 1 },
-                    ]
-                });
-
-                $('#file tr#filesSearch th').each( function () {
-                    var title = $(this).text();
-                    if (title != '') {
-                        $(this).html('<input id="filesSearch" data-column="' + title + '" type="text"/>');
-                    }
-                });
-
-                $('input#filesSearch').keyup(function() {
-                    var name = $(this).attr('data-column');
-                    var column = filesTable.column(name + ':name');
-                    if (column.search() !== this.value ) {
-                        column.search(this.value).draw();
-                    }
-                });
-
-                function prettySize(size) {
-                    var c = 0;
-                    while (size >= 1024) {
-                        size = size / 1024;
-                        c++;
-                    }
-                    var ind = '';
-                    switch (c) {
-                        case 0:
-                            ind = 'B';
-                            break;
-                        case 1:
-                            ind = 'KB';
-                            break;
-                        case 2:
-                            ind = 'MB';
-                            break;
-                        case 3:
-                            ind = 'GB';
-                            break;
-                    }
-                    var s =+ round(size, 1);
-                    return s + ' ' + ind;
-                }
-
-                function round(n, place) {
-                    var t = Math.pow(10, place)
-                    return Math.round(n *t) / t;
-                }
-
-                // #forms
-        		var docId = [];
-    			$('button[id="addDoc"]').click(function() {
-                    var b = $(this);
-                    if (b.attr('data-added') == '0') {
-    					docId.push(b.attr('data-docId'));
-                        b.removeClass('btn-default');
-                        b.addClass('btn-success');
-    					b.attr('data-added', '1');
-    					$('button[id="done"]').removeAttr('disabled');
-    					$('button[id="done"]').text('Add Documents To Driver');
-    				} else {
-                        var idx = docId.indexOf(b.attr('data-docId'));
-                        if (idx > -1) {
-                            docId.splice(idx, 1);
+                    success: function(resp) {
+                        if (resp.status === 'success')  {
+                            renderForms(resp.docs);
+                            docId = [];
+                            $('button.check').removeClass('btn-success');
+                            $('button.check').addClass('btn-default');
+                            $('button#done').attr('disabled', 'disabled');
+    						$('button#done').text('Please Select Documents');
+                            $.Notification.autoHideNotify('success', 'top right', resp.msg);
+                            return
                         }
-                        b.removeClass('btn-success');
-    					b.addClass('btn-default');
-    					b.attr('data-added', '0');
-    					if(docId.length < 1) {
-    						$('button[id="done"]').attr('disabled', 'disabled');
-    						$('button[id="done"]').text('Please Select Documents');
-    					}
-    				}
-    			});
-
-    			$('button[id="done"]').click(function(e){
-    				e.preventDefault();
-                    $.ajax({
-                        url: '/driver/document',
-                        method: 'POST',
-                        data: {
-                            docIds :docId.join(','),
-                            id: '{{ .driver.Id }}'
-                        },
-                        success: function(resp) {
-                            if (resp.status === 'success')  {
-                                renderForms(resp.docs);
-                                docId = [];
-                                $('button.check').removeClass('btn-success');
-                                $('button.check').addClass('btn-default');
-                                $('button#done').attr('disabled', 'disabled');
-        						$('button#done').text('Please Select Documents');
-                                $.Notification.autoHideNotify('success', 'top right', resp.msg);
-                                return
-                            }
-                            if (resp.status === 'error' && resp.type == 'marshal') {
-                                docId = [];
-                                $('button.check').removeClass('btn-success');
-                                $('button.check').addClass('btn-default');
-                                $('button#done').attr('disabled', 'disabled');
-        						$('button#done').text('Please Select Documents');
-                                $.Notification.confirm('success', 'top right', resp.msg, 'Reload Now');
-                                return
-                            }
-                            $.Notification.autoHideNotify('error', 'top right', resp.msg);
-                        },
-                        error: function(d) {
-                            alert('error');
+                        if (resp.status === 'error' && resp.type == 'marshal') {
+                            docId = [];
+                            $('button.check').removeClass('btn-success');
+                            $('button.check').addClass('btn-default');
+                            $('button#done').attr('disabled', 'disabled');
+    						$('button#done').text('Please Select Documents');
+                            $.Notification.confirm('success', 'top right', resp.msg, 'Reload Now');
+                            return
                         }
-                    })
-    			});
-
-                function renderForms(forms) {
-                    docsTable.data = [];
-                    docsTable.rows('*').remove();
-                    for (var i = 0; i < forms.length; i++) {
-                        var rowNode = docsTable.row.add([
-                            forms[i].documentId,
-                            forms[i].complete,
-                            '<a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ .driver.Id }}/' + forms[i].id + '" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a>'
-                        ]).draw().node()
-                        var jRowNode = $(rowNode);
-                        jRowNode.addClass('clickable').attr('data-url', '/document/' + forms[i].id).attr('data-target', '_blank');
-                        jRowNode.children().last().addClass('text-center');
-
+                        $.Notification.autoHideNotify('error', 'top right', resp.msg);
+                    },
+                    error: function(d) {
+                        alert('error');
                     }
+                })
+			});
+
+            function renderForms(forms) {
+                docsTable.data = [];
+                docsTable.rows().remove().draw();
+                for (var i = 0; i < forms.length; i++) {
+                    var rowNode = docsTable.row.add([
+                        forms[i].documentId,
+                        forms[i].complete,
+                        '<a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ .driver.Id }}/' + forms[i].id + '" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a>'
+                    ]).draw().node()
+                    var jRowNode = $(rowNode);
+                    jRowNode.addClass('clickable').attr('data-url', '/document/' + forms[i].id).attr('data-target', '_blank');
+                    jRowNode.children().last().addClass('text-center');
+
                 }
+            }
 
-                var docsTable = $('#docs').DataTable({
-                    "lengthMenu":[5,10,15,20],
-                    "dom": 'lrtip',
-                    "columnDefs": [
-                        { "orderable": false, "targets": [1,2] },
-                        { "name": "dqf",   "targets": 0 }
-                    ]
-                });
+            var docsTable = $('#docs').DataTable({
+                "lengthMenu":[5,10,15,20],
+                "dom": 'lrtip',
+                "columnDefs": [
+                    { "orderable": false, "targets": [1,2] },
+                    { "name": "dqf",   "targets": 0 }
+                ]
+            });
 
-                $('#docs tr#docsSearch th').each( function () {
-                    var title = $(this).text();
-                    if (title != '') {
-                        $(this).html('<input id="docsSearch" data-column="' + title + '" type="text"/>');
-                    }
-                });
+            $('#docs tr#docsSearch th').each( function () {
+                var title = $(this).text();
+                if (title != '') {
+                    $(this).html('<input id="docsSearch" data-column="' + title + '" type="text"/>');
+                }
+            });
 
-                $('input#docsSearch').keyup(function() {
-                    var name = $(this).attr('data-column');
-                    var column = docsTable.column(name + ':name');
-                    if (column.search() !== this.value ) {
-                        column.search(this.value).draw();
-                    }
-                });
+            $('input#docsSearch').keyup(function() {
+                var name = $(this).attr('data-column');
+                var column = docsTable.column(name + ':name');
+                if (column.search() !== this.value ) {
+                    column.search(this.value).draw();
+                }
+            });
 
-                $('#filter').on( 'keyup', function () {
-                    if (selectedTable === 'docsTable') {
-                        docsTable.search( this.value ).draw();
-                    } else if (selectedTable === 'filesTable') {
-                        filesTable.search( this.value ).draw();
-                    }
-                });
-
-    		});
+            $('#filter').on( 'keyup', function () {
+                if (selectedTable === 'docsTable') {
+                    docsTable.search( this.value ).draw();
+                } else if (selectedTable === 'filesTable') {
+                    filesTable.search( this.value ).draw();
+                }
+            });
 
             $(document).on('click', '.notifyjs-metro-base .yes', function() {
                 location.reload();
