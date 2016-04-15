@@ -5,15 +5,11 @@
         <title>DQF-400</title>
     </head>
     <body>
-        <div class="row">
-           <div class="col-lg-12">
-               <div id="invalidMsg" class="hide alert alert-danger alert-dismissable">
-                   INVALID: Document is not filled out completely.
-               </div>
-           </div>
-        </div>
+        <div class="container-fluid">
 
-        <div class="row">
+            {{ template "dqf-warning.tmpl" . }}
+
+            <div class="row">
         		<div class="col-lg-12">
         			<legend>Request for Drug and Alcohol Records<span class="pull-right">DQF 400</span></legend>
         			<div><strong>Section A.</strong> To be completed by the new employer, signed by the employee, and transmitted to the previous employer:</div>
@@ -310,15 +306,17 @@
         		</div>
         	{{ end }}
 
-        <div class="row">
-            <div class="col-lg-1 col-lg-offset-9">
-                <button class="btn btn-primary" type="button" name="button" id="save" >Save</button>
+            <div class="row">
+                <div class="col-lg-1 col-lg-offset-9">
+                    <button class="btn btn-primary" type="button" name="button" id="save" >Save</button>
+                </div>
+                <div class="col-lg-1">
+                    <button class="btn btn-success" type="button" name="button" id="complete" >Complete</button>
+                </div>
             </div>
-            <div class="col-lg-1">
-                <button class="btn btn-success" type="button" name="button" id="complete" >Complete</button>
-            </div>
+            <br/><br/>
+
         </div>
-        <br/><br/>
 
         {{ template "dqf-scripts.tmpl" . }}
 

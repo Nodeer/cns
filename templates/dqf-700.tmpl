@@ -5,15 +5,12 @@
         <title>DQF-700</title>
     </head>
     <body>
-        <div class="row">
-           <div class="col-lg-12">
-               <div id="invalidMsg" class="hide alert alert-danger alert-dismissable">
-                   INVALID: Document is not filled out completely.
-               </div>
-           </div>
-        </div>
 
-        <div class="row">
+        <div class="container-fluid">
+
+            {{ template "dqf-warning.tmpl" . }}
+
+            <div class="row">
         		<div class="col-lg-12">
         			<legend>Certification of Violations<span class="pull-right">DQF 700</span></legend>
         			<div>
@@ -174,15 +171,17 @@
         		</div>
         	</div>
 
-        <div class="row">
-            <div class="col-lg-1 col-lg-offset-9">
-                <button class="btn btn-primary" type="button" name="button" id="save" >Save</button>
+            <div class="row">
+                <div class="col-lg-1 col-lg-offset-9">
+                    <button class="btn btn-primary" type="button" name="button" id="save" >Save</button>
+                </div>
+                <div class="col-lg-1">
+                    <button class="btn btn-success" type="button" name="button" id="complete" >Complete</button>
+                </div>
             </div>
-            <div class="col-lg-1">
-                <button class="btn btn-success" type="button" name="button" id="complete" >Complete</button>
-            </div>
+            <br/><br/>
+
         </div>
-        <br/><br/>
 
         {{ template "dqf-scripts.tmpl" . }}
 

@@ -99,6 +99,15 @@
                                                         <label>Zip</label>
                                                         <input type="text" value="{{ .employee.Zip }}" name="address.Zip" class="form-control">
                                                     </div>
+                                                    <div class="form-group">
+                                                        <label>Home Page</label>
+                                                        <select class="form-control" name="home">
+                                                            <option {{ if eq .employee.Home "/company" }}selected {{ end }}value="/company">Company</option>
+                                                            <option {{ if eq .employee.Home "/employee" }}selected {{ end }}value="/employee">Employee</option>
+                                                            <option {{ if eq .employee.Home "/driver" }}selected {{ end }}value="/driver">Driver</option>
+                                                            <option {{ if eq .employee.Home "/calendar" }}selected {{ end }}value="/calendar">Calendar</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

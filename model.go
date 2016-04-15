@@ -20,6 +20,7 @@ type Employee struct {
 	FirstName string `json:"firstName,omitempty"`
 	LastName  string `json:"lastName,omitempty"`
 	Phone     string `json:"phone,omitempty"`
+	Home      string `json:"home,omitempty"`
 	Address
 }
 

@@ -35,7 +35,7 @@
 
                         <table id="drivers" class="table table-bordered table-hover" style="background-color:white;">
                             <thead>
-                                <tr class="search">
+                                <tr id="search">
                                     <th></th>
                                     <th>name</th>
                                     <th>email</th>
@@ -75,9 +75,9 @@
         <script src="/static/datatables/custom.js" charset="utf-8"></script>
 
         <script type="text/javascript">
-            $(document).ready(function() {
                 var table = $('#drivers').DataTable({
-                    lengthMenu:[10,15,20],
+                    "lengthMenu":[10,15,20],
+                    "dom": 'lrtip',
                     "columnDefs": [
                         { "orderable": false, "targets": [3] },
                         { "name": "email",   "targets": 2 },
@@ -86,21 +86,6 @@
                     ]
                 });
 
-                $('#drivers tr.search th').each( function () {
-                    var title = $(this).text();
-                    if (title != '') {
-                        $(this).html('<input id="search" data-column="' + title + '" type="text"/>');
-                    }
-                });
-
-                $('input#search').keyup(function() {
-                    var name = $(this).attr('data-column');
-                    var column = table.column(name + ':name');
-                    if (column.search() !== this.value ) {
-                        column.search(this.value).draw();
-                    }
-                });
-            } );
         </script>
 
     </body>

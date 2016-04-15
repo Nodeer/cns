@@ -1,10 +1,10 @@
-tr.search input {
+tr#search input {
     width: 100%;
     padding: 3px;
     box-sizing: border-box;
 }
 
-tr.search th {
+tr#search th {
     padding-right: 8px;
 }
 

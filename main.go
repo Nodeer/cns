@@ -28,10 +28,12 @@ func init() {
 	db.AddStore("document")
 	db.AddStore("event")
 
+	mx.AddRoutes(login, loginPost, logout, driverDocuments)
+
 	mx.AddSecureRoutes(EMPLOYEE, index)
 
 	mx.AddSecureRoutes(EMPLOYEE, allCompany, viewCompany, saveCompany)
-	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee)
+	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee, settings)
 	mx.AddSecureRoutes(EMPLOYEE, allDriver, uploadDriverFile, addDriverDocument, viewDriver, savedriver, viewDriverFile, delDriverFile, documentDel)
 
 	mx.AddRoutes(calendar, calendarEvents, calendarEvent)
@@ -49,6 +51,34 @@ func main() {
 // current route controllers
 var index = web.Route{"GET", "/", func(w http.ResponseWriter, r *http.Request) {
 	tc.Render(w, r, "index.tmpl", web.Model{})
+}}
+
+var login = web.Route{"GET", "/login", func(w http.ResponseWriter, r *http.Request) {
+	tc.Render(w, r, "login.tmpl", web.Model{})
+}}
+
+var loginPost = web.Route{"POST", "/login", func(w http.ResponseWriter, r *http.Request) {
+	email, pass := r.FormValue("email"), r.FormValue("password")
+	var employee Employee
+	if !db.Auth("user", email, pass, &employee) {
+		web.SetErrorRedirect(w, r, "/login", "Incorrect username or password")
+		return
+	}
+	sess := web.Login(w, r, employee.Role)
+	sess["id"] = employee.Id
+	sess["email"] = employee.Email
+	web.PutMultiSess(w, r, sess)
+	redirect := "/company"
+	if employee.Home != "" {
+		redirect = employee.Home
+	}
+	web.SetSuccessRedirect(w, r, redirect, "Welcome "+employee.FirstName)
+	return
+}}
+
+var logout = web.Route{"GET", "/logout", func(w http.ResponseWriter, r *http.Request) {
+	web.Logout(w)
+	web.SetSuccessRedirect(w, r, "/login", "Successfully logged out")
 }}
 
 var allEmployee = web.Route{"GET", "/employee", func(w http.ResponseWriter, r *http.Request) {
@@ -72,6 +102,10 @@ var viewEmployee = web.Route{"GET", "/employee/:id", func(w http.ResponseWriter,
 	tc.Render(w, r, "employee.tmpl", web.Model{
 		"employee": employee,
 	})
+}}
+
+var settings = web.Route{"GET", "/settings", func(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/employee/"+web.GetSess(r, "id").(string), 303)
 }}
 
 var saveEmployee = web.Route{"POST", "/employee/:id", func(w http.ResponseWriter, r *http.Request) {
@@ -382,5 +416,32 @@ var calendarEvent = web.Route{"POST", "/calendar/event", func(w http.ResponseWri
 		return
 	}
 	ajaxErrorResponse(w, `{"err":false,"code":200,"msg":"Successfully added the event to the database"}`)
+	return
+}}
+
+var driverDocuments = web.Route{"GET", "/document/:id", func(w http.ResponseWriter, r *http.Request) {
+	var document Document
+	var driver Driver
+	var company Company
+	ok := db.Get("document", r.FormValue(":id"), &document)
+	if !ok {
+		web.SetErrorRedirect(w, r, "/", "Error, retrieving document.")
+		return
+	}
+	ok = db.Get("user", document.DriverId, &driver)
+	if !ok {
+		web.SetErrorRedirect(w, r, "/", "Error, document is not associated with a driver.")
+		return
+	}
+	ok = db.Get("user", document.CompanyId, &company)
+	if !ok {
+		web.SetErrorRedirect(w, r, "/", "Error, document is not associated with a company.")
+		return
+	}
+	tc.Render(w, r, "dqf-"+document.DocumentId+".tmpl", web.Model{
+		"document": document,
+		"driver":   driver,
+		"company":  company,
+	})
 	return
 }}

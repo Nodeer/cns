@@ -32,7 +32,7 @@
 
                         <table id="employees" class="table table-bordered table-hover" style="background-color:white;">
                             <thead>
-                                <tr class="search">
+                                <tr id="search">
                                     <th></th>
                                     <th>name</th>
                                     <th>email</th>
@@ -73,9 +73,9 @@
 
 
         <script type="text/javascript">
-            $(document).ready(function() {
                 var table = $('#employees').DataTable({
-                    lengthMenu:[10,15,20],
+                    "lengthMenu":[10,15,20],
+                    "dom": 'lrtip',
                     "columnDefs": [
                         { "orderable": false, "targets": [3] },
                         { "name": "name",  "targets": 1 },
@@ -83,22 +83,6 @@
                         { "name": "phone",   "targets": 3 },
                     ]
                 });
-
-                $('#employees tr.search th').each( function () {
-                    var title = $(this).text();
-                    if (title != '') {
-                        $(this).html('<input id="search" data-column="' + title + '" type="text"/>');
-                    }
-                } );
-
-                $('input#search').keyup(function() {
-                    var name = $(this).attr('data-column');
-                    var column = table.column(name + ':name');
-                    if (column.search() !== this.value ) {
-                        column.search(this.value).draw();
-                    }
-                });
-            } );
         </script>
 
     </body>

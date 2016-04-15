@@ -101,7 +101,7 @@
                                                 <div class="table-responsive">
                                                     <table id="docsTable" class="table table-bordered table-hover">
                                                         <thead>
-                                                            <tr id="search" class="search">
+                                                            <tr id="search">
                                                                 <th>dqf</th>
                                                                 <th></th>
                                                                 <th></th>
@@ -280,12 +280,6 @@
                 }
             });
 
-            $('#filter').on( 'keyup', function () {
-                if (table !== undefined && table !== {}) {
-                    table.search( this.value ).draw();
-                }
-            });
-
             tableState['docsTable']['table'] = $('#docsTable').DataTable({
                 "lengthMenu":[5,10,15,20],
                 "dom": 'lrtip',
@@ -303,21 +297,6 @@
                     { "name": "name",   "targets": 0 },
                     { "name": "size",  "targets": 1 },
                 ]
-            });
-
-            $('tr#search th').each( function () {
-                var title = $(this).text();
-                if (title != '') {
-                    $(this).html('<input id="columnSearch" data-column="' + title + '" type="text"/>');
-                }
-            });
-
-            $('input#columnSearch').keyup(function() {
-                var name = $(this).attr('data-column');
-                var column = table.column(name + ':name');
-                if (column.search() !== this.value ) {
-                    column.search(this.value).draw();
-                }
             });
 
             function renderTable(data) {
@@ -390,7 +369,7 @@
                     },
                     success: function(resp) {
                         if (resp.status === 'success')  {
-                            renderTable(resp.docs);
+                            renderTable(resp.data);
                             docId = [];
                             $('button.check').removeClass('btn-success');
                             $('button.check').addClass('btn-default');
@@ -423,8 +402,7 @@
                 init: function() {
                     this.on('success', function(file, resp) {
                         if (resp.status === 'success')  {
-                            renderTable
-                            (resp.files);
+                            renderTable(resp.data);
                             $.Notification.autoHideNotify('success', 'top right', resp.msg);
                             return
                         }
@@ -486,8 +464,7 @@
 							return
 						}
 						if (resp.status === 'error' && (resp.type === 'marshal' || resp.type === 'readDir')) {
-                            console.log(resp.type);
-							swal({
+                            swal({
 				                title: '',
 				                text: resp.msg,
 				                type: 'success',
@@ -505,7 +482,7 @@
     					return
 					},
 					error: function() {
-						swal("Error!", resp.msg, "error");
+						swal("Error!", 'Error deleteing. Please try again', "error");
 						return
 					}
 				});
