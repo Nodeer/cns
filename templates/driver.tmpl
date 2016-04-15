@@ -33,15 +33,15 @@
                         <div class="panel panel-default p-0">
                             <div class="panel-body p-0">
                                 <ul class="nav nav-tabs profile-tabs">
-                                    <li class="active"><a class="view" data-toggle="tab" href="#info">Information</a></li>
-                                    <li><a class="view" data-table="docsTable" data-toggle="tab" href="#forms">Forms</a></li>
-                                    <li><a class="view" data-table="filesTable" data-toggle="tab" href="#files">Uploaded Files</a></li>
-                                    <li><a class="view" data-toggle="tab" href="#settings">Settings</a></li>
+                                    <li class="active"><a class="view" data-toggle="tab" href="#infoTab">Information</a></li>
+                                    <li><a class="view" data-table="docsTable" data-toggle="tab" href="#docsTab">Forms</a></li>
+                                    <li><a class="view" data-table="filesTable" data-toggle="tab" href="#filesTab">Uploaded Files</a></li>
+                                    <li><a class="view" data-toggle="tab" href="#settingsTab">Settings</a></li>
                                 </ul>
 
                                 <div class="tab-content m-0">
 
-                                    <div id="info" class="tab-pane active">
+                                    <div id="infoTab" class="tab-pane active">
                                         <div class="profile-desk">
                                             <h1>{{ .driver.FirstName }} {{ .driver.LastName}}</h1>
 
@@ -73,11 +73,11 @@
                                         </div>
                                     </div>
 
-                                    <div id="forms" class="tab-pane">
+                                    <div id="docsTab" class="tab-pane">
                                         <div class="row m-t-10">
                                             <div class="col-lg-4">
                                 				<h2>Add Documents</h2>
-                                				<div id="documents" class="list-group">
+                                				<div id="docs" class="list-group">
                                 					{{ range $dqf := .dqfs }}
                                                         <p>
                                                             DQF{{ index $dqf 0 }} - {{ index $dqf 1 }}
@@ -87,7 +87,7 @@
                                 						</p>
                                 					{{ end }}
                                                     <p>
-                                						<form id="documentForm" class="test-center" role="form" method="post" action="/admin/driver/{{ .driver.Id }}/document">
+                                						<form id="documentForm" class="text-center" role="form" method="post" action="/admin/driver/{{ .driver.Id }}/document">
                                 							<input type="hidden"  id="docIds" name="docIds">
                                                             <input type="hidden" name="id" value="{{ .driver.Id }}">
                                 							<button id="done" class="btn btn-md btn-primary btn-block" type="submit" disabled="disabled">
@@ -99,9 +99,9 @@
                                     		</div>
                                             <div class="col-lg-8">
                                                 <div class="table-responsive">
-                                                    <table id="docs" class="table table-bordered table-hover">
+                                                    <table id="docsTable" class="table table-bordered table-hover">
                                                         <thead>
-                                                            <tr id="docsSearch" class="search">
+                                                            <tr id="search" class="search">
                                                                 <th>dqf</th>
                                                                 <th></th>
                                                                 <th></th>
@@ -129,13 +129,13 @@
                                     </div>
 
                                     <!-- profile -->
-                                    <div id="files" class="tab-pane">
+                                    <div id="filesTab" class="tab-pane">
                                         <div class="row m-t-10">
                                             <div class="col-lg-6">
                                                 <div class="table-responsive">
-                                                    <table id="file" class="table table-bordered table-hover">
+                                                    <table id="filesTable" class="table table-bordered table-hover">
                                                         <thead>
-                                                            <tr id="filesSearch" class="search">
+                                                            <tr id="search" class="search">
                                                                 <th>name</th>
                                                                 <th>size</th>
                                                                 <th></th>
@@ -172,7 +172,7 @@
                                     </div>
 
                                     <!-- settings -->
-                                    <div id="settings" class="tab-pane">
+                                    <div id="settingsTab" class="tab-pane">
                                         <div class="user-profile-content">
                                             <form id="set" role="form" action="/driver/{{ .driver.Id }}" method="post">
                                                 <div class="row">
@@ -255,6 +255,268 @@
 
         <script>
 
+            var selectedTable = '';
+            var table = {};
+            var tableState = {
+                'docsTable': {
+                    'table':{},
+                    'search':''
+                },
+                'filesTable': {
+                    'table':{},
+                    'search':''
+                }
+            }
+
+            $('a.view').click(function() {
+                newTable = $(this).attr('data-table');
+                if (newTable !== selectedTable && newTable !== undefined) {
+                    if (selectedTable !== '') {
+                        tableState[selectedTable]['search'] = $('input#filter').val();
+                    }
+                    $('input#filter').val(tableState[newTable]['search']);
+                    table = tableState[newTable]['table'];
+                    selectedTable = newTable;
+                }
+            });
+
+            $('#filter').on( 'keyup', function () {
+                if (table !== undefined && table !== {}) {
+                    table.search( this.value ).draw();
+                }
+            });
+
+            tableState['docsTable']['table'] = $('#docsTable').DataTable({
+                "lengthMenu":[5,10,15,20],
+                "dom": 'lrtip',
+                "columnDefs": [
+                    { "orderable": false, "targets": [1,2] },
+                    { "name": "dqf",   "targets": 0 }
+                ]
+            });
+
+            tableState['filesTable']['table'] = $('#filesTable').DataTable({
+                "lengthMenu":[5,10,15,20],
+                "dom": 'lrtip',
+                "columnDefs": [
+                    { "orderable": false, "targets": [2] },
+                    { "name": "name",   "targets": 0 },
+                    { "name": "size",  "targets": 1 },
+                ]
+            });
+
+            $('tr#search th').each( function () {
+                var title = $(this).text();
+                if (title != '') {
+                    $(this).html('<input id="columnSearch" data-column="' + title + '" type="text"/>');
+                }
+            });
+
+            $('input#columnSearch').keyup(function() {
+                var name = $(this).attr('data-column');
+                var column = table.column(name + ':name');
+                if (column.search() !== this.value ) {
+                    column.search(this.value).draw();
+                }
+            });
+
+            function renderTable(data) {
+                table.data = [];
+                table.rows('*').remove().draw();
+                for (var i = 0; i < data.length; i++) {
+                    if (selectedTable === 'docsTable') {
+                        renderDocRow(data[i]);
+                    } else if (selectedTable === 'filesTable') {
+                        renderFileRow(data[i]);
+                    }
+                }
+            }
+
+            function renderDocRow(doc) {
+                var rowNode = table.row.add([
+                    doc.documentId,
+                    doc.complete,
+                    '<a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ .driver.Id }}/' + doc.id + '" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a>'
+                ]).draw().node();
+                var jRowNode = $(rowNode);
+                jRowNode.addClass('clickable').attr('data-url', '/document/' + doc.id).attr('data-target', '_blank');
+                jRowNode.children().last().addClass('text-center');
+            }
+
+            function renderFileRow(file) {
+                var rowNode = table.row.add([
+                    file.name,
+                    prettySize(file.size),
+                    '<a data-message="Are you sure you would like to delete this file?" data-color="red" data-url="/driver/file/{{ .driver.Id }}/' + file.name + '" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a>'
+                ]).draw().node();
+                var jRowNode = $(rowNode);
+                jRowNode.addClass('clickable').attr('data-url', '/driver/file/{{ .driver.Id }}/' + file.name).attr('data-target', '_blank');
+                jRowNode.children().last().addClass('text-center');
+            }
+
+            var docId = [];
+			$('button[id="addDoc"]').click(function() {
+                var b = $(this);
+                if (b.attr('data-added') == '0') {
+					docId.push(b.attr('data-docId'));
+                    b.removeClass('btn-default');
+                    b.addClass('btn-success');
+					b.attr('data-added', '1');
+					$('button[id="done"]').removeAttr('disabled');
+					$('button[id="done"]').text('Add Documents To Driver');
+				} else {
+                    var idx = docId.indexOf(b.attr('data-docId'));
+                    if (idx > -1) {
+                        docId.splice(idx, 1);
+                    }
+                    b.removeClass('btn-success');
+					b.addClass('btn-default');
+					b.attr('data-added', '0');
+					if(docId.length < 1) {
+						$('button[id="done"]').attr('disabled', 'disabled');
+						$('button[id="done"]').text('Please Select Documents');
+					}
+				}
+			});
+
+            $('button[id="done"]').click(function(e){
+				e.preventDefault();
+                $.ajax({
+                    url: '/driver/document',
+                    method: 'POST',
+                    data: {
+                        docIds :docId.join(','),
+                        id: '{{ .driver.Id }}'
+                    },
+                    success: function(resp) {
+                        if (resp.status === 'success')  {
+                            renderTable(resp.docs);
+                            docId = [];
+                            $('button.check').removeClass('btn-success');
+                            $('button.check').addClass('btn-default');
+                            $('button#done').attr('disabled', 'disabled');
+    						$('button#done').text('Please Select Documents');
+                            $.Notification.autoHideNotify('success', 'top right', resp.msg);
+                            return
+                        }
+                        if (resp.status === 'error' && resp.type == 'marshal') {
+                            docId = [];
+                            $('button.check').removeClass('btn-success');
+                            $('button.check').addClass('btn-default');
+                            $('button#done').attr('disabled', 'disabled');
+    						$('button#done').text('Please Select Documents');
+                            $.Notification.confirm('success', 'top right', resp.msg, 'Reload Now');
+                            return
+                        }
+                        $.Notification.autoHideNotify('error', 'top right', resp.msg);
+                    },
+                    error: function(d) {
+                        alert('error');
+                    }
+                })
+			});
+
+            Dropzone.options.dropzone = false;
+            var myDropzone = new Dropzone('#dropzone', {
+                createImageThumbnails: false,
+                filesixeBase: 1024,
+                init: function() {
+                    this.on('success', function(file, resp) {
+                        if (resp.status === 'success')  {
+                            renderTable
+                            (resp.files);
+                            $.Notification.autoHideNotify('success', 'top right', resp.msg);
+                            return
+                        }
+                        if (status === 'error' && (resp.type === 'marshal' || resp.type === 'readDir')) {
+                            $.Notification.confirm('success', 'top right', resp.msg, 'Reload Now');
+                            return
+                        }
+                        $.Notification.autoHideNotify('error', 'top right', resp.msg);
+                    });
+                    this.on('removedfile', function(file) {
+                        alert(file.name);
+
+                    });
+                },
+            });
+
+            function prettySize(size) {
+                var c = 0;
+                while (size >= 1024) {
+                    size = size / 1024;
+                    c++;
+                }
+                var ind = '';
+                switch (c) {
+                    case 0:
+                        ind = 'B';
+                        break;
+                    case 1:
+                        ind = 'KB';
+                        break;
+                    case 2:
+                        ind = 'MB';
+                        break;
+                    case 3:
+                        ind = 'GB';
+                        break;
+                }
+                var s =+ round(size, 1);
+                return s + ' ' + ind;
+            }
+
+            function round(n, place) {
+                var t = Math.pow(10, place)
+                return Math.round(n *t) / t;
+            }
+
+            $(document).on('click', '.notifyjs-metro-base .yes', function() {
+                location.reload();
+            });
+
+            confirm.yes = function(btn) {
+                $.ajax({
+					method:'POST',
+					url: btn.attr('data-url'),
+					success: function(resp) {
+						if (resp.status == 'success') {
+							swal("Deleted!", resp.msg, "success");
+                            renderTable(resp.data);
+							return
+						}
+						if (resp.status === 'error' && (resp.type === 'marshal' || resp.type === 'readDir')) {
+                            console.log(resp.type);
+							swal({
+				                title: '',
+				                text: resp.msg,
+				                type: 'success',
+				                showCancelButton: true,
+				                confirmButtonColor: 'green',
+				                confirmButtonText: 'Reload Now',
+				                closeOnConfirm: false
+				            }, function(){
+								location.reload();
+								return
+							})
+							return
+						}
+    					swal("Error!", resp.msg, "error");
+    					return
+					},
+					error: function() {
+						swal("Error!", resp.msg, "error");
+						return
+					}
+				});
+            }
+
+
+
+
+
+
+            /*
             confirm.yes = function(btn) {
                 $.ajax({
 					method:'POST',
@@ -513,6 +775,7 @@
             $(document).on('click', '.notifyjs-metro-base .yes', function() {
                 location.reload();
             });
+            */
 
         </script>
 

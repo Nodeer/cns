@@ -32,7 +32,7 @@ func init() {
 
 	mx.AddSecureRoutes(EMPLOYEE, allCompany, viewCompany, saveCompany)
 	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee)
-	mx.AddSecureRoutes(EMPLOYEE, allDriver, uploadDriverFile, addDriverDocument, viewDriver, savedriver, viewDriverFile, documentDel)
+	mx.AddSecureRoutes(EMPLOYEE, allDriver, uploadDriverFile, addDriverDocument, viewDriver, savedriver, viewDriverFile, delDriverFile, documentDel)
 
 	mx.AddRoutes(calendar, calendarEvents, calendarEvent)
 
@@ -181,6 +181,67 @@ var savedriver = web.Route{"POST", "/driver/:id", func(w http.ResponseWriter, r 
 	return
 }}
 
+var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.ResponseWriter, r *http.Request) {
+	driverId := r.FormValue("id")
+	var driver Driver
+	if !db.Get("user", driverId, &driver) {
+		ajaxErrorResponse(w, `{"status":"error", "msg":"Error adding documents"}`)
+		return
+	}
+	docIds := strings.Split(r.FormValue("docIds"), ",")
+	for _, docId := range docIds {
+		id := strconv.Itoa(int(time.Now().UnixNano()))
+		doc := Document{
+			Id:         id,
+			Name:       "dqf-" + docId,
+			DocumentId: docId,
+			Complete:   false,
+			CompanyId:  driver.CompanyId,
+			DriverId:   driver.Id,
+		}
+		db.Add("document", id, doc)
+	}
+	var docs []Document
+	db.Match("document", `"driverId":"`+driver.Id+`"`, &docs)
+	resp := make(map[string]interface{}, 0)
+	resp["status"] = "success"
+	resp["msg"] = "Successfully added documents"
+	resp["data"] = docs
+	b, err := json.Marshal(resp)
+	if err != nil {
+		ajaxErrorResponse(w, `{"status":"error","type":"marshal","msg":"Successfully added documents. Please refresh the page to view"}`)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "%s", b)
+	return
+}}
+
+var documentDel = web.Route{"POST", "/document/del/:driverId/:docId", func(w http.ResponseWriter, r *http.Request) {
+	db.Del("document", r.FormValue(":docId"))
+
+	var docs []Document
+
+	db.Match("document", `"driverId":"`+r.FormValue(":driverId")+`"`, &docs)
+
+	resp := make(map[string]interface{}, 0)
+	resp["status"] = "success"
+	resp["msg"] = "Successfully deleted document"
+	resp["data"] = docs
+	b, err := json.Marshal(resp)
+
+	if err != nil {
+		ajaxErrorResponse(w, `{"status":"error","type":"marshal","msg":"Successfully deleted document. Please refresh the page to view"}`)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "%s", b)
+	return
+}}
+
 var uploadDriverFile = web.Route{"POST", "/driver/upload", func(w http.ResponseWriter, r *http.Request) {
 	driverId := r.FormValue("id")
 	if driverId == "" {
@@ -228,7 +289,7 @@ var uploadDriverFile = web.Route{"POST", "/driver/upload", func(w http.ResponseW
 	resp := make(map[string]interface{}, 0)
 	resp["status"] = "success"
 	resp["msg"] = "Successfully uploaded file " + handler.Filename
-	resp["files"] = fileInfo
+	resp["data"] = fileInfo
 	b, err := json.Marshal(resp)
 	if err != nil {
 		ajaxErrorResponse(w, `{"status":"error","msg":"Successfully uploaded file `+handler.Filename+`. Please refresh the page to view","type":"marshal"}`)
@@ -238,7 +299,6 @@ var uploadDriverFile = web.Route{"POST", "/driver/upload", func(w http.ResponseW
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "%s", b)
 	return
-
 }}
 
 var viewDriverFile = web.Route{"GET", "/driver/file/:id/:file", func(w http.ResponseWriter, r *http.Request) {
@@ -246,61 +306,35 @@ var viewDriverFile = web.Route{"GET", "/driver/file/:id/:file", func(w http.Resp
 	server.ServeHTTP(w, r)
 }}
 
-var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.ResponseWriter, r *http.Request) {
-	driverId := r.FormValue("id")
-	var driver Driver
-	if !db.Get("user", driverId, &driver) {
-		ajaxErrorResponse(w, `{"status":"error", "msg":"Error adding documents"}`)
-		return
-	}
-	docIds := strings.Split(r.FormValue("docIds"), ",")
-	for _, docId := range docIds {
-		id := strconv.Itoa(int(time.Now().UnixNano()))
-		doc := Document{
-			Id:         id,
-			Name:       "dqf-" + docId,
-			DocumentId: docId,
-			Complete:   false,
-			CompanyId:  driver.CompanyId,
-			DriverId:   driver.Id,
-		}
-		db.Add("document", id, doc)
-	}
-	var docs []Document
-	db.Match("document", `"driverId":"`+driver.Id+`"`, &docs)
-	resp := make(map[string]interface{}, 0)
-	resp["status"] = "success"
-	resp["msg"] = "Successfully added documents"
-	resp["docs"] = docs
-	b, err := json.Marshal(resp)
+var delDriverFile = web.Route{"POST", "/driver/file/:id/:file", func(w http.ResponseWriter, r *http.Request) {
+	driverId := r.FormValue(":id")
+	filename := r.FormValue(":file")
+	os.Remove("upload/driver/" + driverId + "/" + filename)
+
+	files, err := ioutil.ReadDir("upload/driver/" + driverId)
 	if err != nil {
-		ajaxErrorResponse(w, `{"status":"error","type":"marshal","msg":"Successfully added documents. Please refresh the page to view"}`)
+		ajaxErrorResponse(w, `{"status":"error","msg":"Successfully uploaded file `+filename+`. Please refresh the page to view","type":"readDir"}`)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "%s", b)
-	return
-}}
 
-var documentDel = web.Route{"POST", "/document/del/:driverId/:docId", func(w http.ResponseWriter, r *http.Request) {
-	db.Del("document", r.FormValue(":docId"))
+	var fileInfo []map[string]interface{}
 
-	var docs []Document
-
-	db.Match("document", `"driverId":"`+r.FormValue(":driverId")+`"`, &docs)
+	for _, file := range files {
+		f := make(map[string]interface{})
+		f["name"] = file.Name()
+		f["size"] = file.Size()
+		fileInfo = append(fileInfo, f)
+	}
 
 	resp := make(map[string]interface{}, 0)
 	resp["status"] = "success"
-	resp["msg"] = "Successfully deleted document"
-	resp["docs"] = docs
+	resp["msg"] = "Successfully uploaded file " + filename
+	resp["data"] = fileInfo
 	b, err := json.Marshal(resp)
-
 	if err != nil {
-		ajaxErrorResponse(w, `{"status":"error","type":"marshal","msg":"Successfully deleted document. Please refresh the page to view"}`)
+		ajaxErrorResponse(w, `{"status":"error","msg":"Successfully uploaded file `+filename+`. Please refresh the page to view","type":"marshal"}`)
 		return
 	}
-
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "%s", b)
