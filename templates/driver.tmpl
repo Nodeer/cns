@@ -27,21 +27,21 @@
                     <div class="col-sm-12">
 
                         <p class="lead">
-                            {{ (printf "Driver: %s %s" .driver.FirstName .driver.LastName) }}
+                            Driver: {{ if .driver.Id }}{{ .driver.FirstName }} {{ .driver.LastName}}{{ else }}NEW{{ end }}
                         </p>
 
                         <div class="panel panel-default p-0">
                             <div class="panel-body p-0">
                                 <ul class="nav nav-tabs profile-tabs">
-                                    <li class="active"><a class="view" data-toggle="tab" href="#infoTab">Information</a></li>
-                                    <li><a class="view" data-table="docsTable" data-toggle="tab" href="#docsTab">Forms</a></li>
-                                    <li><a class="view" data-table="filesTable" data-toggle="tab" href="#filesTab">Uploaded Files</a></li>
-                                    <li><a class="view" data-toggle="tab" href="#settingsTab">Settings</a></li>
+                                    <li class="active"><a id="infoTab" class="view" data-toggle="tab" href="#infoPane">Information</a></li>
+                                    <li><a id="docsTab" class="view" data-table="docsTable" data-toggle="tab" href="#docsPane">Forms</a></li>
+                                    <li><a id="filesTab" class="view" data-table="filesTable" data-toggle="tab" href="#filesPane">Uploaded Files</a></li>
+                                    <li><a id="settingsTab" class="view" data-toggle="tab" href="#settingsPane">Settings</a></li>
                                 </ul>
 
                                 <div class="tab-content m-0">
 
-                                    <div id="infoTab" class="tab-pane active">
+                                    <div id="infoPane" class="tab-pane active">
                                         <div class="profile-desk">
                                             <h1>{{ .driver.FirstName }} {{ .driver.LastName}}</h1>
 
@@ -73,7 +73,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="docsTab" class="tab-pane">
+                                    <div id="docsPane" class="tab-pane">
                                         <div class="row m-t-10">
                                             <div class="col-lg-4">
                                 				<h2>Add Documents</h2>
@@ -129,7 +129,7 @@
                                     </div>
 
                                     <!-- profile -->
-                                    <div id="filesTab" class="tab-pane">
+                                    <div id="filesPane" class="tab-pane">
                                         <div class="row m-t-10">
                                             <div class="col-lg-6">
                                                 <div class="table-responsive">
@@ -172,9 +172,9 @@
                                     </div>
 
                                     <!-- settings -->
-                                    <div id="settingsTab" class="tab-pane">
+                                    <div id="settingsPane" class="tab-pane">
                                         <div class="user-profile-content">
-                                            <form id="set" role="form" action="/driver/{{ .driver.Id }}" method="post">
+                                            <form id="set" role="form" action="/driver" method="post">
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="form-group">
@@ -187,7 +187,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Email</label>
-                                                            <input type="email" value="{{ .driver.Email }}" name="email" class="form-control">
+                                                            <input type="email" value="{{ .driver.Email }}" name="auth.Email" class="form-control">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Date of Birth</label>
@@ -213,7 +213,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label>State</label>
-                                                            <input type="text" value="{{ .driver.State }}" name="address.City" class="form-control">
+                                                            <input type="text" value="{{ .driver.State }}" name="address.State" class="form-control">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Zip</label>
@@ -223,6 +223,7 @@
                                                             <label>Phone</label>
                                                             <input type="text" value="{{ .driver.Phone }}" name="phone" class="form-control">
                                                         </div>
+                                                        <input type="hidden" name="id" value="{{ .driver.Id }}">
                                                     </div>
                                                 </div>
                                                 <button class="btn btn-primary" type="submit">Save</button>
@@ -251,7 +252,11 @@
         <script src="/static/js/confirm.js" charset="utf-8"></script>
         <script src="/static/datatables/custom.js" charset="utf-8"></script>
 
-        {{ template "alerts.tmpl" . }}
+        {{ if not .driver.Id}}
+            <script type="text/javascript">
+                $('a#settingsTab').tab('show');
+            </script>
+        {{ end }}
 
         <script>
 

@@ -26,20 +26,20 @@
                     <div class="col-sm-12">
 
                         <p class="lead">
-                            {{ (printf "Company: %s" .company.Name) }}
+                            Company: {{ if .company.Id}}{{ .company.Name }}{{ else }}NEW{{ end }}
                         </p>
 
                         <div class="panel panel-default p-0">
                             <div class="panel-body p-0">
                                 <ul class="nav nav-tabs profile-tabs">
-                                    <li class="active"><a data-toggle="tab" href="#aboutme">Information</a></li>
-                                    <li class=""><a data-toggle="tab" href="#driver">Drivers</a></li>
-                                    <li class=""><a data-toggle="tab" href="#vehicle">Vehicles</a></li>
-                                    <li class=""><a data-toggle="tab" href="#edit-profile">Settings</a></li>
+                                    <li class="active"><a id="infoTab" data-toggle="tab" href="#infoPane">Information</a></li>
+                                    <li class=""><a id="driversTab" data-toggle="tab" href="#driversPane">Drivers</a></li>
+                                    <li class=""><a id="vehiclesTab" data-toggle="tab" href="#vehiclesPane">Vehicles</a></li>
+                                    <li class=""><a id="settingsTab" data-toggle="tab" href="#settingsPane">Settings</a></li>
                                 </ul>
                                 <div class="tab-content m-0">
 
-                                    <div id="aboutme" class="tab-pane active">
+                                    <div id="infoPane" class="tab-pane active">
                                         <div class="profile-desk">
                                             <h1>{{ .company.Name }}</h1>
                                             <table class="table table-condensed">
@@ -55,7 +55,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td><b>Phone</b></td>
-                                                        <td>(123)-456-7890</td>
+                                                        <td>{{ .company.Phone }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td><b>Address</b></td>
@@ -66,7 +66,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="driver" class="tab-pane">
+                                    <div id="driversPane" class="tab-pane">
                                         <table id="drivers" class="table table-bordered table-hover" style="background-color:white;">
                                             <thead>
                                                 <tr id="search">
@@ -95,13 +95,13 @@
                                         </table>
                                     </div>
 
-                                    <div id="vehicle" class="tab-pane">
+                                    <div id="vehiclesPane" class="tab-pane">
 
                                     </div>
 
-                                    <div id="edit-profile" class="tab-pane">
+                                    <div id="settingsPane" class="tab-pane">
                                         <div class="user-profile-content">
-                                            <form role="form" action="/company/{{ .company.Id}}" method="post">
+                                            <form role="form" action="/company" method="post">
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="form-group">
@@ -114,7 +114,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="Email">Contact Email</label>
-                                                            <input type="email" value="{{ .company.Email }}" name="email" class="form-control">
+                                                            <input type="email" value="{{ .company.Email }}" name="auth.Email" class="form-control">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="Email">Phone</label>
@@ -138,6 +138,7 @@
                                                             <label for="Email">Zip</label>
                                                             <input type="text" value="{{ .company.Zip }}" name="address.Zip" class="form-control">
                                                         </div>
+                                                        <input type="hidden" name="id" value="{{ .company.Id }}">
                                                     </div>
                                                 </div>
                                                 <button class="btn btn-primary" type="submit">Save</button>
@@ -164,6 +165,11 @@
         <script src="/static/datatables/dataTables.bootstrap.js"></script>
         <script src="/static/js/confirm.js" charset="utf-8"></script>
         <script src="/static/datatables/custom.js" charset="utf-8"></script>
+        {{ if not .company.Id}}
+            <script type="text/javascript">
+                $('a#settingsTab').tab('show');
+            </script>
+        {{ end }}
 
         <script type="text/javascript">
 
@@ -177,7 +183,7 @@
                         { "name": "phone",   "targets": 3 },
                     ]
                 });
-                
+
         </script>
 
   </body>

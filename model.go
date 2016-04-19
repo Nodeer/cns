@@ -46,6 +46,9 @@ type Driver struct {
 
 func (d Driver) FormatDOB() string {
 	ds := strings.Split(d.DOB, "-")
+	if len(ds) != 3 {
+		return ""
+	}
 	if ds[1][0] == '0' {
 		ds[1] = ds[1][1:]
 	}
@@ -101,7 +104,7 @@ var DQFS = [][]string{
 type Event struct {
 	Id        string    `json:"id,omitempty"`
 	Name      string    `json:"name"`
-	Title     string    `json:"title",omitempty`
+	Title     string    `json:"title,omitempty"`
 	AllDay    bool      `json:"allDay,omitempty"`
 	Start     time.Time `json:"start"`
 	End       time.Time `json:"end,omitempty"`

@@ -94,10 +94,13 @@ var allEmployee = web.Route{"GET", "/employee", func(w http.ResponseWriter, r *h
 
 var viewEmployee = web.Route{"GET", "/employee/:id", func(w http.ResponseWriter, r *http.Request) {
 	var employee Employee
-	ok := db.Get("user", r.FormValue(":id"), &employee)
-	if !ok || employee.Role != "EMPLOYEE" {
-		web.SetErrorRedirect(w, r, "/employee", "Error finding employee")
-		return
+	employeeId := r.FormValue(":id")
+	if employeeId != "add" {
+		ok := db.Get("user", r.FormValue(":id"), &employee)
+		if !ok || employee.Role != "EMPLOYEE" {
+			web.SetErrorRedirect(w, r, "/employee", "Error finding employee")
+			return
+		}
 	}
 	tc.Render(w, r, "employee.tmpl", web.Model{
 		"employee": employee,
@@ -108,17 +111,28 @@ var settings = web.Route{"GET", "/settings", func(w http.ResponseWriter, r *http
 	http.Redirect(w, r, "/employee/"+web.GetSess(r, "id").(string), 303)
 }}
 
-var saveEmployee = web.Route{"POST", "/employee/:id", func(w http.ResponseWriter, r *http.Request) {
-	empId := r.FormValue(":id")
+var saveEmployee = web.Route{"POST", "/employee", func(w http.ResponseWriter, r *http.Request) {
+	empId := r.FormValue("id")
 	var employee Employee
-	if !db.Get("user", empId, &employee) {
-		web.SetErrorRedirect(w, r, "/employee/"+empId, "Error saving employee")
+	db.Get("user", empId, &employee)
+	FormToStruct(&employee, r.Form, "")
+	if employee.Id == "" && empId == "" {
+		employee.Id = strconv.Itoa(int(time.Now().UnixNano()))
+		employee.Password = employee.Email
+		employee.Role = "EMPLOYEE"
+		employee.Active = true
+	}
+
+	var users []interface{}
+	//db.Query("user", &users, "email="+employee.Email, "id^"+employee.Id)
+	db.TestQuery("users", &users, adb.Eq("email", employee.Email), adb.Ne("id", employee.Id))
+	fmt.Println(users)
+	if len(users) > 0 {
+		web.SetErrorRedirect(w, r, "/employee/"+employee.Id, "Error saving employee. Email is already registered")
 		return
 	}
-	r.ParseForm()
-	FormToStruct(&employee, r.Form, "")
-	db.Set("user", empId, employee)
-	web.SetSuccessRedirect(w, r, "/employee/"+empId, "Successfully saved employee")
+	db.Set("user", employee.Id, employee)
+	web.SetSuccessRedirect(w, r, "/employee/"+employee.Id, "Successfully saved employee")
 	return
 }}
 
@@ -135,30 +149,35 @@ var allCompany = web.Route{"GET", "/company", func(w http.ResponseWriter, r *htt
 
 var viewCompany = web.Route{"GET", "/company/:id", func(w http.ResponseWriter, r *http.Request) {
 	var company Company
-	ok := db.Get("user", r.FormValue(":id"), &company)
-	if !ok || company.Role != "COMPANY" {
-		web.SetErrorRedirect(w, r, "/company", "Error finding company")
-		return
-	}
 	var drivers []Driver
-	ok = db.Match("user", `"companyId":"`+company.Id+`"`, &drivers)
+	compId := r.FormValue(":id")
+	if compId != "add" {
+		ok := db.Get("user", compId, &company)
+		if !ok || company.Role != "COMPANY" {
+			web.SetErrorRedirect(w, r, "/company", "Error finding company")
+			return
+		}
+		//db.Match("user", `"companyId":"`+company.Id+`"`, &drivers)
+		db.Query("user", &drivers, "companyId="+company.Id)
+	}
 	tc.Render(w, r, "company.tmpl", web.Model{
 		"company": company,
 		"drivers": drivers,
 	})
 }}
 
-var saveCompany = web.Route{"POST", "/company/:id", func(w http.ResponseWriter, r *http.Request) {
-	compId := r.FormValue(":id")
+var saveCompany = web.Route{"POST", "/company", func(w http.ResponseWriter, r *http.Request) {
+	compId := r.FormValue("id")
 	var company Company
-	if !db.Get("user", compId, &company) {
-		web.SetErrorRedirect(w, r, "/company/"+compId, "Error saving company")
-		return
+	db.Get("user", compId, &company)
+	if compId == "" && company.Id == "" {
+		company.Id = strconv.Itoa(int(time.Now().UnixNano()))
+		company.Password = company.Email
+		company.Role = "COMPANY"
 	}
-	r.ParseForm()
 	FormToStruct(&company, r.Form, "")
-	db.Set("user", compId, company)
-	web.SetSuccessRedirect(w, r, "/company/"+compId, "Successfully saved company")
+	db.Set("user", company.Id, company)
+	web.SetSuccessRedirect(w, r, "/company/"+company.Id, "Successfully saved company")
 	return
 }}
 
@@ -176,23 +195,24 @@ var allDriver = web.Route{"GET", "/driver", func(w http.ResponseWriter, r *http.
 var viewDriver = web.Route{"GET", "/driver/:id", func(w http.ResponseWriter, r *http.Request) {
 	var driver Driver
 	driverId := r.FormValue(":id")
-	ok := db.Get("user", driverId, &driver)
-	if !ok || driver.Role != "DRIVER" {
-		web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
-		return
-	}
 	var files []map[string]interface{}
-	if fileInfos, err := ioutil.ReadDir("upload/driver/" + driverId); err == nil {
-		for _, fileInfo := range fileInfos {
-			var info = make(map[string]interface{})
-			info["name"] = fileInfo.Name()
-			info["size"] = fileInfo.Size()
-			files = append(files, info)
-		}
-	}
 	var docs []Document
-	db.Match("document", `"driverId":"`+driver.Id+`"`, &docs)
-
+	if driverId != "add" {
+		ok := db.Get("user", driverId, &driver)
+		if !ok || driver.Role != "DRIVER" {
+			web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
+			return
+		}
+		if fileInfos, err := ioutil.ReadDir("upload/driver/" + driverId); err == nil {
+			for _, fileInfo := range fileInfos {
+				var info = make(map[string]interface{})
+				info["name"] = fileInfo.Name()
+				info["size"] = fileInfo.Size()
+				files = append(files, info)
+			}
+		}
+		db.Match("document", `"driverId":"`+driver.Id+`"`, &docs)
+	}
 	tc.Render(w, r, "driver.tmpl", web.Model{
 		"driver": driver,
 		"files":  files,
@@ -201,17 +221,18 @@ var viewDriver = web.Route{"GET", "/driver/:id", func(w http.ResponseWriter, r *
 	})
 }}
 
-var savedriver = web.Route{"POST", "/driver/:id", func(w http.ResponseWriter, r *http.Request) {
-	driverId := r.FormValue(":id")
+var savedriver = web.Route{"POST", "/driver", func(w http.ResponseWriter, r *http.Request) {
+	driverId := r.FormValue("id")
 	var driver Driver
-	if !db.Get("user", driverId, &driver) {
-		web.SetErrorRedirect(w, r, "/driver/"+driverId, "Error saving driver")
-		return
-	}
-	r.ParseForm()
+	db.Get("user", driverId, &driver)
 	FormToStruct(&driver, r.Form, "")
-	db.Set("user", driverId, driver)
-	web.SetSuccessRedirect(w, r, "/driver/"+driverId, "Successfully saved driver")
+	if driver.Id == "" && driverId == "" {
+		driver.Id = strconv.Itoa(int(time.Now().UnixNano()))
+		driver.Password = driver.Email
+		driver.Role = "DRIVER"
+	}
+	db.Set("user", driver.Id, driver)
+	web.SetSuccessRedirect(w, r, "/driver/"+driver.Id, "Successfully saved driver")
 	return
 }}
 

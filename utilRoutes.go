@@ -9,6 +9,12 @@ import (
 	"github.com/cagnosolutions/web"
 )
 
+const (
+	CperE = 10
+	COMP  = 500
+	DperC = 20
+)
+
 func init() {
 	mx.AddRoutes(makeUsers, upload, buttons, uploader, notify, alert)
 }
@@ -17,12 +23,12 @@ var makeUsers = web.Route{"GET", "/makeUsers", func(w http.ResponseWriter, r *ht
 	MakeEmployees()
 	compIds := MakeCompanies()
 	MakeDrivers(compIds)
-	web.SetSuccessRedirect(w, r, "/", "Successfully made drivers")
+	web.SetSuccessRedirect(w, r, "/", "Successfully made users")
 	return
 }}
 
 func MakeEmployees() {
-	for i := 0; i < 10; i++ {
+	for i := 0; i < (COMP / CperE); i++ {
 		id := strconv.Itoa(int(time.Now().UnixNano()))
 
 		user := Employee{
@@ -46,9 +52,9 @@ func MakeEmployees() {
 	}
 }
 
-func MakeCompanies() [10]string {
-	compIds := [10]string{}
-	for i := 0; i < 10; i++ {
+func MakeCompanies() [COMP]string {
+	compIds := [COMP]string{}
+	for i := 0; i < COMP; i++ {
 		id := strconv.Itoa(int(time.Now().UnixNano()))
 		compIds[i] = id
 		user := Company{
@@ -73,10 +79,10 @@ func MakeCompanies() [10]string {
 	return compIds
 }
 
-func MakeDrivers(compIds [10]string) {
-	for i := 0; i < 10; i++ {
+func MakeDrivers(compIds [COMP]string) {
+	for i := 0; i < (COMP * DperC); i++ {
 		id := strconv.Itoa(int(time.Now().UnixNano()))
-
+		compIdx := i / DperC
 		user := Driver{
 			FirstName:    "Daniel",
 			LastName:     fmt.Sprintf("Jones the %dth", (i + 4)),
@@ -84,7 +90,7 @@ func MakeDrivers(compIds [10]string) {
 			DOB:          fmt.Sprintf("198%d-03-1%d", i, i),
 			LicenseNum:   fmt.Sprintf("1234567%d", i),
 			LicenseState: fmt.Sprintf("%d state", i),
-			CompanyId:    compIds[i],
+			CompanyId:    compIds[compIdx],
 		}
 
 		user.Id = id
