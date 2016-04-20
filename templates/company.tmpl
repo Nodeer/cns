@@ -10,6 +10,8 @@
         <link href="/static/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
 
+        <link href="/static/toggles/toggles.css" rel="stylesheet" />
+
         <title>Company</title>
     </head>
     <body>
@@ -120,6 +122,13 @@
                                                             <label for="Email">Phone</label>
                                                             <input type="text" value="{{ .company.Phone }}" name="phone"  class="form-control">
                                                         </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Company Login</label>
+                                                            <div class="control-label">
+                                                                <div class="toggle toggle-default"></div>
+                                                            </div>
+                                                            <input id="switch" type="checkbox" name="auth.Active" {{ if .company.Active }}checked{{ end }} value="true" class="hide">
+                                                        </div>
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <div class="form-group">
@@ -165,6 +174,10 @@
         <script src="/static/datatables/dataTables.bootstrap.js"></script>
         <script src="/static/js/confirm.js" charset="utf-8"></script>
         <script src="/static/datatables/custom.js" charset="utf-8"></script>
+
+        <script src="/static/toggles/toggles.min.js"></script>
+
+
         {{ if not .company.Id}}
             <script type="text/javascript">
                 $('a#settingsTab').tab('show');
@@ -184,6 +197,11 @@
                     ]
                 });
 
+                // Form Toggles
+                jQuery('.toggle').toggles({
+                    {{ if .company.Active }}on: true,{{ end }}
+                    checkbox:$('#switch')
+                });
         </script>
 
   </body>

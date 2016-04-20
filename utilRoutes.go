@@ -10,13 +10,13 @@ import (
 )
 
 const (
-	CperE = 10
-	COMP  = 500
-	DperC = 20
+	CperE = 1
+	COMP  = 10
+	DperC = 2
 )
 
 func init() {
-	mx.AddRoutes(makeUsers, upload, buttons, uploader, notify, alert)
+	mx.AddRoutes(makeUsers, upload, buttons, uploader, notify, alert, form)
 }
 
 var makeUsers = web.Route{"GET", "/makeUsers", func(w http.ResponseWriter, r *http.Request) {
@@ -73,6 +73,7 @@ func MakeCompanies() [COMP]string {
 		user.City = fmt.Sprintf("%dville", i)
 		user.State = fmt.Sprintf("%d state", i)
 		user.Zip = fmt.Sprintf("1234%d", i)
+		user.CreateSlug()
 
 		db.Add("user", id, user)
 	}
@@ -156,6 +157,7 @@ var makeCompanies = web.Route{"GET", "/makeComps", func(w http.ResponseWriter, r
 		user.State = fmt.Sprintf("%d state", i)
 		user.Zip = fmt.Sprintf("1234%d", i)
 
+		user.CreateSlug()
 		db.Add("user", id, user)
 	}
 	web.SetSuccessRedirect(w, r, "/", "success")
@@ -215,4 +217,8 @@ var notify = web.Route{"GET", "/notify", func(w http.ResponseWriter, r *http.Req
 
 var alert = web.Route{"GET", "/alert", func(w http.ResponseWriter, r *http.Request) {
 	tc.Render(w, r, "sweet-alert.tmpl", nil)
+}}
+
+var form = web.Route{"GET", "/form", func(w http.ResponseWriter, r *http.Request) {
+	tc.Render(w, r, "form-advanced.tmpl", nil)
 }}

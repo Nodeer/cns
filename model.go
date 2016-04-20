@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -29,7 +31,18 @@ type Company struct {
 	Name    string `json:"name,omitempty"`
 	Contact string `json:"contact,omityempty"`
 	Phone   string `json:"phone,omitempty"`
+	Slug    string `json:"slug,omitempty"`
 	Address
+}
+
+func (c *Company) CreateSlug() {
+	// slug = title.replaceAll("[;/?:@&=+\\\$,\\{\\}\\|\\\\^\\[\\]`]", "").trim().replace(' ', '_').toLowerCase()
+	r, err := regexp.Compile("[;/?:@&=+$,\\{\\}\\|^\\[\\]`]")
+	if err != nil {
+		log.Printf("model.go -> Company.creaeSlug() -> regexp.Compile() -> %v\n", err)
+		return
+	}
+	c.Slug = strings.ToLower(strings.Replace(strings.Trim(r.ReplaceAllString(c.Name, ""), " "), " ", "-", -1))
 }
 
 type Driver struct {

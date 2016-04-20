@@ -83,7 +83,8 @@ var logout = web.Route{"GET", "/logout", func(w http.ResponseWriter, r *http.Req
 
 var allEmployee = web.Route{"GET", "/employee", func(w http.ResponseWriter, r *http.Request) {
 	var employees []Employee
-	ok := db.Match("user", `"role":"EMPLOYEE"`, &employees)
+	//ok := db.Match("user", `"role":"EMPLOYEE"`, &employees)
+	ok := db.TestQuery("user", &employees, adb.Eq("role", "EMPLOYEE"))
 	if !ok {
 		fmt.Println("error")
 	}
@@ -124,9 +125,7 @@ var saveEmployee = web.Route{"POST", "/employee", func(w http.ResponseWriter, r 
 	}
 
 	var users []interface{}
-	//db.Query("user", &users, "email="+employee.Email, "id^"+employee.Id)
-	db.TestQuery("users", &users, adb.Eq("email", employee.Email), adb.Ne("id", employee.Id))
-	fmt.Println(users)
+	db.TestQuery("user", &users, adb.Eq("email", employee.Email), adb.Ne("id", `"`+employee.Id+`"`))
 	if len(users) > 0 {
 		web.SetErrorRedirect(w, r, "/employee/"+employee.Id, "Error saving employee. Email is already registered")
 		return
@@ -138,7 +137,8 @@ var saveEmployee = web.Route{"POST", "/employee", func(w http.ResponseWriter, r 
 
 var allCompany = web.Route{"GET", "/company", func(w http.ResponseWriter, r *http.Request) {
 	var companies []Company
-	ok := db.Match("user", `"role":"COMPANY"`, &companies)
+	//ok := db.Match("user", `"role":"COMPANY"`, &companies)
+	ok := db.TestQuery("user", &companies, adb.Eq("role", "COMPANY"))
 	if !ok {
 		fmt.Println("error")
 	}
@@ -158,7 +158,8 @@ var viewCompany = web.Route{"GET", "/company/:id", func(w http.ResponseWriter, r
 			return
 		}
 		//db.Match("user", `"companyId":"`+company.Id+`"`, &drivers)
-		db.Query("user", &drivers, "companyId="+company.Id)
+		//db.Query("user", &drivers, "companyId="+company.Id)
+		db.TestQuery("user", &drivers, adb.Eq("companyId", `"`+company.Id+`"`))
 	}
 	tc.Render(w, r, "company.tmpl", web.Model{
 		"company": company,
@@ -174,8 +175,10 @@ var saveCompany = web.Route{"POST", "/company", func(w http.ResponseWriter, r *h
 		company.Id = strconv.Itoa(int(time.Now().UnixNano()))
 		company.Password = company.Email
 		company.Role = "COMPANY"
+		company.CreateSlug()
 	}
 	FormToStruct(&company, r.Form, "")
+	company.Active = r.FormValue("auth.Active") == "true"
 	db.Set("user", company.Id, company)
 	web.SetSuccessRedirect(w, r, "/company/"+company.Id, "Successfully saved company")
 	return
@@ -183,7 +186,8 @@ var saveCompany = web.Route{"POST", "/company", func(w http.ResponseWriter, r *h
 
 var allDriver = web.Route{"GET", "/driver", func(w http.ResponseWriter, r *http.Request) {
 	var drivers []Driver
-	ok := db.Match("user", `"role":"DRIVER"`, &drivers)
+	//ok := db.Match("user", `"role":"DRIVER"`, &drivers)
+	ok := db.TestQuery("user", &drivers, adb.Eq("role", "DRIVER"))
 	if !ok {
 		fmt.Println("error")
 	}
@@ -211,7 +215,8 @@ var viewDriver = web.Route{"GET", "/driver/:id", func(w http.ResponseWriter, r *
 				files = append(files, info)
 			}
 		}
-		db.Match("document", `"driverId":"`+driver.Id+`"`, &docs)
+		//db.Match("document", `"driverId":"`+driver.Id+`"`, &docs)
+		db.TestQuery("document", &docs, adb.Eq("driverId", `"`+driver.Id+`"`))
 	}
 	tc.Render(w, r, "driver.tmpl", web.Model{
 		"driver": driver,
@@ -257,7 +262,8 @@ var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.Respon
 		db.Add("document", id, doc)
 	}
 	var docs []Document
-	db.Match("document", `"driverId":"`+driver.Id+`"`, &docs)
+	//db.Match("document", `"driverId":"`+driver.Id+`"`, &docs)
+	db.TestQuery("document", &docs, adb.Eq("driverId", `"`+driver.Id+`"`))
 	resp := make(map[string]interface{}, 0)
 	resp["status"] = "success"
 	resp["msg"] = "Successfully added documents"
@@ -278,7 +284,8 @@ var documentDel = web.Route{"POST", "/document/del/:driverId/:docId", func(w htt
 
 	var docs []Document
 
-	db.Match("document", `"driverId":"`+r.FormValue(":driverId")+`"`, &docs)
+	//db.Match("document", `"driverId":"`+r.FormValue(":driverId")+`"`, &docs)
+	db.TestQuery("document", &docs, adb.Eq("driverId", `"`+r.FormValue(":driverId")+`"`))
 
 	resp := make(map[string]interface{}, 0)
 	resp["status"] = "success"
