@@ -60,7 +60,7 @@
 
                                     <div id="settingsPane" class="tab-pane">
                                         <div class="user-profile-content">
-                                            <form role="form" action="/employee" method="post">
+                                            <form role="form" action="/cns/employee" method="post">
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="form-group">
@@ -102,10 +102,10 @@
                                                     <div class="form-group">
                                                         <label>Home Page</label>
                                                         <select class="form-control" name="home">
-                                                            <option {{ if eq .employee.Home "/company" }}selected {{ end }}value="/company">Company</option>
-                                                            <option {{ if eq .employee.Home "/employee" }}selected {{ end }}value="/employee">Employee</option>
-                                                            <option {{ if eq .employee.Home "/driver" }}selected {{ end }}value="/driver">Driver</option>
-                                                            <option {{ if eq .employee.Home "/calendar" }}selected {{ end }}value="/calendar">Calendar</option>
+                                                            <option {{ if eq .employee.Home "/cns/company" }}selected {{ end }}value="/cns/company">Company</option>
+                                                            <option {{ if eq .employee.Home "/cns/employee" }}selected {{ end }}value="/cns/employee">Employee</option>
+                                                            <option {{ if eq .employee.Home "/cns/driver" }}selected {{ end }}value="/cns/driver">Driver</option>
+                                                            <option {{ if eq .employee.Home "/cns/calendar" }}selected {{ end }}value="/cns/calendar">Calendar</option>
                                                         </select>
                                                     </div>
                                                     <input type="hidden" name="id" value="{{ .employee.Id }}">

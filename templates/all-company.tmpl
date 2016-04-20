@@ -28,7 +28,7 @@
                         <p class="lead">
                             Companies
                             <span class="pull-right">
-                                <a href="/company/add">Add <i class="fa fa-plus"></i></a>
+                                <a href="/cns/company/add">Add <i class="fa fa-plus"></i></a>
                             </span>
                         </p>
 
@@ -51,7 +51,7 @@
                             </thead>
                             <tbody>
                                 {{ range $company := .companies }}
-                                    <tr id="{{ $company.Id }}" class="clickable" data-url="/company/{{ $company.Id }}">
+                                    <tr id="{{ $company.Id }}" class="clickable" data-url="/cns/company/{{ $company.Id }}">
                                         <td>{{ $company.Id }}</td>
                                         <td>{{ $company.Name }}</td>
                                         <td>{{ $company.Contact }}</td>

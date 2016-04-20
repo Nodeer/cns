@@ -15,7 +15,7 @@
 
     <body>
 
-        {{ template "side-nav.tmpl" . }}
+        {{ template "comp-side-nav.tmpl" . }}
 
         <!--Main Content Start -->
         <section class="content">
@@ -28,7 +28,6 @@
 
                         <p class="lead">
                             Driver: {{ if .driver.Id }}{{ .driver.FirstName }} {{ .driver.LastName}}{{ else }}NEW{{ end }}
-                            <a href="/" target="_blank">LINK</a>
                         </p>
 
                         <div class="panel panel-default p-0">
@@ -37,7 +36,7 @@
                                     <li class="active"><a id="infoTab" class="view" data-toggle="tab" href="#infoPane">Information</a></li>
                                     <li><a id="docsTab" class="view" data-table="docsTable" data-toggle="tab" href="#docsPane">Forms</a></li>
                                     <li><a id="filesTab" class="view" data-table="filesTable" data-toggle="tab" href="#filesPane">Uploaded Files</a></li>
-                                    <li><a id="settingsTab" class="view" data-toggle="tab" href="#settingsPane">Settings</a></li>
+                                    <!-- <li><a id="settingsTab" class="view" data-toggle="tab" href="#settingsPane">Settings</a></li> -->
                                 </ul>
 
                                 <div class="tab-content m-0">

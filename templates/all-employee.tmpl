@@ -29,7 +29,7 @@
                         <p class="lead">
                             Employees
                             <span class="pull-right">
-                                <a href="/employee/add">Add <i class="fa fa-plus"></i></a>
+                                <a href="/cns/employee/add">Add <i class="fa fa-plus"></i></a>
                             </span>
                         </p>
 
@@ -50,7 +50,7 @@
                             </thead>
                             <tbody>
                                 {{ range $employee := .employees }}
-                                    <tr id="{{ $employee.Id }}" class="clickable" data-url="/employee/{{ $employee.Id }}">
+                                    <tr id="{{ $employee.Id }}" class="clickable" data-url="/cns/employee/{{ $employee.Id }}">
                                         <td>{{ $employee.Id }}</td>
                                         <td>{{ $employee.FirstName }}{{ $employee.LastName }}</td>
                                         <td>{{ $employee.Email }}</td>

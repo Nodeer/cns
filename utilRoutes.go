@@ -10,9 +10,9 @@ import (
 )
 
 const (
-	CperE = 1
-	COMP  = 10
-	DperC = 2
+	CperE = 10
+	COMP  = 500
+	DperC = 20
 )
 
 func init() {

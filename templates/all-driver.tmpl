@@ -32,7 +32,7 @@
                         <p class="lead">
                             Drivers
                             <span class="pull-right">
-                                <a href="/driver/add">Add <i class="fa fa-plus"></i></a>
+                                <a href="/cns/driver/add">Add <i class="fa fa-plus"></i></a>
                             </span>
                         </p>
 
@@ -53,7 +53,7 @@
                             </thead>
                             <tbody>
                                 {{ range $driver := .drivers }}
-                                    <tr id="{{ $driver.Id }}" class="clickable" data-url="/driver/{{ $driver.Id }}">
+                                    <tr id="{{ $driver.Id }}" class="clickable" data-url="/cns/driver/{{ $driver.Id }}">
                                         <td>{{ $driver.Id }}</td>
                                         <td>{{ $driver.FirstName }} {{ $driver.LastName }}</td>
                                         <td>{{ $driver.Email }}</td>

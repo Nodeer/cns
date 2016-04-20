@@ -10,13 +10,11 @@
         <link href="/static/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
 
-        <link href="/static/toggles/toggles.css" rel="stylesheet" />
-
         <title>Company</title>
     </head>
     <body>
 
-        {{ template "side-nav.tmpl" . }}
+        {{ template "comp-side-nav.tmpl" . }}
 
         <!--Main Content Start -->
         <section class="content">
@@ -26,11 +24,6 @@
             <div class="wraper container-fluid">
                 <div class="row">
                     <div class="col-sm-12">
-
-                        <p class="lead">
-                            Company: {{ if .company.Id}}{{ .company.Name }}{{ else }}NEW{{ end }}
-                        </p>
-
                         <div class="panel panel-default p-0">
                             <div class="panel-body p-0">
                                 <ul class="nav nav-tabs profile-tabs">
@@ -86,7 +79,7 @@
                                             </thead>
                                             <tbody>
                                                 {{ range $driver := .drivers }}
-                                                    <tr id="{{ $driver.Id }}" class="clickable" data-url="/cns/driver/{{ $driver.Id }}">
+                                                    <tr id="{{ $driver.Id }}" class="clickable" data-url="/company/driver/{{ $driver.Id }}">
                                                         <td>{{ $driver.Id }}</td>
                                                         <td>{{ $driver.FirstName }} {{ $driver.LastName }}</td>
                                                         <td>{{ $driver.Email }}</td>
@@ -103,7 +96,7 @@
 
                                     <div id="settingsPane" class="tab-pane">
                                         <div class="user-profile-content">
-                                            <form role="form" action="/cns/company" method="post">
+                                            <form role="form" action="/company" method="post">
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="form-group">
@@ -121,13 +114,6 @@
                                                         <div class="form-group">
                                                             <label for="Email">Phone</label>
                                                             <input type="text" value="{{ .company.Phone }}" name="phone"  class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="control-label">Company Login</label>
-                                                            <div class="control-label">
-                                                                <div class="toggle toggle-default"></div>
-                                                            </div>
-                                                            <input id="switch" type="checkbox" name="auth.Active" {{ if .company.Active }}checked{{ end }} value="true" class="hide">
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
@@ -175,15 +161,6 @@
         <script src="/static/js/confirm.js" charset="utf-8"></script>
         <script src="/static/datatables/custom.js" charset="utf-8"></script>
 
-        <script src="/static/toggles/toggles.min.js"></script>
-
-
-        {{ if not .company.Id}}
-            <script type="text/javascript">
-                $('a#settingsTab').tab('show');
-            </script>
-        {{ end }}
-
         <script type="text/javascript">
 
                 var table = $('#drivers').DataTable({
@@ -195,12 +172,6 @@
                         { "name": "name",  "targets": 1 },
                         { "name": "phone",   "targets": 3 },
                     ]
-                });
-
-                // Form Toggles
-                jQuery('.toggle').toggles({
-                    {{ if .company.Active }}on: true,{{ end }}
-                    checkbox:$('#switch')
                 });
         </script>
 
