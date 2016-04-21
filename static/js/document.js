@@ -11,11 +11,13 @@ function send(url) {
 		url: url,
 		data: readyData(),
 		method: 'POST',
-		success: function(data) {
-			console.log(data);
-			window.location.href = data;
+		success: function(resp) {
+			if (resp.status === 'success') {
+				alert(resp.msg);
+			}
 		},
 		error: function(data) {
+			alert("error")
 			console.log(data);
 		}
 	});
@@ -24,13 +26,13 @@ function send(url) {
 $(document).ready(function() {
 
 	$('button#save').click(function() {
-		send(url + 'save');
+		send(url + '/save');
 	});
 
 	$('button#complete').click(function() {
 		$('div#invalidMsg').addClass('hide');
 		if (inputTools.validate()) {
-			send(url + 'complete');
+			send(url + '/complete');
 		} else {
 			$('div#invalidMsg').removeClass('hide');
 			$('html, body').animate({ scrollTop: 0 }, 'fast');

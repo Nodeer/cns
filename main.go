@@ -28,7 +28,7 @@ func init() {
 	db.AddStore("document")
 	db.AddStore("event")
 
-	mx.AddRoutes(login, loginPost, logout, driverDocuments)
+	mx.AddRoutes(login, loginPost, logout, viewDocument, saveDocument)
 
 	mx.AddSecureRoutes(EMPLOYEE, index)
 
@@ -272,7 +272,7 @@ var calendarEvent = web.Route{"POST", "/cns/calendar/event", func(w http.Respons
 	return
 }}
 
-var driverDocuments = web.Route{"GET", "/document/:id", func(w http.ResponseWriter, r *http.Request) {
+var viewDocument = web.Route{"GET", "/document/:id", func(w http.ResponseWriter, r *http.Request) {
 	var document Document
 	var driver Driver
 	var company Company
@@ -286,6 +286,7 @@ var driverDocuments = web.Route{"GET", "/document/:id", func(w http.ResponseWrit
 		web.SetErrorRedirect(w, r, "/", "Error, document is not associated with a driver.")
 		return
 	}
+	db.Get("user", driver.CompanyId, &company)
 	tc.Render(w, r, "dqf-"+document.DocumentId+".tmpl", web.Model{
 		"document": document,
 		"driver":   driver,
@@ -293,3 +294,20 @@ var driverDocuments = web.Route{"GET", "/document/:id", func(w http.ResponseWrit
 	})
 	return
 }}
+
+var saveDocument = web.Route{"POST", "/document/save", func(w http.ResponseWriter, r *http.Request) {
+	var document Document
+	db.Get("document", r.FormValue("id"), &document)
+	document.Data = r.FormValue("data")
+	db.Set("document", document.Id, document)
+	ajaxErrorResponse(w, `{"status":"success","msg":"Successfully saved document"}`)
+	return
+}}
+
+// var pdfTest = web.Route{"GET", "/document/make/pdf", func(w http.ResponseWriter, r *http.Request) {
+// 	pdfTemplate := template.Must(template.ParseFiles("templates/dqf-100.tmpl"))
+// 	buff := bytes.NewBufferString("")
+// 	var document Document
+// 	db.Get("document", "1460666962207855603", &document)
+// 	err := pdf.Template
+// }}
