@@ -214,7 +214,7 @@ InputTools.prototype = {
             if (i === 0) {
                 for (var j = 0; j < row.length; j++) {
                     var val = row[j];
-                    var input = document.querySelector('[name="' + header[j] + '"]');
+                    var input = document.querySelector('[data-group="' + key + '"] [name="' + header[j] + '"]');
                     if ((input.type === 'checkbox' || input.type === 'radio') && val === true) {
                         input.checked = true;
                     } else {
