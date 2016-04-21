@@ -133,9 +133,17 @@
                                             </div>
                                             <div class="col-lg-6">
                                                 <form action="/cns/company/note" method="post">
-                                                    <textarea class="form-control" name="body" rows="8"></textarea>
+                                                    <textarea id="text" class="form-control" name="body" rows="8"></textarea>
                                                     <input type="hidden" name="id" value="{{ .company.Id }}">
                                                     <br>
+                                                    <div class="col-lg-12">
+                                                        <div class="row">
+                                                            <div data-note="cool" class="customNote btn btn-success">note1</div>
+                                                            <div data-note="neat" class="customNote btn btn-warning">note2</div>
+                                                            <div data-note="dumb" class="customNote btn btn-danger">note3</div>
+                                                        </div>
+                                                        <br>
+                                                    </div>
                                                     <button class="btn btn-primary" type="submit">Save</button>
                                                 </form>
                                             </div>
@@ -243,6 +251,14 @@
                     {{ if .company.Active }}on: true,{{ end }}
                     checkbox:$('#switch')
                 });
+        </script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('.customNote').click(function() {
+                    $('#text').val($(this).attr('data-note'));
+                });
+            });
         </script>
 
   </body>
