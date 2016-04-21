@@ -126,3 +126,9 @@ type Event struct {
 	Editable  bool      `json:"editable"`
 	Overlap   bool      `json:"overlap,omitempty"`
 }
+
+type Note struct {
+	Id        string `json:"id,omitempty"`
+	CompanyId string `json:"companyId,omitempty"`
+	Body      string `json:"body,omitempty"`
+}

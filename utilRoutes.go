@@ -31,24 +31,24 @@ func MakeEmployees() {
 	for i := 0; i < (COMP / CperE); i++ {
 		id := strconv.Itoa(int(time.Now().UnixNano()))
 
-		user := Employee{
+		employee := Employee{
 			FirstName: "John",
 			LastName:  fmt.Sprintf("Smith the %dth", (i + 4)),
 			Phone:     fmt.Sprintf("717-777-777%d", i),
 		}
 
-		user.Id = id
-		user.Email = fmt.Sprintf("%d@cns.com", i)
-		user.Password = fmt.Sprintf("Password-%d", i)
-		user.Active = (i%2 == 0)
-		user.Role = "EMPLOYEE"
+		employee.Id = id
+		employee.Email = fmt.Sprintf("%d@cns.com", i)
+		employee.Password = fmt.Sprintf("Password-%d", i)
+		employee.Active = (i%2 == 0)
+		employee.Role = "EMPLOYEE"
 
-		user.Street = fmt.Sprintf("12%d Main Street", 1)
-		user.City = fmt.Sprintf("%dville", i)
-		user.State = fmt.Sprintf("%d state", i)
-		user.Zip = fmt.Sprintf("1234%d", i)
+		employee.Street = fmt.Sprintf("12%d Main Street", 1)
+		employee.City = fmt.Sprintf("%dville", i)
+		employee.State = fmt.Sprintf("%d state", i)
+		employee.Zip = fmt.Sprintf("1234%d", i)
 
-		db.Add("user", id, user)
+		db.Add("employee", id, employee)
 	}
 }
 
@@ -57,25 +57,25 @@ func MakeCompanies() [COMP]string {
 	for i := 0; i < COMP; i++ {
 		id := strconv.Itoa(int(time.Now().UnixNano()))
 		compIds[i] = id
-		user := Company{
+		company := Company{
 			Name:    fmt.Sprintf("Company %d", i),
 			Contact: fmt.Sprintf("Bobbi Sue the %dth", (i + 4)),
 			Phone:   fmt.Sprintf("717-777-777%d", i),
 		}
 
-		user.Id = id
-		user.Email = fmt.Sprintf("%d@company%d.com", i, i)
-		user.Password = fmt.Sprintf("Password-%d", i)
-		user.Active = (i%2 == 0)
-		user.Role = "COMPANY"
+		company.Id = id
+		company.Email = fmt.Sprintf("%d@company%d.com", i, i)
+		company.Password = fmt.Sprintf("Password-%d", i)
+		company.Active = (i%2 == 0)
+		company.Role = "COMPANY"
 
-		user.Street = fmt.Sprintf("12%d Main Street", 1)
-		user.City = fmt.Sprintf("%dville", i)
-		user.State = fmt.Sprintf("%d state", i)
-		user.Zip = fmt.Sprintf("1234%d", i)
-		user.CreateSlug()
+		company.Street = fmt.Sprintf("12%d Main Street", 1)
+		company.City = fmt.Sprintf("%dville", i)
+		company.State = fmt.Sprintf("%d state", i)
+		company.Zip = fmt.Sprintf("1234%d", i)
+		company.CreateSlug()
 
-		db.Add("user", id, user)
+		db.Add("company", id, company)
 	}
 	return compIds
 }
@@ -84,7 +84,7 @@ func MakeDrivers(compIds [COMP]string) {
 	for i := 0; i < (COMP * DperC); i++ {
 		id := strconv.Itoa(int(time.Now().UnixNano()))
 		compIdx := i / DperC
-		user := Driver{
+		driver := Driver{
 			FirstName:    "Daniel",
 			LastName:     fmt.Sprintf("Jones the %dth", (i + 4)),
 			Phone:        fmt.Sprintf("717-777-777%d", i),
@@ -94,18 +94,18 @@ func MakeDrivers(compIds [COMP]string) {
 			CompanyId:    compIds[compIdx],
 		}
 
-		user.Id = id
-		user.Email = fmt.Sprintf("%d@%d.com", i, i)
-		user.Password = fmt.Sprintf("Password-%d", i)
-		user.Active = (i%2 == 0)
-		user.Role = "DRIVER"
+		driver.Id = id
+		driver.Email = fmt.Sprintf("%d@%d.com", i, i)
+		driver.Password = fmt.Sprintf("Password-%d", i)
+		driver.Active = (i%2 == 0)
+		driver.Role = "DRIVER"
 
-		user.Street = fmt.Sprintf("12%d Main Street", 1)
-		user.City = fmt.Sprintf("%dville", i)
-		user.State = fmt.Sprintf("%d state", i)
-		user.Zip = fmt.Sprintf("1234%d", i)
+		driver.Street = fmt.Sprintf("12%d Main Street", 1)
+		driver.City = fmt.Sprintf("%dville", i)
+		driver.State = fmt.Sprintf("%d state", i)
+		driver.Zip = fmt.Sprintf("1234%d", i)
 
-		db.Add("user", id, user)
+		db.Add("driver", id, driver)
 	}
 }
 
@@ -113,24 +113,24 @@ var makeEmployees = web.Route{"GET", "/makeEmployees", func(w http.ResponseWrite
 	for i := 0; i < 10; i++ {
 		id := strconv.Itoa(int(time.Now().UnixNano()))
 
-		user := Employee{
+		employee := Employee{
 			FirstName: "John",
 			LastName:  fmt.Sprintf("Smith the %dth", (i + 4)),
 			Phone:     fmt.Sprintf("717-777-777%d", i),
 		}
 
-		user.Id = id
-		user.Email = fmt.Sprintf("%d@cns.com", i)
-		user.Password = fmt.Sprintf("Password-%d", i)
-		user.Active = (i%2 == 0)
-		user.Role = "EMPLOYEE"
+		employee.Id = id
+		employee.Email = fmt.Sprintf("%d@cns.com", i)
+		employee.Password = fmt.Sprintf("Password-%d", i)
+		employee.Active = (i%2 == 0)
+		employee.Role = "EMPLOYEE"
 
-		user.Street = fmt.Sprintf("12%d Main Street", 1)
-		user.City = fmt.Sprintf("%dville", i)
-		user.State = fmt.Sprintf("%d state", i)
-		user.Zip = fmt.Sprintf("1234%d", i)
+		employee.Street = fmt.Sprintf("12%d Main Street", 1)
+		employee.City = fmt.Sprintf("%dville", i)
+		employee.State = fmt.Sprintf("%d state", i)
+		employee.Zip = fmt.Sprintf("1234%d", i)
 
-		db.Add("user", id, user)
+		db.Add("employee", id, employee)
 	}
 	web.SetSuccessRedirect(w, r, "/", "success")
 	return
@@ -140,25 +140,25 @@ var makeCompanies = web.Route{"GET", "/makeComps", func(w http.ResponseWriter, r
 	for i := 0; i < 10; i++ {
 		id := strconv.Itoa(int(time.Now().UnixNano()))
 
-		user := Company{
+		company := Company{
 			Name:    fmt.Sprintf("Company %d", i),
 			Contact: fmt.Sprintf("Bobbi Sue the %dth", (i + 4)),
 			Phone:   fmt.Sprintf("717-777-777%d", i),
 		}
 
-		user.Id = id
-		user.Email = fmt.Sprintf("%d@company%d.com", i, i)
-		user.Password = fmt.Sprintf("Password-%d", i)
-		user.Active = (i%2 == 0)
-		user.Role = "COMPANY"
+		company.Id = id
+		company.Email = fmt.Sprintf("%d@company%d.com", i, i)
+		company.Password = fmt.Sprintf("Password-%d", i)
+		company.Active = (i%2 == 0)
+		company.Role = "COMPANY"
 
-		user.Street = fmt.Sprintf("12%d Main Street", 1)
-		user.City = fmt.Sprintf("%dville", i)
-		user.State = fmt.Sprintf("%d state", i)
-		user.Zip = fmt.Sprintf("1234%d", i)
+		company.Street = fmt.Sprintf("12%d Main Street", 1)
+		company.City = fmt.Sprintf("%dville", i)
+		company.State = fmt.Sprintf("%d state", i)
+		company.Zip = fmt.Sprintf("1234%d", i)
 
-		user.CreateSlug()
-		db.Add("user", id, user)
+		company.CreateSlug()
+		db.Add("company", id, company)
 	}
 	web.SetSuccessRedirect(w, r, "/", "success")
 	return
@@ -168,7 +168,7 @@ var makeDrivers = web.Route{"GET", "/makeDrive", func(w http.ResponseWriter, r *
 	for i := 0; i < 10; i++ {
 		id := strconv.Itoa(int(time.Now().UnixNano()))
 
-		user := Driver{
+		driver := Driver{
 			FirstName:    "Daniel",
 			LastName:     fmt.Sprintf("Jones the %dth", (i + 4)),
 			Phone:        fmt.Sprintf("717-777-777%d", i),
@@ -177,18 +177,18 @@ var makeDrivers = web.Route{"GET", "/makeDrive", func(w http.ResponseWriter, r *
 			LicenseState: fmt.Sprintf("%d state", i),
 		}
 
-		user.Id = id
-		user.Email = fmt.Sprintf("%d@%d.com", i, i)
-		user.Password = fmt.Sprintf("Password-%d", i)
-		user.Active = (i%2 == 0)
-		user.Role = "DRIVER"
+		driver.Id = id
+		driver.Email = fmt.Sprintf("%d@%d.com", i, i)
+		driver.Password = fmt.Sprintf("Password-%d", i)
+		driver.Active = (i%2 == 0)
+		driver.Role = "DRIVER"
 
-		user.Street = fmt.Sprintf("12%d Main Street", 1)
-		user.City = fmt.Sprintf("%dville", i)
-		user.State = fmt.Sprintf("%d state", i)
-		user.Zip = fmt.Sprintf("1234%d", i)
+		driver.Street = fmt.Sprintf("12%d Main Street", 1)
+		driver.City = fmt.Sprintf("%dville", i)
+		driver.State = fmt.Sprintf("%d state", i)
+		driver.Zip = fmt.Sprintf("1234%d", i)
 
-		db.Add("user", id, user)
+		db.Add("driver", id, driver)
 	}
 	web.SetSuccessRedirect(w, r, "/", "success")
 	return

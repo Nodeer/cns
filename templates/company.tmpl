@@ -37,6 +37,7 @@
                                     <li class="active"><a id="infoTab" data-toggle="tab" href="#infoPane">Information</a></li>
                                     <li class=""><a id="driversTab" data-toggle="tab" href="#driversPane">Drivers</a></li>
                                     <li class=""><a id="vehiclesTab" data-toggle="tab" href="#vehiclesPane">Vehicles</a></li>
+                                    <li class=""><a id="notesTab" data-toggle="tab" href="#notesPane">Notes</a></li>
                                     <li class=""><a id="settingsTab" data-toggle="tab" href="#settingsPane">Settings</a></li>
                                 </ul>
                                 <div class="tab-content m-0">
@@ -99,6 +100,46 @@
 
                                     <div id="vehiclesPane" class="tab-pane">
 
+                                    </div>
+
+                                    <div id="notesPane" class="tab-pane">
+                                        <div class="row m-t-10">
+                                            <div class="col-lg-6">
+                                                <div class="table-responsive">
+                                                    <table id="filesTable" class="table table-bordered table-hover">
+                                                        <thead>
+                                                            <tr id="search" class="search">
+                                                                <th></th>
+                                                                <th>Data</th>
+                                                                <th></th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>Data</th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {{ range $note := .notes }}
+                                                                <tr>
+                                                                    <td>{{ $note.Id }}</td>
+                                                                    <td>{{ $note.Body }}</td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            {{ end }}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <form action="/cns/company/note" method="post">
+                                                    <textarea class="form-control" name="body" rows="8"></textarea>
+                                                    <input type="hidden" name="id" value="{{ .company.Id }}">
+                                                    <br>
+                                                    <button class="btn btn-primary" type="submit">Save</button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div id="settingsPane" class="tab-pane">

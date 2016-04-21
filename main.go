@@ -24,15 +24,18 @@ var db *adb.DB = adb.NewDB()
 // initialize routes
 func init() {
 
-	db.AddStore("user")
+	db.AddStore("employee")
+	db.AddStore("company")
+	db.AddStore("driver")
 	db.AddStore("document")
 	db.AddStore("event")
+	db.AddStore("note")
 
 	mx.AddRoutes(login, loginPost, logout, viewDocument, saveDocument)
 
 	mx.AddSecureRoutes(EMPLOYEE, index)
 
-	mx.AddSecureRoutes(EMPLOYEE, allCompany, viewCompany, saveCompany)
+	mx.AddSecureRoutes(EMPLOYEE, allCompany, viewCompany, saveCompany, saveNote)
 	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee, settings)
 	mx.AddSecureRoutes(EMPLOYEE, allDriver, viewDriver, saveDriver)
 
@@ -59,7 +62,7 @@ var logout = web.Route{"GET", "/logout", func(w http.ResponseWriter, r *http.Req
 		redirect = "/company/login"
 	case "DRIVER":
 		var company Company
-		db.Get("user", web.GetSess(r, "companyId").(string), &company)
+		db.Get("company", web.GetSess(r, "companyId").(string), &company)
 		redirect = "/login/" + company.Slug
 	}
 	web.Logout(w)
@@ -69,7 +72,7 @@ var logout = web.Route{"GET", "/logout", func(w http.ResponseWriter, r *http.Req
 var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.ResponseWriter, r *http.Request) {
 	driverId := r.FormValue("id")
 	var driver Driver
-	if !db.Get("user", driverId, &driver) {
+	if !db.Get("driver", driverId, &driver) {
 		ajaxErrorResponse(w, `{"status":"error", "msg":"Error adding documents"}`)
 		return
 	}
@@ -281,12 +284,12 @@ var viewDocument = web.Route{"GET", "/document/:id", func(w http.ResponseWriter,
 		web.SetErrorRedirect(w, r, "/", "Error, retrieving document.")
 		return
 	}
-	ok = db.Get("user", document.DriverId, &driver)
+	ok = db.Get("driver", document.DriverId, &driver)
 	if !ok {
 		web.SetErrorRedirect(w, r, "/", "Error, document is not associated with a driver.")
 		return
 	}
-	db.Get("user", driver.CompanyId, &company)
+	db.Get("company", driver.CompanyId, &company)
 	tc.Render(w, r, "dqf-"+document.DocumentId+".tmpl", web.Model{
 		"document": document,
 		"driver":   driver,

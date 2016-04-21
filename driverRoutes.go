@@ -14,7 +14,7 @@ func init() {
 
 var driverLogin = web.Route{"GET", "/login/:slug", func(w http.ResponseWriter, r *http.Request) {
 	var company Company
-	if !db.TestQueryOne("user", &company, adb.Eq("slug", r.FormValue(":slug")), adb.Eq("active", "true")) {
+	if !db.TestQueryOne("company", &company, adb.Eq("slug", r.FormValue(":slug")), adb.Eq("active", "true")) {
 		web.SetErrorRedirect(w, r, "/login", "Error finding company")
 		return
 	}
@@ -25,14 +25,14 @@ var driverLogin = web.Route{"GET", "/login/:slug", func(w http.ResponseWriter, r
 
 var driverLoginPost = web.Route{"POST", "/login/:slug", func(w http.ResponseWriter, r *http.Request) {
 	var company Company
-	if !db.TestQueryOne("user", &company, adb.Eq("slug", r.FormValue(":slug")), adb.Eq("active", "true")) {
+	if !db.TestQueryOne("company", &company, adb.Eq("slug", r.FormValue(":slug")), adb.Eq("active", "true")) {
 		web.SetErrorRedirect(w, r, "/login", "Error finding company")
 		return
 	}
 
 	email, pass := r.FormValue("email"), r.FormValue("password")
 	var driver Driver
-	if !db.Auth("user", email, pass, &driver) || driver.CompanyId != company.Id {
+	if !db.Auth("driver", email, pass, &driver) || driver.CompanyId != company.Id {
 		web.SetErrorRedirect(w, r, "/login/"+r.FormValue(":slug"), "Incorrect username or password")
 		return
 	}
