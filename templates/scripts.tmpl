@@ -8,3 +8,12 @@
 <script src="/static/js/jquery.app.js"></script>
 
 {{ template "alerts.tmpl" . }}
+
+{{ if not .comment }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			href = $('#comment').attr('href') + window.location.pathname + '&page=' + document.title;
+			$('#comment').attr('href', href);
+		});
+	</script>
+{{ end }}

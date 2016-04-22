@@ -128,7 +128,15 @@ type Event struct {
 }
 
 type Note struct {
-	Id        string `json:"id,omitempty"`
+	Id        string `json:"id"`
 	CompanyId string `json:"companyId,omitempty"`
 	Body      string `json:"body,omitempty"`
+}
+
+type Comment struct {
+	Id     string `json:"id"`
+	Body   string `json:"body"`
+	Url    string `json:"url"`
+	Page   string `json:"page"`
+	Closed bool   `json:"closed"`
 }

@@ -55,7 +55,7 @@ var viewEmployee = web.Route{"GET", "/cns/employee/:id", func(w http.ResponseWri
 	employeeId := r.FormValue(":id")
 	if employeeId != "add" {
 		ok := db.Get("employee", r.FormValue(":id"), &employee)
-		if !ok || employee.Role != "EMPLOYEE" {
+		if !ok {
 			web.SetErrorRedirect(w, r, "/employee", "Error finding employee")
 			return
 		}
@@ -115,8 +115,6 @@ var viewCompany = web.Route{"GET", "/cns/company/:id", func(w http.ResponseWrite
 			web.SetErrorRedirect(w, r, "/company", "Error finding company")
 			return
 		}
-		//db.Match("user", `"companyId":"`+company.Id+`"`, &drivers)
-		//db.Query("user", &drivers, "companyId="+company.Id)
 		db.TestQuery("driver", &drivers, adb.Eq("companyId", `"`+company.Id+`"`))
 		db.TestQuery("note", &notes, adb.Eq("companyId", `"`+company.Id+`"`))
 	}

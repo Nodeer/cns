@@ -30,8 +30,9 @@ func init() {
 	db.AddStore("document")
 	db.AddStore("event")
 	db.AddStore("note")
+	db.AddStore("comment")
 
-	mx.AddRoutes(login, loginPost, logout, viewDocument, saveDocument)
+	mx.AddRoutes(login, loginPost, logout, viewDocument, saveDocument, GetComment, PostComent)
 
 	mx.AddSecureRoutes(EMPLOYEE, index)
 
@@ -46,6 +47,7 @@ func init() {
 	web.Funcs["lower"] = strings.ToLower
 	web.Funcs["size"] = PrettySize
 	tc = web.NewTmplCache()
+	defaultUsers()
 }
 
 // main http listener
@@ -90,7 +92,6 @@ var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.Respon
 		db.Add("document", id, doc)
 	}
 	var docs []Document
-	//db.Match("document", `"driverId":"`+driver.Id+`"`, &docs)
 	db.TestQuery("document", &docs, adb.Eq("driverId", `"`+driver.Id+`"`))
 	resp := make(map[string]interface{}, 0)
 	resp["status"] = "success"
@@ -307,10 +308,20 @@ var saveDocument = web.Route{"POST", "/document/save", func(w http.ResponseWrite
 	return
 }}
 
-// var pdfTest = web.Route{"GET", "/document/make/pdf", func(w http.ResponseWriter, r *http.Request) {
-// 	pdfTemplate := template.Must(template.ParseFiles("templates/dqf-100.tmpl"))
-// 	buff := bytes.NewBufferString("")
-// 	var document Document
-// 	db.Get("document", "1460666962207855603", &document)
-// 	err := pdf.Template
-// }}
+var GetComment = web.Route{"GET", "/comment", func(w http.ResponseWriter, r *http.Request) {
+	tc.Render(w, r, "comment.tmpl", web.Model{
+		"return":  r.FormValue("return"),
+		"comment": true,
+		"page":    r.FormValue("page"),
+	})
+}}
+
+var PostComent = web.Route{"POST", "/comment", func(w http.ResponseWriter, r *http.Request) {
+	id := strconv.Itoa(int(time.Now().UnixNano()))
+	var comment Comment
+	r.ParseForm()
+	FormToStruct(&comment, r.Form, "")
+	comment.Id = id
+	db.Set("comment", id, comment)
+	web.SetSuccessRedirect(w, r, comment.Url, "Successfully added comment")
+}}

@@ -11,6 +11,8 @@
         <link href="/static/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
 
+        <title>All Employees</title>
+
     </head>
 
     <body>
@@ -52,7 +54,7 @@
                                 {{ range $employee := .employees }}
                                     <tr id="{{ $employee.Id }}" class="clickable" data-url="/cns/employee/{{ $employee.Id }}">
                                         <td>{{ $employee.Id }}</td>
-                                        <td>{{ $employee.FirstName }}{{ $employee.LastName }}</td>
+                                        <td>{{ $employee.FirstName }} {{ $employee.LastName }}</td>
                                         <td>{{ $employee.Email }}</td>
                                         <td>{{ $employee.Phone }}</td>
                                     </tr>

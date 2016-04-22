@@ -19,6 +19,34 @@ func init() {
 	mx.AddRoutes(makeUsers, upload, buttons, uploader, notify, alert, form)
 }
 
+func defaultUsers() {
+
+	developer := Employee{
+		FirstName: "developer",
+		LastName:  "developer",
+	}
+
+	developer.Id = "0"
+	developer.Email = "developer@cns.com"
+	developer.Password = "developer"
+	developer.Active = true
+	developer.Role = "DEVELOPER"
+
+	admin := Employee{
+		FirstName: "admin",
+		LastName:  "admin",
+	}
+
+	admin.Id = "1"
+	admin.Email = "admin@cns.com"
+	admin.Password = "admin"
+	admin.Active = true
+	admin.Role = "ADMIN"
+
+	db.Set("employee", "0", developer)
+	db.Set("employee", "1", admin)
+}
+
 var makeUsers = web.Route{"GET", "/makeUsers", func(w http.ResponseWriter, r *http.Request) {
 	MakeEmployees()
 	compIds := MakeCompanies()
