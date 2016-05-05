@@ -10,7 +10,7 @@
             {{ template "dqf-warning.tmpl" . }}
 
             <div class="col-lg-12 text-center"><h1>DRIVER'S APPLICATION FOR EMPLOYMENT | DQF 100</h1></div>
-            <div class="col-lg-12">
+            <div class="col-lg-12" id="content">
             	<!-- PAGE ONE -->
             	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             		<div class="panel panel-default">
@@ -652,6 +652,10 @@
         </div>
 
         {{ template "dqf-scripts.tmpl" . }}
+        <script src="/static/jsPDF-1.2.60/jspdf.js" charset="utf-8"></script>
+        <script src="/static/jsPDF-1.2.60/plugins/from_html.js" charset="utf-8"></script>
+        <script src="/static/jsPDF-1.2.60/plugins/split_text_to_size.js" charset="utf-8"></script>
+        <script src="/static/jsPDF-1.2.60/plugins/standard_fonts_metrics.js" charset="utf-8"></script>
 
     </body>
 </html>
