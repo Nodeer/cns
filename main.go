@@ -27,6 +27,7 @@ func init() {
 	db.AddStore("employee")
 	db.AddStore("company")
 	db.AddStore("driver")
+	db.AddStore("vehicle")
 	db.AddStore("document")
 	db.AddStore("event")
 	db.AddStore("note")

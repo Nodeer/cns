@@ -140,3 +140,20 @@ type Comment struct {
 	Page   string `json:"page"`
 	Closed bool   `json:"closed"`
 }
+
+type Vehicle struct {
+	Id            string  `json:"id"`
+	CompanyId     string  `json:"companyId,omitempty"`
+	VehicleType   string  `json:"vehicleType,omitempty"`
+	UnitNumber    string  `json:"unitNumber,omitempty"`
+	Make          string  `json:"make,omitempty"`
+	VIN           string  `json:"vin,omitempty"`
+	Title         string  `json:"title,omitempty"`
+	GVW           string  `json:"gvw,omitempty"`
+	GCR           string  `json:"gcr,omitempty"`
+	UnladenWeight string  `json:"unladenWeight,omitempty"`
+	PurchasePrice float32 `json:"purchacePrice,omitempty"`
+	CurrentValue  float32 `json:"currentValue,omitempty"`
+	AxleType      string  `json:"axleType,omitempty"`
+	FuelType      string  `json:"fuelType,omitempty"`
+}

@@ -12,7 +12,8 @@ import (
 const (
 	CperE = 1
 	COMP  = 10
-	DperC = 1
+	DperC = 10
+	VperC = 5
 )
 
 func init() {
@@ -51,6 +52,7 @@ var makeUsers = web.Route{"GET", "/makeUsers", func(w http.ResponseWriter, r *ht
 	MakeEmployees()
 	compIds := MakeCompanies()
 	MakeDrivers(compIds)
+	MakeVehicles(compIds)
 	web.SetSuccessRedirect(w, r, "/", "Successfully made users")
 	return
 }}
@@ -134,6 +136,31 @@ func MakeDrivers(compIds [COMP]string) {
 		driver.Zip = fmt.Sprintf("1234%d", i)
 
 		db.Add("driver", id, driver)
+	}
+}
+
+func MakeVehicles(compIds [COMP]string) {
+	for i := 0; i < (COMP * VperC); i++ {
+		id := strconv.Itoa(int(time.Now().UnixNano()))
+		compIdx := i / VperC
+		vehicle := Vehicle{
+			Id:            id,
+			CompanyId:     compIds[compIdx],
+			VehicleType:   fmt.Sprintf("type-%d", i),
+			UnitNumber:    fmt.Sprintf("%d", i),
+			Make:          fmt.Sprintf("make-%d", i),
+			VIN:           fmt.Sprintf("%d%d%d", i, i, i),
+			Title:         fmt.Sprintf("title-%d", i),
+			GVW:           fmt.Sprintf("GVW-%d", i),
+			GCR:           fmt.Sprintf("GCR-%d", i),
+			UnladenWeight: fmt.Sprintf("unladenWeight-%d", i),
+			PurchasePrice: float32(i),
+			CurrentValue:  float32(i),
+			AxleType:      fmt.Sprintf("axle-%d", i),
+			FuelType:      fmt.Sprintf("fuel-%d", i),
+		}
+
+		db.Add("vehicle", id, vehicle)
 	}
 }
 

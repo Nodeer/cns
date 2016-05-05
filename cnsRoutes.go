@@ -107,6 +107,7 @@ var allCompany = web.Route{"GET", "/cns/company", func(w http.ResponseWriter, r 
 var viewCompany = web.Route{"GET", "/cns/company/:id", func(w http.ResponseWriter, r *http.Request) {
 	var company Company
 	var drivers []Driver
+	var vehicles []Vehicle
 	var notes []Note
 	compId := r.FormValue(":id")
 	if compId != "add" {
@@ -116,12 +117,14 @@ var viewCompany = web.Route{"GET", "/cns/company/:id", func(w http.ResponseWrite
 			return
 		}
 		db.TestQuery("driver", &drivers, adb.Eq("companyId", `"`+company.Id+`"`))
+		db.TestQuery("vehicle", &vehicles, adb.Eq("companyId", `"`+company.Id+`"`))
 		db.TestQuery("note", &notes, adb.Eq("companyId", `"`+company.Id+`"`))
 	}
 	tc.Render(w, r, "company.tmpl", web.Model{
-		"company": company,
-		"drivers": drivers,
-		"notes":   notes,
+		"company":  company,
+		"drivers":  drivers,
+		"vehicles": vehicles,
+		"notes":    notes,
 	})
 }}
 
