@@ -87,24 +87,52 @@ func MakeCompanies() [COMP]string {
 	for i := 0; i < COMP; i++ {
 		id := strconv.Itoa(int(time.Now().UnixNano()))
 		compIds[i] = id
-		company := Company{
-			Name:    fmt.Sprintf("Company %d", i),
-			Contact: fmt.Sprintf("Bobbi Sue the %dth", (i + 4)),
-			Phone:   fmt.Sprintf("717-777-777%d", i),
+
+		company := Company{}
+		company.Id = id
+		company.Name = fmt.Sprintf("Company %d", i)
+		company.ContactName = fmt.Sprintf("Bobbi Sue the %dth", (i + 4))
+		company.ContactTitle = fmt.Sprintf("Worker #%d", i)
+		company.ContactPhone = fmt.Sprintf("717-777-777%d", i)
+		company.DOTNum = "DOT#" + id
+
+		company.PhysicalAddress.Street = fmt.Sprintf("12%d Main Street", i)
+		company.PhysicalAddress.City = fmt.Sprintf("%dville", i)
+		company.PhysicalAddress.State = fmt.Sprintf("%d state", i)
+		company.PhysicalAddress.Zip = fmt.Sprintf("1234%d", i)
+		//company.CreateSlug()
+		if i%2 == 0 {
+			company.SameAddress = true
+
+			company.MailingAddress.Street = fmt.Sprintf("12%d Main Street", i)
+			company.MailingAddress.City = fmt.Sprintf("%dville", i)
+			company.MailingAddress.State = fmt.Sprintf("%d state", i)
+			company.MailingAddress.Zip = fmt.Sprintf("1234%d", i)
+
+			company.SecondName = fmt.Sprintf("Terry Robinson the %dth", (i + 4))
+			company.SecondTitle = fmt.Sprintf("Worker #%d", i+1)
+			company.SecondPhone = fmt.Sprintf("717-965-435%d", i)
+
+		} else {
+			company.SameAddress = false
+
+			company.MailingAddress.Street = fmt.Sprintf("12%d Main Street", i*10)
+			company.MailingAddress.City = fmt.Sprintf("%dville", i*10)
+			company.MailingAddress.State = fmt.Sprintf("%d state", i*10)
+			company.MailingAddress.Zip = fmt.Sprintf("123%d", i*10)
 		}
 
-		company.Id = id
+		company.MCNum = fmt.Sprintf("MC#%d", i*654)
+		company.PUCNum = fmt.Sprintf("PUC#%d", i*789)
+		company.Fax = fmt.Sprintf("515-555-555%d", i)
 		company.Email = fmt.Sprintf("%d@company%d.com", i, i)
-		company.Password = fmt.Sprintf("Password-%d", i)
-		company.Active = (i%2 == 0)
-		company.Role = "COMPANY"
+		company.EINNum = fmt.Sprintf("EIN#%d", i*425)
 
-		company.Street = fmt.Sprintf("12%d Main Street", 1)
-		company.City = fmt.Sprintf("%dville", i)
-		company.State = fmt.Sprintf("%d state", i)
-		company.Zip = fmt.Sprintf("1234%d", i)
-		company.CreateSlug()
-
+		//company.Id = id
+		//company.Email = fmt.Sprintf("%d@company%d.com", i, i)
+		//company.Password = fmt.Sprintf("Password-%d", i)
+		//company.Active = (i%2 == 0)
+		//company.Role = "COMPANY"
 		db.Add("company", id, company)
 	}
 	return compIds
@@ -191,6 +219,7 @@ var makeEmployees = web.Route{"GET", "/makeEmployees", func(w http.ResponseWrite
 	return
 }}
 
+/*
 var makeCompanies = web.Route{"GET", "/makeComps", func(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < 10; i++ {
 		id := strconv.Itoa(int(time.Now().UnixNano()))
@@ -217,7 +246,7 @@ var makeCompanies = web.Route{"GET", "/makeComps", func(w http.ResponseWriter, r
 	}
 	web.SetSuccessRedirect(w, r, "/", "success")
 	return
-}}
+}}*/
 
 var makeDrivers = web.Route{"GET", "/makeDrive", func(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < 10; i++ {

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        {{ template "head.tmpl" . }}
+
+        <!-- sweet alerts -->
+        <link href="/static/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+        <!-- DataTables -->
+        <link href="/static/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
+
+        <link href="/static/toggles/toggles.css" rel="stylesheet" />
+
+        <title>Company</title>
+    </head>
+    <body>
+
+        {{ template "side-nav.tmpl" . }}
+
+        <!--Main Content Start -->
+        <section class="content">
+
+            {{ template "nav.tmpl" . }}
+
+            <div class="wraper container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <p class="lead">
+                            Company: {{ if .company.Id}}{{ .company.Name }}{{ else }}NEW{{ end }}
+                        </p>
+
+                        <div class="panel panel-default p-0">
+                            <div class="panel-body p-0">
+                                <ul class="nav nav-tabs profile-tabs">
+                                    <li class=""><a id="infoTab" href="/cns/company/{{ .company.Id }}">Customer Center</a></li>
+                                    <li class=""><a id="driversTab" href="/cns/company/{{ .company.Id }}/service">Service</a></li>
+                                    <li class="active"><a id="vehiclesTab" >Vehicles</a></li>
+                                    <li class=""><a id="notesTab" href="/cns/company/{{ .company.Id }}/driver">Drivers</a></li>
+                                </ul>
+                                <div class="tab-content m-0">
+
+                                    <div id="vehiclesPane">
+                                        <table id="vehiclesTable" class="table table-bordered table-hover" style="background-color:white;">
+                                            <thead>
+                                                <tr id="search">
+                                                    <th></th>
+                                                    <th>type</th>
+                                                    <th>make</th>
+                                                    <th>vin</th>
+                                                    <th>title</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Type</th>
+                                                    <th>Make</th>
+                                                    <th>VIN</th>
+                                                    <th>Title</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{ $company := .company }}
+                                                {{ range $vehicle := .vehicles }}
+                                                    <tr class="clickable" data-url="/cns/company/{{ $company.Id }}/vehicle/{{ $vehicle.Id }}">
+                                                        <td>{{ $vehicle.Id }}</td>
+                                                        <td>{{ $vehicle.VehicleType }}</td>
+                                                        <td>{{ $vehicle.Make }}</td>
+                                                        <td>{{ $vehicle.VIN }}</td>
+                                                        <td>{{ $vehicle.Title }}</td>
+                                                    </tr>
+                                                {{ end }}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{ template "footer.tmpl" . }}
+
+        </section>
+        <!-- Main Content Ends -->
+
+        {{ template "scripts.tmpl" . }}
+
+        <script src="/static/js/jquery.scrollTo.min.js"></script>
+        <script src="/static/datatables/jquery.dataTables.min.js"></script>
+        <script src="/static/datatables/dataTables.bootstrap.js"></script>
+        <script src="/static/js/confirm.js" charset="utf-8"></script>
+        <script src="/static/datatables/custom.js" charset="utf-8"></script>
+
+        <script src="/static/toggles/toggles.min.js"></script>
+
+        <script type="text/javascript">
+
+                var table = $('#vehiclesTable').DataTable({
+                    "lengthMenu":[5,10,15,20],
+                    "dom": 'lrtip',
+                    "columnDefs": [
+                        { "orderable": false, "targets": [3,4] },
+                        { "name": "type",   "targets": 1 },
+                        { "name": "make",  "targets": 2 },
+                        { "name": "vin",  "targets": 3 },
+                        { "name": "title",  "targets": 4 },
+                    ]
+                });
+
+        </script>
+
+  </body>
+</html>

@@ -37,8 +37,10 @@ func init() {
 
 	mx.AddSecureRoutes(EMPLOYEE, index)
 
-	mx.AddSecureRoutes(EMPLOYEE, allCompany, viewCompany, saveCompany, saveNote)
 	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee, settings)
+
+	mx.AddSecureRoutes(EMPLOYEE, companyAll, companyView, companyDriver, companyVehicle, companyNote, companySetting, companySave, companySaveNote, companyVehicleView)
+
 	mx.AddSecureRoutes(EMPLOYEE, allDriver, viewDriver, saveDriver)
 
 	mx.AddSecureRoutes(AJAX, uploadDriverFile, addDriverDocument, viewDriverFile, delDriverFile, documentDel)
@@ -57,19 +59,8 @@ func main() {
 }
 
 var logout = web.Route{"GET", "/logout", func(w http.ResponseWriter, r *http.Request) {
-	redirect := "/login"
-	switch web.GetRole(r) {
-	case "EMPLOYEE":
-		redirect = "/login"
-	case "COMPANY":
-		redirect = "/company/login"
-	case "DRIVER":
-		var company Company
-		db.Get("company", web.GetSess(r, "companyId").(string), &company)
-		redirect = "/login/" + company.Slug
-	}
 	web.Logout(w)
-	web.SetSuccessRedirect(w, r, redirect, "Successfully logged out")
+	web.SetSuccessRedirect(w, r, "/login", "Successfully logged out")
 }}
 
 var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.ResponseWriter, r *http.Request) {

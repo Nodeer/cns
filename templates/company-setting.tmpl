@@ -10,11 +10,13 @@
         <link href="/static/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
 
+        <link href="/static/toggles/toggles.css" rel="stylesheet" />
+
         <title>Company</title>
     </head>
     <body>
 
-        {{ template "comp-side-nav.tmpl" . }}
+        {{ template "side-nav.tmpl" . }}
 
         <!--Main Content Start -->
         <section class="content">
@@ -24,79 +26,25 @@
             <div class="wraper container-fluid">
                 <div class="row">
                     <div class="col-sm-12">
+
+                        <p class="lead">
+                            Company: {{ if .company.Id}}{{ .company.Name }}{{ else }}NEW{{ end }}
+                        </p>
+
                         <div class="panel panel-default p-0">
                             <div class="panel-body p-0">
                                 <ul class="nav nav-tabs profile-tabs">
-                                    <li class="active"><a id="infoTab" data-toggle="tab" href="#infoPane">Information</a></li>
-                                    <li class=""><a id="driversTab" data-toggle="tab" href="#driversPane">Drivers</a></li>
-                                    <li class=""><a id="vehiclesTab" data-toggle="tab" href="#vehiclesPane">Vehicles</a></li>
-                                    <li class=""><a id="settingsTab" data-toggle="tab" href="#settingsPane">Settings</a></li>
+                                    <li class=""><a id="infoTab" href="/cns/company/{{ .company.Id }}">Information</a></li>
+                                    <li class=""><a id="driversTab" href="/cns/company/{{ .company.Id }}/driver">Drivers</a></li>
+                                    <li class=""><a id="vehiclesTab" href="/cns/company/{{ .company.Id }}/vehicle">Vehicles</a></li>
+                                    <li class=""><a id="notesTab" href="/cns/company/{{ .company.Id }}/note">Notes</a></li>
+                                    <li class="active"><a id="settingsTab" >Settings</a></li>
                                 </ul>
                                 <div class="tab-content m-0">
 
-                                    <div id="infoPane" class="tab-pane active">
-                                        <div class="profile-desk">
-                                            <h1>{{ .company.Name }}</h1>
-                                            <table class="table table-condensed">
-                                                <tbody>
-                                                    <tr>
-                                                        <td><b>Contact Name</b></td>
-                                                        <td>{{ .company.Contact }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Contact Email</b></td>
-                                                        <td>{{ .company.Email }}</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Phone</b></td>
-                                                        <td>{{ .company.Phone }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Address</b></td>
-                                                        <td>{{ .company.AddrHTML }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                                    <div id="driversPane" class="tab-pane">
-                                        <table id="drivers" class="table table-bordered table-hover" style="background-color:white;">
-                                            <thead>
-                                                <tr id="search">
-                                                    <th></th>
-                                                    <th>name</th>
-                                                    <th>email</th>
-                                                    <th>phone</th>
-                                                </tr>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Name</th>
-                                                    <th>Email</th>
-                                                    <th>Phone</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{ range $driver := .drivers }}
-                                                    <tr id="{{ $driver.Id }}" class="clickable" data-url="/company/driver/{{ $driver.Id }}">
-                                                        <td>{{ $driver.Id }}</td>
-                                                        <td>{{ $driver.FirstName }} {{ $driver.LastName }}</td>
-                                                        <td>{{ $driver.Email }}</td>
-                                                        <td>{{ $driver.Phone }}</td>
-                                                    </tr>
-                                                {{ end }}
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div id="vehiclesPane" class="tab-pane">
-
-                                    </div>
-
-                                    <div id="settingsPane" class="tab-pane">
+                                    <div id="settingsPane">
                                         <div class="user-profile-content">
-                                            <form role="form" action="/company" method="post">
+                                            <form role="form" action="/cns/company" method="post">
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="form-group">
@@ -114,6 +62,13 @@
                                                         <div class="form-group">
                                                             <label for="Email">Phone</label>
                                                             <input type="text" value="{{ .company.Phone }}" name="phone"  class="form-control">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Company Login</label>
+                                                            <div class="control-label">
+                                                                <div class="toggle toggle-default"></div>
+                                                            </div>
+                                                            <input id="switch" type="checkbox" name="auth.Active" {{ if .company.Active }}checked{{ end }} value="true" class="hide">
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
@@ -156,24 +111,19 @@
         {{ template "scripts.tmpl" . }}
 
         <script src="/static/js/jquery.scrollTo.min.js"></script>
-        <script src="/static/datatables/jquery.dataTables.min.js"></script>
-        <script src="/static/datatables/dataTables.bootstrap.js"></script>
         <script src="/static/js/confirm.js" charset="utf-8"></script>
-        <script src="/static/datatables/custom.js" charset="utf-8"></script>
+        <script src="/static/toggles/toggles.min.js"></script>
 
         <script type="text/javascript">
 
-                var table = $('#drivers').DataTable({
-                    "lengthMenu":[10,15,20],
-                    "dom": 'lrtip',
-                    "columnDefs": [
-                        { "orderable": false, "targets": [3] },
-                        { "name": "email",   "targets": 2 },
-                        { "name": "name",  "targets": 1 },
-                        { "name": "phone",   "targets": 3 },
-                    ]
+                // Form Toggles
+                jQuery('.toggle').toggles({
+                    {{ if .company.Active }}on: true,{{ end }}
+                    checkbox:$('#switch')
                 });
+
         </script>
+
 
   </body>
 </html>

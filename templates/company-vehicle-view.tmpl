@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        {{ template "head.tmpl" . }}
+
+        <!-- sweet alerts -->
+        <link href="/static/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+
+        <title>Company</title>
+    </head>
+    <body>
+
+        {{ template "side-nav.tmpl" . }}
+
+        <!--Main Content Start -->
+        <section class="content">
+
+            {{ template "nav.tmpl" . }}
+
+            <div class="wraper container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <p class="lead">
+                            Company: {{ .company.Name }}
+                        </p>
+
+                        <div class="panel panel-default p-0">
+                            <div class="panel-body p-0">
+                                <ul class="nav nav-tabs profile-tabs">
+                                    <li class=""><a id="infoTab" href="/cns/company/{{ .company.Id }}">Customer Center</a></li>
+                                    <li class=""><a id="driversTab" href="/cns/company/{{ .company.Id }}/service">Service</a></li>
+                                    <li class=""><a id="vehiclesTab" href="/cns/company/{{ .company.Id }}/vehicle">Vehicles</a></li>
+                                    <li class=""><a id="notesTab" href="/cns/company/{{ .company.Id }}/driver">Drivers</a></li>
+                                </ul>
+
+                                <div style="padding:30px">
+                                    <div id="view" class="profile-desk">
+                                        <h1>
+                                            {{ .vehicle.VehicleType }}
+                                            <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
+                                            <button class="btn btn-danger btn-xs pull-right hide" id="cancelButton">Cancel</button>
+                                        </h1>
+
+                                        <div class="col-lg-6">
+                                            <table class="table table-condensed" style="margin-bottom:0;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td><b>Unit #</b></td>
+                                                        <td>{{ .vehicle.UnitNumber }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Make</b></td>
+                                                        <td>{{ .vehicle.Make }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>VIN</b></td>
+                                                        <td>{{ .vehicle.VIN }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Title #</b></td>
+                                                        <td>{{ .vehicle.Title }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>GVW</b></td>
+                                                        <td>{{ .vehicle.GVW }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>GCR</b></td>
+                                                        <td>{{ .vehicle.GCR }}</td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <table class="table table-condensed" style="margin-bottom:0;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td><b>Unladen Weight</b></td>
+                                                        <td>{{ .vehicle.UnladenWeight }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Purchase Price</b></td>
+                                                        <td>{{ .vehicle.PurchasePrice }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Purchase Date</b></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Current Value</b></td>
+                                                        <td>{{ .vehicle.CurrentValue }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Axle Type</b></td>
+                                                        <td>{{ .vehicle.AxleType }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Fuel Type</b></td>
+                                                        <td>{{ .vehicle.FuelType }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div id="edit" class="profile-desk hide">
+                                        <div class="row">
+                                            <h1 class="col-lg-12">
+                                                <div class="col-lg-4">
+                                                    <select class="form-control" name="vehicleType">
+                                                        <option value="TRUCK">Truck</option>
+                                                        <option value="TRACTOR">Tractor</option>
+                                                        <option value="TRAILER">Trailer</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
+                                                    <button class="btn btn-danger btn-xs pull-right hide" id="cancelButton">Cancel</button>
+                                                </div>
+                                            </h1>
+                                        </div>
+                                        <br>
+
+                                        <form class="" action="index.html" method="post">
+                                            <div class="col-lg-6">
+                                                <table class="table table-condensed" style="margin-bottom:0;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><b>Unit #</b></td>
+                                                            <td><input type="text" class="form-control" name="unitNumber" value="{{ .vehicle.UnitNumber }}" placeholder="Unit #"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Make</b></td>
+                                                            <td><input type="text" class="form-control" name="make" value="{{ .vehicle.Make }}" placeholder="Make"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>VIN</b></td>
+                                                            <td><input type="text" class="form-control" name="vIN" value="{{ .vehicle.VIN }}" placeholder="VIN"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Title #</b></td>
+                                                            <td><input type="text" class="form-control" name="title" value="{{ .vehicle.Title }}" placeholder="Title #"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>GVW</b></td>
+                                                            <td><input type="text" class="form-control" name="gVW" value="{{ .vehicle.GVW }}" placeholder="GVW"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>GCR</b></td>
+                                                            <td><input type="text" class="form-control" name="gCR" value="{{ .vehicle.GCR }}" placeholder="GCR"></td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <table class="table table-condensed" style="margin-bottom:0;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><b>Unladen Weight</b></td>
+                                                            <td><input type="text" class="form-control" name="unladenWeight" value="{{ .vehicle.UnladenWeight }}" placeholder="Unladen Weight"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Purchase Price</b></td>
+                                                            <td><input type="text" class="form-control" name="purchasePrice" value="{{ .vehicle.PurchasePrice }}" placeholder="Purchase Price"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Purchase Date</b></td>
+                                                            <td><input type="text" class="form-control" value="{{ .vehicle.GCR }}" placeholder="GCR"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Current Value</b></td>
+                                                            <td><input type="text" class="form-control" name="currentValue" value="{{ .vehicle.CurrentValue }}" placeholder="Current Value"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Axle Type</b></td>
+                                                            <td><input type="text" class="form-control" name="axleType" value="{{ .vehicle.AxleType }}" placeholder="Axle Type"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Fuel Type</b></td>
+                                                            <td><input type="text" class="form-control" name="fuelType" value="{{ .vehicle.FuelType }}" placeholder="Fuel Type"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="hidden" name="id" value="{{ .company.Id }}">
+                                                <div class="form-group">
+                                                    <button class="btn btn-success btn-block">Save</button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{ template "footer.tmpl" . }}
+
+        </section>
+        <!-- Main Content Ends -->
+
+        {{ template "scripts.tmpl" . }}
+
+        <script src="/static/js/jquery.scrollTo.min.js"></script>
+
+        <script type="text/javascript">
+            $('button#editButton').click(function() {
+                $('div#view').addClass('hide');
+                $('button#editButton').addClass('hide');
+                $('div#edit').removeClass('hide');
+                $("button#cancelButton").removeClass('hide');
+            });
+
+            $('button#cancelButton').click(function() {
+                $('div#edit').addClass('hide');
+                $("button#cancelButton").addClass('hide');
+                $('div#view').removeClass('hide');
+                $('button#editButton').removeClass('hide');
+                $('form#edit')[0].reset();
+                if ($('input#sameYes')[0].checked) {
+                    $('span#mailingAddress').addClass('hide');
+                }
+            });
+        </script>
+
+  </body>
+</html>

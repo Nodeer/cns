@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"math"
-	"regexp"
 	"strings"
 	"time"
 )
@@ -27,15 +25,27 @@ type Employee struct {
 }
 
 type Company struct {
-	Auth
-	Name    string `json:"name,omitempty"`
-	Contact string `json:"contact,omityempty"`
-	Phone   string `json:"phone,omitempty"`
-	Slug    string `json:"slug,omitempty"`
-	Address
+	Id              string  `json:"id"`
+	DOTNum          string  `json:"dotNum,omitempty"`
+	Name            string  `json:"name,omitempty"`
+	ContactName     string  `json:"contactName,omitempty"`
+	ContactTitle    string  `json:"contactTitle,omitempty"`
+	ContactPhone    string  `json:"contactPhone,omitempty"`
+	SecondName      string  `json:"secondName,omitempty"`
+	SecondTitle     string  `json:"secondTitle,omitempty"`
+	SecondPhone     string  `json:"secondPhone,omitempty"`
+	SameAddress     bool    `json:"sameAddress"`
+	PhysicalAddress Address `json:"pysicalAddress,omitempty"`
+	MailingAddress  Address `json:"mailingAddress,omitempty"`
+	MCNum           string  `json:"mcNum,omitempty"`
+	PUCNum          string  `json:"pucNum,omitempty"`
+	Fax             string  `json:"fax,omitempty"`
+	Email           string  `json:"email,omitempty"`
+	EINNum          string  `json:"einNum,omitempty"`
+	//Slug            string  `json:"slug,omitempty"`
 }
 
-func (c *Company) CreateSlug() {
+/*func (c *Company) CreateSlug() {
 	// slug = title.replaceAll("[;/?:@&=+\\\$,\\{\\}\\|\\\\^\\[\\]`]", "").trim().replace(' ', '_').toLowerCase()
 	r, err := regexp.Compile("[;/?:@&=+$,\\{\\}\\|^\\[\\]`]")
 	if err != nil {
@@ -43,7 +53,7 @@ func (c *Company) CreateSlug() {
 		return
 	}
 	c.Slug = strings.ToLower(strings.Replace(strings.Trim(r.ReplaceAllString(c.Name, ""), " "), " ", "-", -1))
-}
+}*/
 
 type Driver struct {
 	Auth

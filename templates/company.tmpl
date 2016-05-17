@@ -7,8 +7,6 @@
         <!-- sweet alerts -->
         <link href="/static/sweet-alert/sweet-alert.min.css" rel="stylesheet">
         <!-- DataTables -->
-        <link href="/static/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
 
         <link href="/static/toggles/toggles.css" rel="stylesheet" />
 
@@ -28,210 +26,202 @@
                     <div class="col-sm-12">
 
                         <p class="lead">
-                            Company: {{ if .company.Id}}{{ .company.Name }}{{ else }}NEW{{ end }}
+                            Company: {{ .company.Name }}
                         </p>
 
                         <div class="panel panel-default p-0">
                             <div class="panel-body p-0">
                                 <ul class="nav nav-tabs profile-tabs">
-                                    <li class="active"><a id="infoTab" class="view" data-toggle="tab" href="#infoPane">Information</a></li>
-                                    <li class=""><a id="driversTab" class="view" data-table="driversTable" data-toggle="tab" href="#driversPane">Drivers</a></li>
-                                    <li class=""><a id="vehiclesTab" class="view" data-table="vehiclesTable" data-toggle="tab" href="#vehiclesPane">Vehicles</a></li>
-                                    <li class=""><a id="notesTab" class="view" data-toggle="tab" href="#notesPane">Notes</a></li>
-                                    <li class=""><a id="settingsTab" class="view" data-toggle="tab" href="#settingsPane">Settings</a></li>
+                                    <li class="active"><a id="infoTab">Customer Center</a></li>
+                                    <li class=""><a id="driversTab" href="/cns/company/{{ .company.Id }}/service">Service</a></li>
+                                    <li class=""><a id="vehiclesTab" href="/cns/company/{{ .company.Id }}/vehicle">Vehicles</a></li>
+                                    <li class=""><a id="notesTab" href="/cns/company/{{ .company.Id }}/driver">Drivers</a></li>
                                 </ul>
-                                <div class="tab-content m-0">
+                                <div style="padding:30px">
 
-                                    <div id="infoPane" class="tab-pane active">
+                                    <div id="infoPane" class="col-lg-6">
                                         <div class="profile-desk">
-                                            <h1>{{ .company.Name }}</h1>
-                                            <table class="table table-condensed">
+                                            <h1>
+                                                {{ .company.Name }}
+                                                <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
+                                                <button class="btn btn-danger btn-xs pull-right hide" id="cancelButton">Cancel</button>
+                                            </h1>
+                                            <table id="view" class="table table-condensed" style="margin-bottom:0;">
                                                 <tbody>
                                                     <tr>
-                                                        <td><b>Contact Name</b></td>
-                                                        <td>{{ .company.Contact }}</td>
+                                                        <td><b>DOT #</b></td>
+                                                        <td>{{ .company.DOTNum }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td><b>Contact Email</b></td>
-                                                        <td>{{ .company.Email }}</a>
+                                                        <td><b>Name</b></td>
+                                                        <td>{{ .company.Name }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Primary Contact</b></td>
+                                                        <td>
+                                                            {{ .company.ContactName }}<br>
+                                                            {{ .company.ContactTitle }}<br>
+                                                            {{ .company.ContactPhone }}
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><b>Phone</b></td>
-                                                        <td>{{ .company.Phone }}</td>
+                                                        <td><b>Secondary Contact</b></td>
+                                                        <td>
+                                                            {{ .company.SecondName }}<br>
+                                                            {{ .company.SecondTitle }}<br>
+                                                            {{ .company.SecondPhone }}
+                                                        </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><b>Address</b></td>
-                                                        <td>{{ .company.AddrHTML }}</td>
+                                                        <td><b>Physical Address</b></td>
+                                                        <td>{{ .company.PhysicalAddress.AddrHTML }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Mailing Address</b></td>
+                                                        <td>{{ .company.MailingAddress.AddrHTML }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <b>MC #</b> &nbsp;&nbsp;{{ .company.MCNum }}
+                                                        </td>
+                                                        <td>
+                                                            <b>PUC #</b> &nbsp;&nbsp;{{ .company.PUCNum }}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <b>Fax</b> &nbsp;&nbsp;{{ .company.Fax }}
+                                                        </td>
+                                                        <td>
+                                                            <b>Email</b> &nbsp;&nbsp;{{ .company.Email }}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <b>EIN #</b> &nbsp;&nbsp;{{ .company.EINNum }}
+                                                        </td>
+                                                        <td></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                        </div>
-                                    </div>
 
-                                    <div id="driversPane" class="tab-pane">
-                                        <table id="driversTable" class="table table-bordered table-hover" style="background-color:white;">
-                                            <thead>
-                                                <tr id="search">
-                                                    <th></th>
-                                                    <th>name</th>
-                                                    <th>email</th>
-                                                    <th>phone</th>
-                                                </tr>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Name</th>
-                                                    <th>Email</th>
-                                                    <th>Phone</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{ range $driver := .drivers }}
-                                                    <tr id="{{ $driver.Id }}" class="clickable" data-url="/cns/driver/{{ $driver.Id }}">
-                                                        <td>{{ $driver.Id }}</td>
-                                                        <td>{{ $driver.FirstName }} {{ $driver.LastName }}</td>
-                                                        <td>{{ $driver.Email }}</td>
-                                                        <td>{{ $driver.Phone }}</td>
-                                                    </tr>
-                                                {{ end }}
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div id="vehiclesPane" class="tab-pane">
-                                        <table id="vehiclesTable" class="table table-bordered table-hover" style="background-color:white;">
-                                            <thead>
-                                                <tr id="search">
-                                                    <th></th>
-                                                    <th>type</th>
-                                                    <th>make</th>
-                                                    <th>vin</th>
-                                                    <th>title</th>
-                                                </tr>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Type</th>
-                                                    <th>Make</th>
-                                                    <th>VIN</th>
-                                                    <th>Title</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{ range $vehicle := .vehicles }}
-                                                    <tr>
-                                                        <td>{{ $vehicle.Id }}</td>
-                                                        <td>{{ $vehicle.VehicleType }}</td>
-                                                        <td>{{ $vehicle.Make }}</td>
-                                                        <td>{{ $vehicle.VIN }}</td>
-                                                        <td>{{ $vehicle.Title }}</td>
-                                                    </tr>
-                                                {{ end }}
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div id="notesPane" class="tab-pane">
-                                        <div class="row m-t-10">
-                                            <div class="col-lg-6">
-                                                <div class="table-responsive">
-                                                    <table id="filesTable" class="table table-bordered table-hover">
-                                                        <thead>
-                                                            <tr id="search" class="search">
-                                                                <th></th>
-                                                                <th>Data</th>
-                                                                <th></th>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>ID</th>
-                                                                <th>Data</th>
-                                                                <th></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {{ range $note := .notes }}
-                                                                <tr>
-                                                                    <td>{{ $note.Id }}</td>
-                                                                    <td>{{ $note.Body }}</td>
-                                                                    <td></td>
-                                                                </tr>
-                                                            {{ end }}
-                                                        </tbody>
-                                                    </table>
+                                            <form id="edit" class="hide" action="/cns/company" method="post">
+                                                <table  class="table table-condensed" style="margin-bottom:0;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><b>DOT #</b></td>
+                                                            <td><input type="text" class="form-control" name="dOTNum" value="{{ .company.DOTNum }}" placeholder="DOT#"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Name</b></td>
+                                                            <td><input type="text" class="form-control" name="name" value="{{ .company.Name }}" placeholder="Name"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Primary Contact</b></td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="contactName" value="{{ .company.ContactName }}" placeholder="Name"><br>
+                                                                <input type="text" class="form-control" name="contactTitle" value="{{ .company.ContactTitle }}" placeholder="Title"><br>
+                                                                <input type="text" class="form-control" name="contactPhone" value="{{ .company.ContactPhone }}" placeholder="Phone">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Secondary Contact</b></td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="secondName" value="{{ .company.SecondName }}" placeholder="Name"><br>
+                                                                <input type="text" class="form-control" name="secondTitle" value="{{ .company.SecondTitle }}" placeholder="Title"><br>
+                                                                <input type="text" class="form-control" name="secondPhone" value="{{ .company.SecondPhone }}" placeholder="Phone">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Physical Address</b></td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="physicalAddress.Street" value="{{ .company.PhysicalAddress.Street }}" placeholder="Name"><br>
+                                                                <input type="text" class="form-control" name="physicalAddress.City" value="{{ .company.PhysicalAddress.City }}" placeholder="Title"><br>
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <input type="text" class="form-control" name="physicalAddress.State" value="{{ .company.PhysicalAddress.State }}" placeholder="Phone">
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <input type="text" class="form-control" name="physicalAddress.Zip" value="{{ .company.PhysicalAddress.Zip }}" placeholder="Zip">
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Mailing Address</b></td>
+                                                            <td>
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        Same as Physical
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio" name="sameAddress" value="true" id="sameYes" {{ if .company.SameAddress}}checked{{ end }}> Yes
+                                                                        </label>
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio" name="sameAddress" value="false" id="sameNo" {{ if not .company.SameAddress}}checked{{ end }}> No
+                                                                        </label>
+                                                                        <!-- <div class="control-label">
+                                                                            <div class="toggle toggle-default"></div>
+                                                                        </div>
+                                                                        <input id="switch" type="checkbox" name="company.SameAddress" {{ if .company.SameAddress }}checked{{ end }} value="true" class="hide"> -->
+                                                                    </div>
+                                                                </div>
+                                                                <span id="mailingAddress" {{ if .company.SameAddress }}class="hide"{{ end }}>
+                                                                    <br>
+                                                                    <input type="text" class="form-control" name="mailingAddress.Street" value="{{ .company.MailingAddress.Street }}" placeholder="Name"><br>
+                                                                    <input type="text" class="form-control" name="mailingAddress.City" value="{{ .company.MailingAddress.City }}" placeholder="Title"><br>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6">
+                                                                            <input type="text" class="form-control" name="mailingAddress.State" value="{{ .company.MailingAddress.State }}" placeholder="State">
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <input type="text" class="form-control" name="mailingAddress.Zip" value="{{ .company.MailingAddress.Zip }}" placeholder="Zip">
+                                                                        </div>
+                                                                    </div>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <b>MC #</b><br><br>
+                                                                <input type="text" class="form-control" name="mCNum" value="{{ .company.MCNum }}" placeholder="MC#">
+                                                            </td>
+                                                            <td>
+                                                                <b>PUC #</b><br><br>
+                                                                <input type="text" class="form-control" name="pUCNum" value="{{ .company.PUCNum }}" placeholder="PUC#">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <b>Fax</b><br><br>
+                                                                <input type="text" class="form-control" name="fax" value="{{ .company.Fax }}" placeholder="Fax">
+                                                            </td>
+                                                            <td>
+                                                                <b>Email</b><br><br>
+                                                                <input type="email" class="form-control" name="email" value="{{ .company.Email }}" placeholder="Email">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <b>EIN #</b><br><br>
+                                                                <input type="text" class="form-control" name="eINNum" value="{{ .company.EINNum }}" placeholder="EIN#">
+                                                            </td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <input type="hidden" name="id" value="{{ .company.Id }}">
+                                                <div class="form-group">
+                                                    <button class="btn btn-success btn-block">Save</button>
                                                 </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <form action="/cns/company/note" method="post">
-                                                    <textarea id="text" class="form-control" name="body" rows="8"></textarea>
-                                                    <input type="hidden" name="id" value="{{ .company.Id }}">
-                                                    <br>
-                                                    <div class="col-lg-12">
-                                                        <div class="row">
-                                                            <div data-note="cool" class="customNote btn btn-success">note1</div>
-                                                            <div data-note="neat" class="customNote btn btn-warning">note2</div>
-                                                            <div data-note="dumb" class="customNote btn btn-danger">note3</div>
-                                                        </div>
-                                                        <br>
-                                                    </div>
-                                                    <button class="btn btn-primary" type="submit">Save</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div id="settingsPane" class="tab-pane">
-                                        <div class="user-profile-content">
-                                            <form role="form" action="/cns/company" method="post">
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            <label for="FullName">Name</label>
-                                                            <input type="text" value="{{ .company.Name }}" name="name" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="FullName">Contact Name</label>
-                                                            <input type="text" value="{{ .company.Contact }}" name="contact" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="Email">Contact Email</label>
-                                                            <input type="email" value="{{ .company.Email }}" name="auth.Email" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="Email">Phone</label>
-                                                            <input type="text" value="{{ .company.Phone }}" name="phone"  class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="control-label">Company Login</label>
-                                                            <div class="control-label">
-                                                                <div class="toggle toggle-default"></div>
-                                                            </div>
-                                                            <input id="switch" type="checkbox" name="auth.Active" {{ if .company.Active }}checked{{ end }} value="true" class="hide">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            <label for="FullName">Street</label>
-                                                            <input type="text" value="{{ .company.Street }}" name="address.Street" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="FullName">City</label>
-                                                            <input type="text" value="{{ .company.City }}" name="address.City" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="Email">State</label>
-                                                            <input type="text" value="{{ .company.State }}" name="address.State" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="Email">Zip</label>
-                                                            <input type="text" value="{{ .company.Zip }}" name="address.Zip" class="form-control">
-                                                        </div>
-                                                        <input type="hidden" name="id" value="{{ .company.Id }}">
-                                                    </div>
-                                                </div>
-                                                <button class="btn btn-primary" type="submit">Save</button>
                                             </form>
+
                                         </div>
                                     </div>
-
+                                    <div class="col-lg-6 text-center">
+                                        NOTES SECTION
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -247,83 +237,59 @@
         {{ template "scripts.tmpl" . }}
 
         <script src="/static/js/jquery.scrollTo.min.js"></script>
-        <script src="/static/datatables/jquery.dataTables.min.js"></script>
-        <script src="/static/datatables/dataTables.bootstrap.js"></script>
-        <script src="/static/js/confirm.js" charset="utf-8"></script>
-        <script src="/static/datatables/custom.js" charset="utf-8"></script>
 
         <script src="/static/toggles/toggles.min.js"></script>
 
-
-        {{ if not .company.Id}}
-            <script type="text/javascript">
-                $('a#settingsTab').tab('show');
-            </script>
-        {{ end }}
-
         <script type="text/javascript">
 
-                // Form Toggles
-                jQuery('.toggle').toggles({
-                    {{ if .company.Active }}on: true,{{ end }}
-                    checkbox:$('#switch')
-                });
-
-                var selectedTable = '';
-                var table = {};
-                var tableState = {
-                    'driversTable': {
-                        'table':{},
-                        'search':''
-                    },
-                    'vehiclesTable': {
-                        'table':{},
-                        'search':''
-                    }
-                }
-
-                $('a.view').click(function() {
-                    newTable = $(this).attr('data-table');
-                    if (newTable !== selectedTable && newTable !== undefined) {
-                        if (selectedTable !== '') {
-                            tableState[selectedTable]['search'] = $('input#filter').val();
-                        }
-                        $('input#filter').val(tableState[newTable]['search']);
-                        table = tableState[newTable]['table'];
-                        selectedTable = newTable;
-                    }
-                });
-
-                tableState['driversTable']['table'] = $('#driversTable').DataTable({
-                    "lengthMenu":[5,10,15,20],
-                    "dom": 'lrtip',
-                    "columnDefs": [
-                        { "orderable": false, "targets": [3] },
-                        { "name": "email",   "targets": 2 },
-                        { "name": "name",  "targets": 1 },
-                        { "name": "phone",   "targets": 3 },
-                    ]
-                });
-
-                tableState['vehiclesTable']['table'] = $('#vehiclesTable').DataTable({
-                    "lengthMenu":[5,10,15,20],
-                    "dom": 'lrtip',
-                    "columnDefs": [
-                        { "orderable": false, "targets": [3,4] },
-                        { "name": "type",   "targets": 1 },
-                        { "name": "make",  "targets": 2 },
-                        { "name": "vin",  "targets": 3 },
-                        { "name": "title",  "targets": 4 },
-                    ]
-                });
-        </script>
-
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('.customNote').click(function() {
-                    $('#text').val($(this).attr('data-note'));
-                });
+            /*$('.toggle').toggles({
+                {{ if .company.SameAddress }}on: true,{{ end }}
+                checkbox:$('#switch'),
+                text:{on:'YES',off:'NO'}
             });
+
+            $('.toggle').click(function() {
+                if ($('input#switch')[0].checked) {
+                    $('span#mailingAddress').addClass('hide');
+                    var inputs = $('span#mailingAddress').find('input');
+                    for (var i = 0; i < inputs.length; i++) {
+                        inputs[i].value = inputs[i].defaultValue;
+                    }
+                } else {
+                    $('span#mailingAddress').removeClass('hide');
+                }
+            });*/
+
+            $('input#sameYes').click(function() {
+                $('span#mailingAddress').addClass('hide');
+                var inputs = $('span#mailingAddress').find('input');
+                for (var i = 0; i < inputs.length; i++) {
+                    inputs[i].value = inputs[i].defaultValue;
+                }
+            });
+
+            $('input#sameNo').click(function() {
+                $('span#mailingAddress').removeClass('hide');
+            });
+
+            $('button#editButton').click(function() {
+                $('table#view').addClass('hide');
+                $('button#editButton').addClass('hide');
+                $('form#edit').removeClass('hide');
+                $("button#cancelButton").removeClass('hide');
+            });
+
+            $('button#cancelButton').click(function() {
+                $('form#edit').addClass('hide');
+                $("button#cancelButton").addClass('hide');
+                $('table#view').removeClass('hide');
+                $('button#editButton').removeClass('hide');
+                $('form#edit')[0].reset();
+                if ($('input#sameYes')[0].checked) {
+                    $('span#mailingAddress').addClass('hide');
+                }
+            });
+
         </script>
 
   </body>

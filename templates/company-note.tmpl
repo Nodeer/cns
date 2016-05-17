@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        {{ template "head.tmpl" . }}
+
+        <!-- sweet alerts -->
+        <link href="/static/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+        <!-- DataTables -->
+        <link href="/static/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
+
+        <link href="/static/toggles/toggles.css" rel="stylesheet" />
+
+        <title>Company</title>
+    </head>
+    <body>
+
+        {{ template "side-nav.tmpl" . }}
+
+        <!--Main Content Start -->
+        <section class="content">
+
+            {{ template "nav.tmpl" . }}
+
+            <div class="wraper container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <p class="lead">
+                            Company: {{ if .company.Id}}{{ .company.Name }}{{ else }}NEW{{ end }}
+                        </p>
+
+                        <div class="panel panel-default p-0">
+                            <div class="panel-body p-0">
+                                <ul class="nav nav-tabs profile-tabs">
+                                    <li class=""><a id="infoTab" href="/cns/company/{{ .company.Id }}">Information</a></li>
+                                    <li class=""><a id="driversTab" href="/cns/company/{{ .company.Id }}/driver">Drivers</a></li>
+                                    <li class=""><a id="vehiclesTab" href="/cns/company/{{ .company.Id }}/vehicle">Vehicles</a></li>
+                                    <li class="active"><a id="notesTab">Notes</a></li>
+                                    <li class=""><a id="settingsTab" href="/cns/company/{{ .company.Id }}/setting">Settings</a></li>
+                                </ul>
+                                <div class="tab-content m-0">
+
+                                    <div id="notesPane">
+                                        <div class="row m-t-10">
+                                            <div class="col-lg-6">
+                                                <div class="table-responsive">
+                                                    <table id="filesTable" class="table table-bordered table-hover">
+                                                        <thead>
+                                                            <tr id="search" class="search">
+                                                                <th></th>
+                                                                <th>Data</th>
+                                                                <th></th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>Data</th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {{ range $note := .notes }}
+                                                                <tr>
+                                                                    <td>{{ $note.Id }}</td>
+                                                                    <td>{{ $note.Body }}</td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            {{ end }}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <form action="/cns/company/note" method="post">
+                                                    <textarea id="text" class="form-control" name="body" rows="8"></textarea>
+                                                    <input type="hidden" name="id" value="{{ .company.Id }}">
+                                                    <br>
+                                                    <div class="col-lg-12">
+                                                        <div class="row">
+                                                            <div data-note="cool" class="customNote btn btn-success">note1</div>
+                                                            <div data-note="neat" class="customNote btn btn-warning">note2</div>
+                                                            <div data-note="dumb" class="customNote btn btn-danger">note3</div>
+                                                        </div>
+                                                        <br>
+                                                    </div>
+                                                    <button class="btn btn-primary" type="submit">Save</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{ template "footer.tmpl" . }}
+
+        </section>
+        <!-- Main Content Ends -->
+
+        {{ template "scripts.tmpl" . }}
+
+        <script src="/static/js/jquery.scrollTo.min.js"></script>
+        <script src="/static/datatables/jquery.dataTables.min.js"></script>
+        <script src="/static/datatables/dataTables.bootstrap.js"></script>
+        <script src="/static/js/confirm.js" charset="utf-8"></script>
+        <script src="/static/datatables/custom.js" charset="utf-8"></script>
+
+        <script src="/static/toggles/toggles.min.js"></script>
+
+        <script type="text/javascript">
+
+        </script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('.customNote').click(function() {
+                    $('#text').val($(this).attr('data-note'));
+                });
+            });
+        </script>
+
+  </body>
+</html>

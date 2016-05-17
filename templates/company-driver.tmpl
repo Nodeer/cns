@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        {{ template "head.tmpl" . }}
+
+        <!-- sweet alerts -->
+        <link href="/static/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+        <!-- DataTables -->
+        <link href="/static/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
+
+        <link href="/static/toggles/toggles.css" rel="stylesheet" />
+
+        <title>Company</title>
+    </head>
+    <body>
+
+        {{ template "side-nav.tmpl" . }}
+
+        <!--Main Content Start -->
+        <section class="content">
+
+            {{ template "nav.tmpl" . }}
+
+            <div class="wraper container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <p class="lead">
+                            Company: {{ if .company.Id}}{{ .company.Name }}{{ else }}NEW{{ end }}
+                        </p>
+
+                        <div class="panel panel-default p-0">
+                            <div class="panel-body p-0">
+                                <ul class="nav nav-tabs profile-tabs">
+                                    <li class=""><a id="infoTab" href="/cns/company/{{ .company.Id }}">Information</a></li>
+                                    <li class="active"><a id="driversTab" href="/cns/company/{{ .company.Id }}/driver">Drivers</a></li>
+                                    <li class=""><a id="vehiclesTab" href="/cns/company/{{ .company.Id }}/vehicle">Vehicles</a></li>
+                                    <li class=""><a id="notesTab" href="/cns/company/{{ .company.Id }}/note">Notes</a></li>
+                                    <li class=""><a id="settingsTab" href="/cns/company/{{ .company.Id }}/setting">Settings</a></li>
+                                </ul>
+                                <div class="tab-content m-0">
+
+                                    <div id="driversPane">
+                                        <table id="driversTable" class="table table-bordered table-hover" style="background-color:white;">
+                                            <thead>
+                                                <tr id="search">
+                                                    <th></th>
+                                                    <th>name</th>
+                                                    <th>email</th>
+                                                    <th>phone</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Name</th>
+                                                    <th>Email</th>
+                                                    <th>Phone</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{ range $driver := .drivers }}
+                                                    <tr id="{{ $driver.Id }}" class="clickable" data-url="/cns/driver/{{ $driver.Id }}">
+                                                        <td>{{ $driver.Id }}</td>
+                                                        <td>{{ $driver.FirstName }} {{ $driver.LastName }}</td>
+                                                        <td>{{ $driver.Email }}</td>
+                                                        <td>{{ $driver.Phone }}</td>
+                                                    </tr>
+                                                {{ end }}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{ template "footer.tmpl" . }}
+
+        </section>
+        <!-- Main Content Ends -->
+
+        {{ template "scripts.tmpl" . }}
+
+        <script src="/static/js/jquery.scrollTo.min.js"></script>
+        <script src="/static/datatables/jquery.dataTables.min.js"></script>
+        <script src="/static/datatables/dataTables.bootstrap.js"></script>
+        <script src="/static/js/confirm.js" charset="utf-8"></script>
+        <script src="/static/datatables/custom.js" charset="utf-8"></script>
+
+        <script type="text/javascript">
+
+            var table = $('#driversTable').DataTable({
+                "lengthMenu":[5,10,15,20],
+                "dom": 'lrtip',
+                "columnDefs": [
+                    { "orderable": false, "targets": [3] },
+                    { "name": "email",   "targets": 2 },
+                    { "name": "name",  "targets": 1 },
+                    { "name": "phone",   "targets": 3 },
+                ]
+            });
+        </script>
+
+  </body>
+</html>
