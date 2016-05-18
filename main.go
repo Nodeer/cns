@@ -39,7 +39,8 @@ func init() {
 
 	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee, settings)
 
-	mx.AddSecureRoutes(EMPLOYEE, companyAll, companyView, companyDriver, companyVehicle, companyNote, companySetting, companySave, companySaveNote, companyVehicleView)
+	mx.AddSecureRoutes(EMPLOYEE, companyAll, companyView, companyDriver, companyNote, companySetting, companySave, companySaveNote)
+	mx.AddSecureRoutes(EMPLOYEE, companyVehicle, companyVehicleView, companyVehicleSave)
 
 	mx.AddSecureRoutes(EMPLOYEE, allDriver, viewDriver, saveDriver)
 
@@ -49,12 +50,14 @@ func init() {
 
 	web.Funcs["lower"] = strings.ToLower
 	web.Funcs["size"] = PrettySize
+	web.Funcs["formatDate"] = FormatDate
 	tc = web.NewTmplCache()
 	defaultUsers()
 }
 
 // main http listener
 func main() {
+	fmt.Println("DID YOU REGISTER ANY NEW ROUTES?")
 	log.Fatal(http.ListenAndServe(":8080", mx))
 }
 

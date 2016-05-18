@@ -88,7 +88,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td><b>Purchase Date</b></td>
-                                                        <td></td>
+                                                        <td>{{ formatDate .vehicle.PurchaseDate }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td><b>Current Value</b></td>
@@ -108,24 +108,23 @@
                                     </div>
 
                                     <div id="edit" class="profile-desk hide">
-                                        <div class="row">
-                                            <h1 class="col-lg-12">
-                                                <div class="col-lg-4">
-                                                    <select class="form-control" name="vehicleType">
-                                                        <option value="TRUCK">Truck</option>
-                                                        <option value="TRACTOR">Tractor</option>
-                                                        <option value="TRAILER">Trailer</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-lg-8">
-                                                    <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
-                                                    <button class="btn btn-danger btn-xs pull-right hide" id="cancelButton">Cancel</button>
-                                                </div>
-                                            </h1>
-                                        </div>
-                                        <br>
-
-                                        <form class="" action="index.html" method="post">
+                                        <form action="/cns/company/{{ .company.Id }}/vehicle" method="post">
+                                            <div class="row">
+                                                <h1 class="col-lg-12">
+                                                    <div class="col-lg-4">
+                                                        <select class="form-control" name="vehicleType">
+                                                            <option {{ if eq .vehicle.VehicleType "TRUCK" }}selected {{ end }}value="TRUCK">Truck</option>
+                                                            <option {{ if eq .vehicle.VehicleType "TRACTOR" }}selected {{ end }}value="TRACTOR">Tractor</option>
+                                                            <option {{ if eq .vehicle.VehicleType "TRAILER" }}selected {{ end }}value="TRAILER">Trailer</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-lg-8">
+                                                        <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
+                                                        <button class="btn btn-danger btn-xs pull-right hide" id="cancelButton">Cancel</button>
+                                                    </div>
+                                                </h1>
+                                            </div>
+                                            <br>
                                             <div class="col-lg-6">
                                                 <table class="table table-condensed" style="margin-bottom:0;">
                                                     <tbody>
@@ -171,7 +170,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td><b>Purchase Date</b></td>
-                                                            <td><input type="text" class="form-control" value="{{ .vehicle.GCR }}" placeholder="GCR"></td>
+                                                            <td><input type="date" class="form-control" value="{{ .vehicle.PurchaseDate }}" placeholder="Purchase Date"></td>
                                                         </tr>
                                                         <tr>
                                                             <td><b>Current Value</b></td>
@@ -189,7 +188,9 @@
                                                 </table>
                                             </div>
                                             <div class="col-lg-6">
-                                                <input type="hidden" name="id" value="{{ .company.Id }}">
+                                                {{ if .vehicle }}
+                                                    <input type="hidden" name="id" value="{{ .vehicle.Id }}">
+                                                {{ end }}
                                                 <div class="form-group">
                                                     <button class="btn btn-success btn-block">Save</button>
                                                 </div>

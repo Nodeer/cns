@@ -13,7 +13,7 @@
             <br>
             <div class="panel panel-color">
                 <form class="form-horizontal m-t-10" method="post" action="/login">
-                    <div class="form-group ">
+                    <div class="form-group">
                         <div class="col-xs-12">
                             <input class="form-control" type="text" placeholder="Username" name="email">
                         </div>
@@ -21,7 +21,8 @@
                     <div class="form-group ">
 
                         <div class="col-xs-12">
-                            <input class="form-control" type="password" placeholder="Password" name="password">
+                            <span id="capsWarn" class="text-danger hide">Caps Lock is On</span>
+                            <input id="password" class="form-control" type="password" placeholder="Password" name="password">
                         </div>
                     </div>
 
@@ -38,6 +39,18 @@
         </div>
 
         {{ template "scripts.tmpl" . }}
+
+        <script type="text/javascript">
+            $('#password').keypress(function(e) {
+                var s = String.fromCharCode( e.which );
+                if ( s.toUpperCase() === s && s.toLowerCase() !== s && !e.shiftKey ) {
+                    //alert('caps is on');
+                    $('#capsWarn').removeClass('hide');
+                } else {
+                    $('#capsWarn').addClass('hide');
+                }
+            });
+        </script>
 
     </body>
 </html>

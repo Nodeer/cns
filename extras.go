@@ -171,10 +171,16 @@ func MakeVehicles(compIds [COMP]string) {
 	for i := 0; i < (COMP * VperC); i++ {
 		id := strconv.Itoa(int(time.Now().UnixNano()))
 		compIdx := i / VperC
+		vType := "TRUCK"
+		if i%3 == 0 {
+			vType = "TRACTOR"
+		} else if i%2 == 0 {
+			vType = "TRAILER"
+		}
 		vehicle := Vehicle{
 			Id:            id,
 			CompanyId:     compIds[compIdx],
-			VehicleType:   fmt.Sprintf("type-%d", i),
+			VehicleType:   vType,
 			UnitNumber:    fmt.Sprintf("%d", i),
 			Make:          fmt.Sprintf("make-%d", i),
 			VIN:           fmt.Sprintf("%d%d%d", i, i, i),
@@ -183,6 +189,7 @@ func MakeVehicles(compIds [COMP]string) {
 			GCR:           fmt.Sprintf("GCR-%d", i),
 			UnladenWeight: fmt.Sprintf("unladenWeight-%d", i),
 			PurchasePrice: float32(i),
+			PurchaseDate:  fmt.Sprintf("199%d-03-1%d", i, i),
 			CurrentValue:  float32(i),
 			AxleType:      fmt.Sprintf("axle-%d", i),
 			FuelType:      fmt.Sprintf("fuel-%d", i),

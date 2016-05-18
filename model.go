@@ -163,7 +163,19 @@ type Vehicle struct {
 	GCR           string  `json:"gcr,omitempty"`
 	UnladenWeight string  `json:"unladenWeight,omitempty"`
 	PurchasePrice float32 `json:"purchacePrice,omitempty"`
+	PurchaseDate  string  `json:"purchaseDate,omitempty"`
 	CurrentValue  float32 `json:"currentValue,omitempty"`
 	AxleType      string  `json:"axleType,omitempty"`
 	FuelType      string  `json:"fuelType,omitempty"`
+}
+
+func FormatDate(d string) string {
+	ds := strings.Split(d, "-")
+	if len(ds) != 3 {
+		return ""
+	}
+	if ds[1][0] == '0' {
+		ds[1] = ds[1][1:]
+	}
+	return fmt.Sprintf("%s/%s/%s", ds[1], ds[2], ds[0])
 }

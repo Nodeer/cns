@@ -238,6 +238,25 @@ var companyVehicleView = web.Route{"GET", "/cns/company/:compId/vehicle/:vId", f
 	})
 }}
 
+var companyVehicleSave = web.Route{"POST", "/cns/company/:compId/vehicle", func(w http.ResponseWriter, r *http.Request) {
+	var company Company
+	compId := r.FormValue(":compId")
+	if !db.Get("company", compId, &company) {
+		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
+		return
+	}
+	var vehicle Vehicle
+	vehicleId := r.FormValue("id")
+	db.Get("vehicle", vehicleId, &vehicle)
+	if vehicleId == "" || vehicle.Id == "" {
+		vehicle.Id = strconv.Itoa(int(time.Now().UnixNano()))
+	}
+	FormToStruct(&vehicle, r.Form, "")
+	db.Set("vehicle", vehicle.Id, vehicle)
+	web.SetSuccessRedirect(w, r, "/cns/company/"+compId+"/vehicle/"+vehicle.Id, "Successfully saved vehicle")
+	return
+}}
+
 /* --- Driver Management --- */
 
 var allDriver = web.Route{"GET", "/cns/driver", func(w http.ResponseWriter, r *http.Request) {
