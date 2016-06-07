@@ -107,8 +107,7 @@ var companyAll = web.Route{"GET", "/cns/company", func(w http.ResponseWriter, r 
 var companyView = web.Route{"GET", "/cns/company/:id", func(w http.ResponseWriter, r *http.Request) {
 	var company Company
 	compId := r.FormValue(":id")
-	ok := db.Get("company", compId, &company)
-	if !ok {
+	if !db.Get("company", compId, &company) && compId != "new" {
 		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
 		return
 	}
@@ -197,9 +196,9 @@ var companySave = web.Route{"POST", "/cns/company", func(w http.ResponseWriter, 
 	var company Company
 	db.Get("company", compId, &company)
 	if compId == "" && company.Id == "" {
-		web.SetErrorRedirect(w, r, "/cns/company", "Error saving company. Please try again")
-		return
-		//company.Id = strconv.Itoa(int(time.Now().UnixNano()))
+		//web.SetErrorRedirect(w, r, "/cns/company", "Error saving company. Please try again")
+		//return
+		company.Id = strconv.Itoa(int(time.Now().UnixNano()))
 		//company.Password = company.Email
 		//company.Role = "COMPANY"
 		//company.CreateSlug()
@@ -221,14 +220,15 @@ var companySave = web.Route{"POST", "/cns/company", func(w http.ResponseWriter, 
 
 var companyVehicleView = web.Route{"GET", "/cns/company/:compId/vehicle/:vId", func(w http.ResponseWriter, r *http.Request) {
 	var company Company
-	var vehicle Vehicle
 	compId := r.FormValue(":compId")
 	if !db.Get("company", compId, &company) {
 		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
 		return
 	}
-	if !db.Get("vehicle", r.FormValue(":vId"), &vehicle) {
-		web.SetErrorRedirect(w, r, "/cns/company/"+compId, "Error finding vehicle")
+	vehicleId := r.FormValue(":vId")
+	var vehicle Vehicle
+	if !db.Get("vehicle", vehicleId, &vehicle) && vehicleId != "new" {
+		web.SetErrorRedirect(w, r, "/cns/company/"+compId+"/vehicle", "Error finding vehicle")
 		return
 	}
 
@@ -250,6 +250,7 @@ var companyVehicleSave = web.Route{"POST", "/cns/company/:compId/vehicle", func(
 	db.Get("vehicle", vehicleId, &vehicle)
 	if vehicleId == "" || vehicle.Id == "" {
 		vehicle.Id = strconv.Itoa(int(time.Now().UnixNano()))
+		vehicle.CompanyId = compId
 	}
 	FormToStruct(&vehicle, r.Form, "")
 	db.Set("vehicle", vehicle.Id, vehicle)

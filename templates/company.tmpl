@@ -26,23 +26,23 @@
                     <div class="col-sm-12">
 
                         <p class="lead">
-                            Company: {{ .company.Name }}
+                            Company: {{ if .company.Id}}{{ .company.Name }}{{ else }}NEW{{ end }}
                         </p>
 
                         <div class="panel panel-default p-0">
                             <div class="panel-body p-0">
                                 <ul class="nav nav-tabs profile-tabs">
-                                    <li class="active"><a id="infoTab">Customer Center</a></li>
-                                    <li class=""><a id="driversTab" href="/cns/company/{{ .company.Id }}/service">Service</a></li>
-                                    <li class=""><a id="vehiclesTab" href="/cns/company/{{ .company.Id }}/vehicle">Vehicles</a></li>
-                                    <li class=""><a id="notesTab" href="/cns/company/{{ .company.Id }}/driver">Drivers</a></li>
+                                    <li class="active"><a id="infoTab" class="tab" >Customer Center</a></li>
+                                    <li class=""><a id="driversTab" class="tab"  href="/cns/company/{{ .company.Id }}/service">Service</a></li>
+                                    <li class=""><a id="vehiclesTab" class="tab"  href="/cns/company/{{ .company.Id }}/vehicle">Vehicles</a></li>
+                                    <li class=""><a id="notesTab" class="tab"  href="/cns/company/{{ .company.Id }}/driver">Drivers</a></li>
                                 </ul>
                                 <div style="padding:30px">
 
                                     <div id="infoPane" class="col-lg-6">
                                         <div class="profile-desk">
                                             <h1>
-                                                {{ .company.Name }}
+                                                {{ if .company.Id }}{{ .company.Name }}{{ else }}New{{ end }}
                                                 <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
                                                 <button class="btn btn-danger btn-xs pull-right hide" id="cancelButton">Cancel</button>
                                             </h1>
@@ -135,11 +135,11 @@
                                                         <tr>
                                                             <td><b>Physical Address</b></td>
                                                             <td>
-                                                                <input type="text" class="form-control" name="physicalAddress.Street" value="{{ .company.PhysicalAddress.Street }}" placeholder="Name"><br>
-                                                                <input type="text" class="form-control" name="physicalAddress.City" value="{{ .company.PhysicalAddress.City }}" placeholder="Title"><br>
+                                                                <input type="text" class="form-control" name="physicalAddress.Street" value="{{ .company.PhysicalAddress.Street }}" placeholder="Street"><br>
+                                                                <input type="text" class="form-control" name="physicalAddress.City" value="{{ .company.PhysicalAddress.City }}" placeholder="City"><br>
                                                                 <div class="row">
                                                                     <div class="col-lg-6">
-                                                                        <input type="text" class="form-control" name="physicalAddress.State" value="{{ .company.PhysicalAddress.State }}" placeholder="Phone">
+                                                                        <input type="text" class="form-control" name="physicalAddress.State" value="{{ .company.PhysicalAddress.State }}" placeholder="State">
                                                                     </div>
                                                                     <div class="col-lg-6">
                                                                         <input type="text" class="form-control" name="physicalAddress.Zip" value="{{ .company.PhysicalAddress.Zip }}" placeholder="Zip">
@@ -169,8 +169,8 @@
                                                                 </div>
                                                                 <span id="mailingAddress" {{ if .company.SameAddress }}class="hide"{{ end }}>
                                                                     <br>
-                                                                    <input type="text" class="form-control" name="mailingAddress.Street" value="{{ .company.MailingAddress.Street }}" placeholder="Name"><br>
-                                                                    <input type="text" class="form-control" name="mailingAddress.City" value="{{ .company.MailingAddress.City }}" placeholder="Title"><br>
+                                                                    <input type="text" class="form-control" name="mailingAddress.Street" value="{{ .company.MailingAddress.Street }}" placeholder="Street"><br>
+                                                                    <input type="text" class="form-control" name="mailingAddress.City" value="{{ .company.MailingAddress.City }}" placeholder="City"><br>
                                                                     <div class="row">
                                                                         <div class="col-lg-6">
                                                                             <input type="text" class="form-control" name="mailingAddress.State" value="{{ .company.MailingAddress.State }}" placeholder="State">
@@ -211,7 +211,9 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <input type="hidden" name="id" value="{{ .company.Id }}">
+                                                {{ if .company.Id }}
+                                                    <input type="hidden" name="id" value="{{ .company.Id }}">
+                                                {{ end }}
                                                 <div class="form-group">
                                                     <button class="btn btn-success btn-block">Save</button>
                                                 </div>
@@ -242,23 +244,7 @@
 
         <script type="text/javascript">
 
-            /*$('.toggle').toggles({
-                {{ if .company.SameAddress }}on: true,{{ end }}
-                checkbox:$('#switch'),
-                text:{on:'YES',off:'NO'}
-            });
-
-            $('.toggle').click(function() {
-                if ($('input#switch')[0].checked) {
-                    $('span#mailingAddress').addClass('hide');
-                    var inputs = $('span#mailingAddress').find('input');
-                    for (var i = 0; i < inputs.length; i++) {
-                        inputs[i].value = inputs[i].defaultValue;
-                    }
-                } else {
-                    $('span#mailingAddress').removeClass('hide');
-                }
-            });*/
+            var newComp = {{ if .company.Id }}false{{ else }}true{{ end }};
 
             $('input#sameYes').click(function() {
                 $('span#mailingAddress').addClass('hide');
@@ -280,6 +266,10 @@
             });
 
             $('button#cancelButton').click(function() {
+                if (newComp) {
+                    window.location.href = '/cns/company';
+                    return;
+                }
                 $('form#edit').addClass('hide');
                 $("button#cancelButton").addClass('hide');
                 $('table#view').removeClass('hide');
@@ -287,6 +277,20 @@
                 $('form#edit')[0].reset();
                 if ($('input#sameYes')[0].checked) {
                     $('span#mailingAddress').addClass('hide');
+                }
+            });
+
+            if (newComp) {
+                $('table#view').addClass('hide');
+                $('button#editButton').addClass('hide');
+                $('form#edit').removeClass('hide');
+                $("button#cancelButton").removeClass('hide');
+            }
+
+            $('a.tab').click(function(e) {
+                if (newComp) {
+                    e.preventDefault()
+                    $.Notification.autoHideNotify('error', 'top right', 'Please save company first');
                 }
             });
 

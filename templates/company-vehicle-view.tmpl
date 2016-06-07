@@ -40,7 +40,6 @@
                                         <h1>
                                             {{ .vehicle.VehicleType }}
                                             <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
-                                            <button class="btn btn-danger btn-xs pull-right hide" id="cancelButton">Cancel</button>
                                         </h1>
 
                                         <div class="col-lg-6">
@@ -108,7 +107,7 @@
                                     </div>
 
                                     <div id="edit" class="profile-desk hide">
-                                        <form action="/cns/company/{{ .company.Id }}/vehicle" method="post">
+                                        <form id="edit" action="/cns/company/{{ .company.Id }}/vehicle" method="post">
                                             <div class="row">
                                                 <h1 class="col-lg-12">
                                                     <div class="col-lg-4">
@@ -119,8 +118,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-lg-8">
-                                                        <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
-                                                        <button class="btn btn-danger btn-xs pull-right hide" id="cancelButton">Cancel</button>
+                                                        <a class="btn btn-danger btn-xs pull-right" id="cancelButton">Cancel</a>
                                                     </div>
                                                 </h1>
                                             </div>
@@ -170,7 +168,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td><b>Purchase Date</b></td>
-                                                            <td><input type="date" class="form-control" value="{{ .vehicle.PurchaseDate }}" placeholder="Purchase Date"></td>
+                                                            <td><input type="date" class="form-control" name="purchaseDate" value="{{ .vehicle.PurchaseDate }}" placeholder="Purchase Date"></td>
                                                         </tr>
                                                         <tr>
                                                             <td><b>Current Value</b></td>
@@ -188,7 +186,7 @@
                                                 </table>
                                             </div>
                                             <div class="col-lg-6">
-                                                {{ if .vehicle }}
+                                                {{ if .vehicle.Id }}
                                                     <input type="hidden" name="id" value="{{ .vehicle.Id }}">
                                                 {{ end }}
                                                 <div class="form-group">
@@ -215,23 +213,29 @@
         <script src="/static/js/jquery.scrollTo.min.js"></script>
 
         <script type="text/javascript">
+
+            var newVehicle = {{ if .vehicle.Id }}false{{ else }}true{{ end }};
+
             $('button#editButton').click(function() {
                 $('div#view').addClass('hide');
-                $('button#editButton').addClass('hide');
                 $('div#edit').removeClass('hide');
-                $("button#cancelButton").removeClass('hide');
             });
 
-            $('button#cancelButton').click(function() {
-                $('div#edit').addClass('hide');
-                $("button#cancelButton").addClass('hide');
-                $('div#view').removeClass('hide');
-                $('button#editButton').removeClass('hide');
-                $('form#edit')[0].reset();
-                if ($('input#sameYes')[0].checked) {
-                    $('span#mailingAddress').addClass('hide');
+            $('a#cancelButton').click(function() {
+                if (newVehicle) {
+                    window.location.href = '/cns/company/{{ .company.Id }}/vehicle';
+                    return;
                 }
+                $('div#edit').addClass('hide');
+                $('div#view').removeClass('hide');
+                $('form#edit')[0].reset();
             });
+
+            if (newVehicle) {
+                $('div#view').addClass('hide');
+                $('div#edit').removeClass('hide');
+            }
+
         </script>
 
   </body>
