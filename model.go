@@ -57,14 +57,24 @@ type Company struct {
 
 type Driver struct {
 	Auth
-	FirstName    string `json:"firstName,omitempty"`
-	LastName     string `json:"lastName,omitempty"`
-	Phone        string `json:"phone,omitempty"`
-	DOB          string `json:"dob,omitempty"`
-	LicenseNum   string `json:"licenseNum,omitempty"`
-	LicenseState string `json:"licenseState,omitempty"`
-	CompanyId    string `json:"companyId,omitempty"`
 	Address
+	FirstName             string `json:"firstName,omitempty"`
+	LastName              string `json:"lastName,omitempty"`
+	Phone                 string `json:"phone,omitempty"`
+	Email                 string `json:"email,omitempty"`
+	EmergencyContactName  string `json:"emergencyContactName,omitempty"`
+	EmergencyContactPhone string `json:"emergencyContactPhone,omitempty"`
+	LicenseNum            string `json:"licenseNum,omitempty"`
+	LicenseState          string `json:"licenseState,omitempty"`
+	LicenseExpire         string `json:"licenseExpire,omitempty"`
+	DOB                   string `json:"dob,omitempty"`
+	MedCardExpiry         string `json:"medCardExpiry,omitempty"`
+	MVRExpiry             string `json:"mVRExpiry,omitempty"`
+	ReviewExpiry          string `json:"reviewExpiry,omitempty"`
+	OneEightyExpiry       string `json:"oneEightyExpiry,omitempty"`
+	HireDate              string `json:"hireDate,omitempty"`
+	TermDate              string `json:"termDate,omitempty"`
+	CompanyId             string `json:"companyId,omitempty"`
 }
 
 func (d Driver) FormatDOB() string {

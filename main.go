@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -42,7 +41,7 @@ func init() {
 	mx.AddSecureRoutes(EMPLOYEE, companyAll, companyView, companyDriver, companyNote, companySetting, companySave, companySaveNote)
 	mx.AddSecureRoutes(EMPLOYEE, companyVehicle, companyVehicleView, companyVehicleSave)
 
-	mx.AddSecureRoutes(EMPLOYEE, allDriver, viewDriver, saveDriver)
+	mx.AddSecureRoutes(EMPLOYEE, allDriver, viewDriver, saveDriver, driverFiles, driverForms)
 
 	mx.AddSecureRoutes(AJAX, uploadDriverFile, addDriverDocument, viewDriverFile, delDriverFile, documentDel)
 
@@ -68,9 +67,11 @@ var logout = web.Route{"GET", "/logout", func(w http.ResponseWriter, r *http.Req
 
 var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.ResponseWriter, r *http.Request) {
 	driverId := r.FormValue("id")
+	redirect := r.FormValue("redirect")
 	var driver Driver
 	if !db.Get("driver", driverId, &driver) {
-		ajaxErrorResponse(w, `{"status":"error", "msg":"Error adding documents"}`)
+		//ajaxErrorResponse(w, `{"status":"error", "msg":"Error adding documents"}`)
+		web.SetErrorRedirect(w, r, redirect, "Error adding documents")
 		return
 	}
 	docIds := strings.Split(r.FormValue("docIds"), ",")
@@ -86,45 +87,14 @@ var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.Respon
 		}
 		db.Add("document", id, doc)
 	}
-	var docs []Document
-	db.TestQuery("document", &docs, adb.Eq("driverId", `"`+driver.Id+`"`))
-	resp := make(map[string]interface{}, 0)
-	resp["status"] = "success"
-	resp["msg"] = "Successfully added documents"
-	resp["data"] = docs
-	b, err := json.Marshal(resp)
-	if err != nil {
-		ajaxErrorResponse(w, `{"status":"error","type":"marshal","msg":"Successfully added documents. Please refresh the page to view"}`)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "%s", b)
+
+	web.SetSuccessRedirect(w, r, redirect, "Successfully added forms")
 	return
 }}
 
 var documentDel = web.Route{"POST", "/document/del/:driverId/:docId", func(w http.ResponseWriter, r *http.Request) {
 	db.Del("document", r.FormValue(":docId"))
-
-	var docs []Document
-
-	//db.Match("document", `"driverId":"`+r.FormValue(":driverId")+`"`, &docs)
-	db.TestQuery("document", &docs, adb.Eq("driverId", `"`+r.FormValue(":driverId")+`"`))
-
-	resp := make(map[string]interface{}, 0)
-	resp["status"] = "success"
-	resp["msg"] = "Successfully deleted document"
-	resp["data"] = docs
-	b, err := json.Marshal(resp)
-
-	if err != nil {
-		ajaxErrorResponse(w, `{"status":"error","type":"marshal","msg":"Successfully deleted document. Please refresh the page to view"}`)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "%s", b)
+	web.SetSuccessRedirect(w, r, r.FormValue("redirect"), "Successfully deleted form")
 	return
 }}
 
@@ -132,58 +102,32 @@ var uploadDriverFile = web.Route{"POST", "/driver/upload", func(w http.ResponseW
 	driverId := r.FormValue("id")
 	if driverId == "" {
 		log.Printf("main.go -> uploadDriverFile() -> os.MkdirAll() -> no dirver id specified")
-		ajaxErrorResponse(w, `{"status":"error","msg":"Error uploading file"}`)
+		ajaxErrorResponse(w, `{"error":true,"msg":"Error uploading file"}`)
 		return
 	}
 	path := "upload/driver/" + driverId + "/"
 	if err := os.MkdirAll(path, 0755); err != nil {
 		log.Printf("main.go -> uploadDriverFile() -> os.MkdirAll() -> %v\n", err)
-		ajaxErrorResponse(w, `{"status":"error","msg":"Error uploading file"}`)
+		ajaxErrorResponse(w, `{"error":true,"msg":"Error uploading file"}`)
 		return
 	}
 	file, handler, err := r.FormFile("file")
 	if err != nil {
 		log.Printf("main.go -> uploadDriverFile() -> r.FormFile() -> %v\n", err)
-		ajaxErrorResponse(w, `{"status":"error","msg":"Error uploading file `+handler.Filename+`"}`)
+		ajaxErrorResponse(w, `{"error":true,"msg":"Error uploading file `+handler.Filename+`"}`)
 		return
 	}
 	defer file.Close()
 	f, err := os.OpenFile(path+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		log.Printf("main.go -> uploadDriverFile() -> os.OpenFile() -> %v\n", err)
-		ajaxErrorResponse(w, `{"status":"error","msg":"Error uploading file `+handler.Filename+`}`)
+		ajaxErrorResponse(w, `{"error":true,"msg":"Error uploading file `+handler.Filename+`"}`)
 		return
 	}
 	defer f.Close()
 	io.Copy(f, file)
 
-	files, err := ioutil.ReadDir(path)
-	if err != nil {
-		ajaxErrorResponse(w, `{"status":"error","msg":"Successfully uploaded file `+handler.Filename+`. Please refresh the page to view","type":"readDir"}`)
-		return
-	}
-
-	var fileInfo []map[string]interface{}
-
-	for _, file := range files {
-		f := make(map[string]interface{})
-		f["name"] = file.Name()
-		f["size"] = file.Size()
-		fileInfo = append(fileInfo, f)
-	}
-
-	resp := make(map[string]interface{}, 0)
-	resp["status"] = "success"
-	resp["msg"] = "Successfully uploaded file " + handler.Filename
-	resp["data"] = fileInfo
-	b, err := json.Marshal(resp)
-	if err != nil {
-		ajaxErrorResponse(w, `{"status":"error","msg":"Successfully uploaded file `+handler.Filename+`. Please refresh the page to view","type":"marshal"}`)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "%s", b)
+	ajaxErrorResponse(w, `{"error":false,"msg":"Successfully uploaded file `+handler.Filename+`"}`)
 	return
 }}
 
@@ -195,35 +139,11 @@ var viewDriverFile = web.Route{"GET", "/driver/file/:id/:file", func(w http.Resp
 var delDriverFile = web.Route{"POST", "/driver/file/:id/:file", func(w http.ResponseWriter, r *http.Request) {
 	driverId := r.FormValue(":id")
 	filename := r.FormValue(":file")
-	os.Remove("upload/driver/" + driverId + "/" + filename)
-
-	files, err := ioutil.ReadDir("upload/driver/" + driverId)
-	if err != nil {
-		ajaxErrorResponse(w, `{"status":"error","msg":"Successfully uploaded file `+filename+`. Please refresh the page to view","type":"readDir"}`)
+	if err := os.Remove("upload/driver/" + driverId + "/" + filename); err != nil {
+		web.SetSuccessRedirect(w, r, r.FormValue("redirect"), "Error deleting file")
 		return
 	}
-
-	var fileInfo []map[string]interface{}
-
-	for _, file := range files {
-		f := make(map[string]interface{})
-		f["name"] = file.Name()
-		f["size"] = file.Size()
-		fileInfo = append(fileInfo, f)
-	}
-
-	resp := make(map[string]interface{}, 0)
-	resp["status"] = "success"
-	resp["msg"] = "Successfully uploaded file " + filename
-	resp["data"] = fileInfo
-	b, err := json.Marshal(resp)
-	if err != nil {
-		ajaxErrorResponse(w, `{"status":"error","msg":"Successfully uploaded file `+filename+`. Please refresh the page to view","type":"marshal"}`)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "%s", b)
+	web.SetSuccessRedirect(w, r, r.FormValue("redirect"), "Successfully deleted file")
 	return
 }}
 

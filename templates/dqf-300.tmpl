@@ -92,25 +92,25 @@
     					<div class="form-group">
     						<label class="control-label left col-xs-2">Street: </label>
     						<div class="col-xs-10">
-    							<input type="text" name="prospective-employer-street" class="form-control input-sm" value="{{ .company.Street }}" required>
+    							<input type="text" name="prospective-employer-street" class="form-control input-sm" value="{{ .company.PhysicalAddress.Street }}" required>
     						</div>
     					</div>
     					<div class="form-group">
     						<label class="control-label left col-xs-2">City: </label>
     						<div class="col-xs-10">
-    							<input type="text" name="prospective-employer-city" class="form-control input-sm" value="{{ .company.City }}" required>
+    							<input type="text" name="prospective-employer-city" class="form-control input-sm" value="{{ .company.PhysicalAddress.City }}" required>
     						</div>
     					</div>
     					<div class="form-group">
     						<label class="control-label left col-xs-2">State: </label>
     						<div class="col-xs-10">
-    							<input type="text" name="prospective-employer-state" class="form-control input-sm" value="{{ .company.State }}" required>
+    							<input type="text" name="prospective-employer-state" class="form-control input-sm" value="{{ .company.PhysicalAddress.State }}" required>
     						</div>
     					</div>
     					<div class="form-group">
     						<label class="control-label left col-xs-2">Zip: </label>
     						<div class="col-xs-10">
-    							<input type="text" name="prospective-employer-zip" class="form-control input-sm" value="{{ .company.Zip }}" required>
+    							<input type="text" name="prospective-employer-zip" class="form-control input-sm" value="{{ .company.PhysicalAddress.Zip }}" required>
     						</div>
     					</div>
     				</div>

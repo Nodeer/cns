@@ -142,14 +142,24 @@ func MakeDrivers(compIds [COMP]string) {
 	for i := 0; i < (COMP * DperC); i++ {
 		id := strconv.Itoa(int(time.Now().UnixNano()))
 		compIdx := i / DperC
+		d := i % 10
 		driver := Driver{
-			FirstName:    "Daniel",
-			LastName:     fmt.Sprintf("Jones the %dth", (i + 4)),
-			Phone:        fmt.Sprintf("717-777-777%d", i),
-			DOB:          fmt.Sprintf("198%d-03-1%d", i, i),
-			LicenseNum:   fmt.Sprintf("1234567%d", i),
-			LicenseState: fmt.Sprintf("%d state", i),
-			CompanyId:    compIds[compIdx],
+			FirstName:             "Daniel",
+			LastName:              fmt.Sprintf("Jones the %dth", (i + 4)),
+			Phone:                 fmt.Sprintf("717-777-777%d", d),
+			EmergencyContactName:  "Samuel Johnson",
+			EmergencyContactPhone: fmt.Sprintf("222-222-222%d", d),
+			LicenseNum:            fmt.Sprintf("1234567%d", i),
+			LicenseState:          fmt.Sprintf("%d state", i),
+			LicenseExpire:         fmt.Sprintf("202%d-03-1%d", d, d),
+			DOB:                   fmt.Sprintf("198%d-01-1%d", d, d),
+			MedCardExpiry:         fmt.Sprintf("202%d-0%d-1%d", d, d, d),
+			MVRExpiry:             fmt.Sprintf("202%d-0%d-1%d", d, d, d),
+			ReviewExpiry:          fmt.Sprintf("192%d-0%d-1%d", d, d, d),
+			OneEightyExpiry:       fmt.Sprintf("192%d-0%d-1%d", d, d, d),
+			HireDate:              fmt.Sprintf("199%d-0%d-1%d", d, d, d),
+			TermDate:              fmt.Sprintf("192%d-0%d-1%d", d, d, d),
+			CompanyId:             compIds[compIdx],
 		}
 
 		driver.Id = id
@@ -161,7 +171,7 @@ func MakeDrivers(compIds [COMP]string) {
 		driver.Street = fmt.Sprintf("12%d Main Street", 1)
 		driver.City = fmt.Sprintf("%dville", i)
 		driver.State = fmt.Sprintf("%d state", i)
-		driver.Zip = fmt.Sprintf("1234%d", i)
+		driver.Zip = fmt.Sprintf("1234%d", d)
 
 		db.Add("driver", id, driver)
 	}

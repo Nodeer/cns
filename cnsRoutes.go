@@ -262,7 +262,6 @@ var companyVehicleSave = web.Route{"POST", "/cns/company/:compId/vehicle", func(
 
 var allDriver = web.Route{"GET", "/cns/driver", func(w http.ResponseWriter, r *http.Request) {
 	var drivers []Driver
-	//ok := db.Match("user", `"role":"DRIVER"`, &drivers)
 	ok := db.TestQuery("driver", &drivers, adb.Eq("role", "DRIVER"))
 	if !ok {
 		fmt.Println("error")
@@ -275,30 +274,53 @@ var allDriver = web.Route{"GET", "/cns/driver", func(w http.ResponseWriter, r *h
 var viewDriver = web.Route{"GET", "/cns/driver/:id", func(w http.ResponseWriter, r *http.Request) {
 	var driver Driver
 	driverId := r.FormValue(":id")
-	var files []map[string]interface{}
-	var docs []Document
-	if driverId != "add" {
-		ok := db.Get("driver", driverId, &driver)
-		if !ok || driver.Role != "DRIVER" {
-			web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
-			return
-		}
-		if fileInfos, err := ioutil.ReadDir("upload/driver/" + driverId); err == nil {
-			for _, fileInfo := range fileInfos {
-				var info = make(map[string]interface{})
-				info["name"] = fileInfo.Name()
-				info["size"] = fileInfo.Size()
-				files = append(files, info)
-			}
-		}
-		//db.Match("document", `"driverId":"`+driver.Id+`"`, &docs)
-		db.TestQuery("document", &docs, adb.Eq("driverId", `"`+driver.Id+`"`))
+	if !db.Get("driver", driverId, &driver) && driverId != "new" {
+		web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
+		return
 	}
+
 	tc.Render(w, r, "driver.tmpl", web.Model{
 		"driver": driver,
-		"files":  files,
+	})
+}}
+
+var driverForms = web.Route{"GET", "/cns/driver/:id/form", func(w http.ResponseWriter, r *http.Request) {
+	var driver Driver
+	driverId := r.FormValue(":id")
+	var docs []Document
+	ok := db.Get("driver", driverId, &driver)
+	if !ok || driver.Role != "DRIVER" {
+		web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
+		return
+	}
+	db.TestQuery("document", &docs, adb.Eq("driverId", `"`+driver.Id+`"`))
+	tc.Render(w, r, "driver-form.tmpl", web.Model{
+		"driver": driver,
 		"dqfs":   DQFS,
 		"docs":   docs,
+	})
+
+}}
+
+var driverFiles = web.Route{"GET", "/cns/driver/:id/file", func(w http.ResponseWriter, r *http.Request) {
+	var driver Driver
+	driverId := r.FormValue(":id")
+	var files []map[string]interface{}
+	if !db.Get("driver", driverId, &driver) {
+		web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
+		return
+	}
+	if fileInfos, err := ioutil.ReadDir("upload/driver/" + driverId); err == nil {
+		for _, fileInfo := range fileInfos {
+			var info = make(map[string]interface{})
+			info["name"] = fileInfo.Name()
+			info["size"] = fileInfo.Size()
+			files = append(files, info)
+		}
+	}
+	tc.Render(w, r, "driver-file.tmpl", web.Model{
+		"driver": driver,
+		"files":  files,
 	})
 }}
 
