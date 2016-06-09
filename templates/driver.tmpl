@@ -36,36 +36,207 @@
                                     <li><a class="tab" href="/cns/driver/{{ .driver.Id }}/file">Uploaded Files</a></li>
                                 </ul>
 
-                                <div style="padding:30px">
-                                    <div class="col-lg-6">
-                                        <h1>{{ .driver.FirstName }} {{ .driver.LastName}}</h1>
+                                <div class="tabPane clearfix">
+                                    <div class="profile-desk">
+                                        <div id="view">
+                                            <h1 class="clearfix">
+                                                <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
+                                            </h1>
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <table class="table table-condensed">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><b>First Name</b></td>
+                                                                <td>{{ .driver.FirstName }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>LastName</b></td>
+                                                                <td>{{ .driver.LastName }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Email</b></td>
+                                                                <td>{{ .driver.Email }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Phone</b></td>
+                                                                <td>{{ .driver.Phone }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Address</b></td>
+                                                                <td>{{ .driver.AddrHTML }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Date of Birth</b></td>
+                                                                <td>{{ formatDate .driver.DOB }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Age</b></td>
+                                                                <td>{{ .driver.GetAge }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Emergency Contact</b></td>
+                                                                <td>
+                                                                    {{ .driver.EmergencyContactName }}<br>
+                                                                    {{ .driver.EmergencyContactPhone }}
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <table class="table table-condensed">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><b>License Number</b></td>
+                                                                <td>{{ .driver.LicenseNum }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>License State</b></td>
+                                                                <td>{{ .driver.LicenseState }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>License Expiration</b></td>
+                                                                <td>{{ formatDate .driver.LicenseExpire }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Medical Card Expiration</b></td>
+                                                                <td>{{ formatDate .driver.MedCardExpiry }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>MVR Expiration</b></td>
+                                                                <td>{{ formatDate .driver.MVRExpiry }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Review Expiration</b></td>
+                                                                <td>{{ formatDate .driver.ReviewExpiry }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>180 Expiration</b></td>
+                                                                <td>{{ formatDate .driver.OneEightyExpiry }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Hire Date</b></td>
+                                                                <td>{{ formatDate .driver.HireDate }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Termination Date</b></td>
+                                                                <td>{{ formatDate .driver.TermDate }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                        <table class="table table-condensed">
-                                            <tbody>
-                                                <tr>
-                                                    <td><b>Email</b></td>
-                                                    <td>{{ .driver.Email }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Phone</b></td>
-                                                    <td>{{ .driver.Phone }}</td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td><b>Address</b></td>
-                                                    <td>{{ .driver.AddrHTML }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Date of Birth</b></td>
-                                                    <td>{{ .driver.FormatDOB }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Age</b></td>
-                                                    <td>{{ .driver.GetAge }}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                        <div id="edit" class="hide">
+                                            <h1 class="clearfix">
+                                                <button class="btn btn-danger btn-xs pull-right" id="cancelButton">Cancel</button>
+                                            </h1>
+                                            <div class="row">
+                                                <form id="edit" action="/cns/driver" method="post">
+                                                    <div class="col-lg-6">
+                                                        <table class="table table-condensed">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><b>First Name</b></td>
+                                                                    <td><input type="text" class="form-control" name="firstName" value="{{ .driver.FirstName }}" placeholder="First Name"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>LastName</b></td>
+                                                                    <td><input type="text" class="form-control" name="lastName" value="{{ .driver.LastName }}" placeholder="Last Name"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Email</b></td>
+                                                                    <td><input type="text" class="form-control" name="auth.Email" value="{{ .driver.Email }}" placeholder="Email"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Phone</b></td>
+                                                                    <td><input type="text" class="form-control" name="phone" value="{{ .driver.Phone }}" placeholder="Phone"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Address</b></td>
+                                                                    <td>
+                                                                        <input type="text" class="form-control" name="address.Street" value="{{ .driver.Street }}" placeholder="Street"><br>
+                                                                        <input type="text" class="form-control" name="address.City" value="{{ .driver.City }}" placeholder="City"><br>
+                                                                        <div class="row">
+                                                                            <div class="col-lg-6">
+                                                                                <input type="text" class="form-control" name="address.State" value="{{ .driver.State }}" placeholder="State">
+                                                                            </div>
+                                                                            <div class="col-lg-6">
+                                                                                <input type="text" class="form-control" name="address.Zip" value="{{ .driver.Zip }}" placeholder="Zip">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Date of Birth</b></td>
+                                                                    <td><input type="date" class="form-control" name="dOB" value="{{ .driver.DOB }}" placeholder="Date of Birth"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Emergency Contact</b></td>
+                                                                    <td>
+                                                                        <input type="text" class="form-control" name="emergencyContactName" value="{{ .driver.EmergencyContactName }}" placeholder="Name"><br>
+                                                                        <input type="text" class="form-control" name="emergencyContactPhone" value="{{ .driver.EmergencyContactPhone }}" placeholder="Phone">
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <table class="table table-condensed">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><b>License Number</b></td>
+                                                                    <td><input type="text" class="form-control" name="licenseNum" value="{{ .driver.LicenseNum }}" placeholder="License Number"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>License State</b></td>
+                                                                    <td><input type="text" class="form-control" name="licenseState" value="{{ .driver.LicenseState }}" placeholder="License State"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>License Expiration</b></td>
+                                                                    <td><input type="date" class="form-control" name="licenseExpire" value="{{ .driver.LicenseExpire }}" placeholder="License Expiration"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Medical Card Expiration</b></td>
+                                                                    <td><input type="date" class="form-control" name="medCardExpiry" value="{{ .driver.MedCardExpiry }}" placeholder="Medical Card Expiration"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>MVR Expiration</b></td>
+                                                                    <td><input type="date" class="form-control" name="mVRExpiry" value="{{ .driver.MVRExpiry }}" placeholder="MVR Expiration"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Review Expiration</b></td>
+                                                                    <td><input type="date" class="form-control" name="reviewExpiry" value="{{ .driver.ReviewExpiry }}" placeholder="Review Expiration"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>180 Expiration</b></td>
+                                                                    <td><input type="date" class="form-control" name="oneEightyExpiry" value="{{ .driver.OneEightyExpiry }}" placeholder="180 Expiration"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Hire Date</b></td>
+                                                                    <td><input type="date" class="form-control" name="hireDate" value="{{ .driver.HireDate }}" placeholder="Hire Date"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Termination Date</b></td>
+                                                                    <td><input type="date" class="form-control" name="termDate" value="{{ .driver.TermDate }}" placeholder="Termination Date"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2">
+                                                                        <button class="btn btn-success btn-block">Save</button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    {{ if .driver.Id }}
+                                                        <input type="hidden" name="id" value="{{ .driver.Id }}">
+                                                    {{ end }}
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </dvi>
                                 </div>
                             </div>
                         </div>
@@ -85,6 +256,23 @@
         <script src="/static/datatables/dataTables.bootstrap.js"></script>
         <script src="/static/js/confirm.js" charset="utf-8"></script>
         <script src="/static/datatables/custom.js" charset="utf-8"></script>
+
+        <script type="text/javascript">
+            $('button#editButton').click(function() {
+                $('div#view').addClass('hide');
+                $('div#edit').removeClass('hide');
+            });
+
+            $('button#cancelButton').click(function() {
+                //if (newVehicle) {
+                //    window.location.href = '/cns/company/{{ .company.Id }}/vehicle';
+                //    return;
+                //}
+                $('div#edit').addClass('hide');
+                $('div#view').removeClass('hide');
+                $('form#edit')[0].reset();
+            });
+        </script>
 
     </body>
 </html>

@@ -38,7 +38,7 @@ func init() {
 
 	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee, settings)
 
-	mx.AddSecureRoutes(EMPLOYEE, companyAll, companyView, companyDriver, companyNote, companySetting, companySave, companySaveNote)
+	mx.AddSecureRoutes(EMPLOYEE, companyAll, companyView, companyDriver, companySave, companySaveNote)
 	mx.AddSecureRoutes(EMPLOYEE, companyVehicle, companyVehicleView, companyVehicleSave)
 
 	mx.AddSecureRoutes(EMPLOYEE, allDriver, viewDriver, saveDriver, driverFiles, driverForms)
@@ -50,6 +50,7 @@ func init() {
 	web.Funcs["lower"] = strings.ToLower
 	web.Funcs["size"] = PrettySize
 	web.Funcs["formatDate"] = FormatDate
+	web.Funcs["toJson"] = ToJson
 	tc = web.NewTmplCache()
 	defaultUsers()
 }

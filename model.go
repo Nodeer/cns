@@ -61,7 +61,6 @@ type Driver struct {
 	FirstName             string `json:"firstName,omitempty"`
 	LastName              string `json:"lastName,omitempty"`
 	Phone                 string `json:"phone,omitempty"`
-	Email                 string `json:"email,omitempty"`
 	EmergencyContactName  string `json:"emergencyContactName,omitempty"`
 	EmergencyContactPhone string `json:"emergencyContactPhone,omitempty"`
 	LicenseNum            string `json:"licenseNum,omitempty"`
@@ -147,12 +146,6 @@ type Event struct {
 	Overlap   bool      `json:"overlap,omitempty"`
 }
 
-type Note struct {
-	Id        string `json:"id"`
-	CompanyId string `json:"companyId,omitempty"`
-	Body      string `json:"body,omitempty"`
-}
-
 type Comment struct {
 	Id     string `json:"id"`
 	Body   string `json:"body"`
@@ -179,13 +172,38 @@ type Vehicle struct {
 	FuelType      string  `json:"fuelType,omitempty"`
 }
 
-func FormatDate(d string) string {
-	ds := strings.Split(d, "-")
-	if len(ds) != 3 {
-		return ""
-	}
-	if ds[1][0] == '0' {
-		ds[1] = ds[1][1:]
-	}
-	return fmt.Sprintf("%s/%s/%s", ds[1], ds[2], ds[0])
+type Note struct {
+	Id              string `json:"id,omitempty"`
+	CompanyId       string `json:"companyId,omitempty"`
+	EmployeeId      string `json:"employeeId,omitempty"`
+	Communication   string `json:"communication,omitempty"`
+	Purpose         string `json:"purpose,omitempty"`
+	StartTime       int64  `json:"startTime,omitempty"`
+	StartTimePretty string `json:"startTimePretty,omitempty"`
+	EndTime         int64  `json:"endTime,omitempty"`
+	EndTimePretty   string `json:"endTimePretty,omitempty"`
+	Representative  string `json:"representative,omitempty"`
+	CallBack        string `json:"callBack,omitempty"`
+	EmailEmployee   bool   `json:"emailEmployee,omitempty"`
+	Billable        bool   `json:"billable,omitempty"`
+	Body            string `json:"body,omitempty"`
+}
+
+type NoteRevSort []Note
+
+func (n NoteRevSort) Len() int {
+	return len(n)
+}
+
+func (n NoteRevSort) Less(i, j int) bool {
+	return n[i].StartTime > n[j].StartTime
+}
+
+func (n NoteRevSort) Swap(i, j int) {
+	n[i], n[j] = n[j], n[i]
+}
+
+type QuickNote struct {
+	Name string
+	Body string
 }

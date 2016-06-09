@@ -153,12 +153,12 @@ func MakeDrivers(compIds [COMP]string) {
 			LicenseState:          fmt.Sprintf("%d state", i),
 			LicenseExpire:         fmt.Sprintf("202%d-03-1%d", d, d),
 			DOB:                   fmt.Sprintf("198%d-01-1%d", d, d),
-			MedCardExpiry:         fmt.Sprintf("202%d-0%d-1%d", d, d, d),
-			MVRExpiry:             fmt.Sprintf("202%d-0%d-1%d", d, d, d),
-			ReviewExpiry:          fmt.Sprintf("192%d-0%d-1%d", d, d, d),
-			OneEightyExpiry:       fmt.Sprintf("192%d-0%d-1%d", d, d, d),
-			HireDate:              fmt.Sprintf("199%d-0%d-1%d", d, d, d),
-			TermDate:              fmt.Sprintf("192%d-0%d-1%d", d, d, d),
+			MedCardExpiry:         fmt.Sprintf("202%d-02-1%d", d, d),
+			MVRExpiry:             fmt.Sprintf("202%d-03-1%d", d, d),
+			ReviewExpiry:          fmt.Sprintf("202%d-04-1%d", d, d),
+			OneEightyExpiry:       fmt.Sprintf("202%d-05-1%d", d, d),
+			HireDate:              fmt.Sprintf("199%d-06-1%d", d, d),
+			TermDate:              fmt.Sprintf("202%d-07-1%d", d, d),
 			CompanyId:             compIds[compIdx],
 		}
 
@@ -321,5 +321,5 @@ var alert = web.Route{"GET", "/alert", func(w http.ResponseWriter, r *http.Reque
 }}
 
 var form = web.Route{"GET", "/form", func(w http.ResponseWriter, r *http.Request) {
-	tc.Render(w, r, "form-advanced.tmpl", nil)
+	tc.Render(w, r, "form-elements.tmpl", nil)
 }}

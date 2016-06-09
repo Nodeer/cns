@@ -39,57 +39,61 @@
                                     <li><a class="tab" href="/cns/driver/{{ .driver.Id }}/file">Uploaded Files</a></li>
                                 </ul>
 
-                                <div style="padding:30px">
+                                <div class="tabPane clearfix">
+                                    <div class="profile-desk">
 
-                                    <div class="col-lg-4">
-                        				<h2>Add Documents</h2>
-                        				<div id="docs" class="list-group">
-                        					{{ range $dqf := .dqfs }}
+                                        <div class="col-lg-4">
+                            				<h2>Add Documents</h2>
+                            				<div id="docs" class="list-group">
+                            					{{ range $dqf := .dqfs }}
+                                                    <p>
+                                                        DQF{{ index $dqf 0 }} - {{ index $dqf 1 }}
+                            							<button id="addDoc" data-added="0" data-docId="{{ index $dqf 0 }}" class="btn-default btn btn-xs pull-right check">
+                            								<i class="fa fa-check"></i>
+                            							</button>
+                            						</p>
+                            					{{ end }}
                                                 <p>
-                                                    DQF{{ index $dqf 0 }} - {{ index $dqf 1 }}
-                        							<button id="addDoc" data-added="0" data-docId="{{ index $dqf 0 }}" class="btn-default btn btn-xs pull-right check">
-                        								<i class="fa fa-check"></i>
-                        							</button>
-                        						</p>
-                        					{{ end }}
-                                            <p>
-                        						<form id="documentForm" class="text-center" method="post" action="/driver/document">
-                        							<input type="hidden"  id="docIds" name="docIds">
-                                                    <input type="hidden" name="id" value="{{ .driver.Id }}">
-                                                    <input type="hidden" name="redirect" value="/cns/driver/{{ .driver.Id }}/form">
-                        							<button id="done" class="btn btn-md btn-primary btn-block" type="submit" disabled="disabled">
-                        								Please Select Documents
-                        							</button>
-                        						</form>
-                                            </p>
-                        				</div>
-                            		</div>
-                                    <div class="col-lg-8">
-                                        <div class="table-responsive">
-                                            <table id="formsTable" class="table table-bordered table-hover">
-                                                <thead>
-                                                    <tr id="search">
-                                                        <th>dqf</th>
-                                                        <th></th>
-                                                        <th></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>DQF</th>
-                                                        <th>Complete</th>
-                                                        <th></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {{ $driver := .driver }}
-                                                    {{ range $doc := .docs }}
-                                                        <tr class="clickable" data-url="/document/{{ $doc.Id }}" data-target="_blank">
-                                                            <td>{{ $doc.DocumentId }}</td>
-                                                            <td>{{ $doc.Complete }}</td>
-                                                            <td class="text-center"><a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ $driver.Id }}/{{ $doc.Id }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
+                            						<form id="documentForm" class="text-center" method="post" action="/driver/document">
+                            							<input type="hidden"  id="docIds" name="docIds">
+                                                        <input type="hidden" name="id" value="{{ .driver.Id }}">
+                                                        <input type="hidden" name="redirect" value="/cns/driver/{{ .driver.Id }}/form">
+                                                        <div class="form-group">
+                                                            <button id="done" class="btn btn-md btn-primary btn-block" type="submit" disabled="disabled">
+                                                                Please Select Documents
+                                                            </button>
+                                                        </div>
+                            						</form>
+                                                </p>
+                            				</div>
+                                		</div>
+                                        <div class="col-lg-8">
+                                            <div class="table-responsive">
+                                                <table id="formsTable" class="table table-bordered table-hover">
+                                                    <thead>
+                                                        <tr id="search">
+                                                            <th>dqf</th>
+                                                            <th></th>
+                                                            <th></th>
                                                         </tr>
-                                                    {{ end }}
-                                                </tbody>
-                                            </table>
+                                                        <tr>
+                                                            <th>DQF</th>
+                                                            <th>Complete</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {{ $driver := .driver }}
+                                                        {{ range $doc := .docs }}
+                                                            <tr class="clickable" data-url="/document/{{ $doc.Id }}" data-target="_blank">
+                                                                <td>{{ $doc.DocumentId }}</td>
+                                                                <td>{{ $doc.Complete }}</td>
+                                                                <td class="text-center"><a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ $driver.Id }}/{{ $doc.Id }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
+                                                            </tr>
+                                                        {{ end }}
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

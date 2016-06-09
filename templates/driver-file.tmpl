@@ -40,43 +40,45 @@
                                     <li class="active"><a class="tab" href="">Uploaded Files</a></li>
                                 </ul>
 
-                                <div style="padding:30px">
-                                    <div class="col-lg-6">
-                                        <div class="table-responsive">
-                                            <table id="filesTable" class="table table-bordered table-hover">
-                                                <thead>
-                                                    <tr id="search" class="search">
-                                                        <th>name</th>
-                                                        <th>size</th>
-                                                        <th></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Size</th>
-                                                        <th></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {{ $driver := .driver }}
-                                                    {{ range $file := .files }}
-                                                        <tr class="clickable" data-url="/driver/file/{{ $driver.Id }}/{{ $file.name }}" data-target="_blank">
-                                                            <td>{{ $file.name }}</td>
-                                                            <td>{{ size $file.size }}</td>
-                                                            <td class="text-center"><a data-message="Are you sure you would like to delete this file?" data-color="red" data-url="/driver/file/{{ $driver.Id}}/{{ $file.name }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
+                                <div class="tabPane clearfix">
+                                    <div class="profile-desk">
+                                        <div class="col-lg-6">
+                                            <div class="table-responsive">
+                                                <table id="filesTable" class="table table-bordered table-hover">
+                                                    <thead>
+                                                        <tr id="search" class="search">
+                                                            <th>name</th>
+                                                            <th>size</th>
+                                                            <th></th>
                                                         </tr>
-                                                    {{ end }}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <form action="/driver/upload" method="post" class="dropzone" id="dropzone">
-                                            <div class="fallback">
-                                                <input name="file" type="file" multiple />
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Size</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {{ $driver := .driver }}
+                                                        {{ range $file := .files }}
+                                                            <tr class="clickable" data-url="/driver/file/{{ $driver.Id }}/{{ $file.name }}" data-target="_blank">
+                                                                <td>{{ $file.name }}</td>
+                                                                <td>{{ size $file.size }}</td>
+                                                                <td class="text-center"><a data-message="Are you sure you would like to delete this file?" data-color="red" data-url="/driver/file/{{ $driver.Id}}/{{ $file.name }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
+                                                            </tr>
+                                                        {{ end }}
+                                                    </tbody>
+                                                </table>
                                             </div>
-                                            <input type="hidden" name="id" value="{{ .driver.Id }}">
-                                            <input type="hidden" name="redirect" value="/cns/driver/{{ .driver.Id }}/file">
-                                        </form>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <form action="/driver/upload" method="post" class="dropzone" id="dropzone">
+                                                <div class="fallback">
+                                                    <input name="file" type="file" multiple />
+                                                </div>
+                                                <input type="hidden" name="id" value="{{ .driver.Id }}">
+                                                <input type="hidden" name="redirect" value="/cns/driver/{{ .driver.Id }}/file">
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

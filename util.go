@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -8,6 +9,15 @@ import (
 	"strconv"
 	"strings"
 )
+
+var quickNotes = []QuickNote{
+	QuickNote{"Good", "I had good contact with the customer."},
+	QuickNote{"Bad", "I had Bad contact with the customer."},
+	QuickNote{"Okay", "I had okay contact with the customer."},
+	QuickNote{"Happy", "The customer was happy when I was finished with them."},
+	QuickNote{"Sad", "The customer was sad when I was finished with them."},
+	QuickNote{"Mad", "The customer was mad when I was finished with them."},
+}
 
 func FormToStruct(ptr interface{}, vals url.Values, start string) {
 	var strct reflect.Value
@@ -140,4 +150,23 @@ func ajaxErrorResponse(w http.ResponseWriter, msg string) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, msg)
+}
+
+func FormatDate(d string) string {
+	ds := strings.Split(d, "-")
+	if len(ds) != 3 {
+		return ""
+	}
+	if ds[1][0] == '0' {
+		ds[1] = ds[1][1:]
+	}
+	return fmt.Sprintf("%s/%s/%s", ds[1], ds[2], ds[0])
+}
+
+func ToJson(v interface{}) string {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return ""
+	}
+	return string(b)
 }

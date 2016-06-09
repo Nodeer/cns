@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"sort"
 	"strconv"
 	"time"
 
@@ -111,9 +113,16 @@ var companyView = web.Route{"GET", "/cns/company/:id", func(w http.ResponseWrite
 		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
 		return
 	}
-
+	var notes NoteRevSort
+	var employees []Employee
+	db.TestQuery("note", &notes, adb.Eq("companyId", `"`+company.Id+`"`))
+	sort.Stable(notes)
+	db.All("employee", &employees)
 	tc.Render(w, r, "company.tmpl", web.Model{
-		"company": company,
+		"company":    company,
+		"notes":      notes,
+		"employees":  employees,
+		"quickNotes": quickNotes,
 	})
 }}
 
@@ -150,7 +159,7 @@ var companyVehicle = web.Route{"GET", "/cns/company/:id/vehicle", func(w http.Re
 	})
 }}
 
-var companyNote = web.Route{"GET", "/cns/company/:id/note", func(w http.ResponseWriter, r *http.Request) {
+/*var companyNote = web.Route{"GET", "/cns/company/:id/note", func(w http.ResponseWriter, r *http.Request) {
 	var company Company
 	var notes []Note
 	compId := r.FormValue(":id")
@@ -165,9 +174,9 @@ var companyNote = web.Route{"GET", "/cns/company/:id/note", func(w http.Response
 		"company": company,
 		"notes":   notes,
 	})
-}}
+}}*/
 
-var companySetting = web.Route{"GET", "/cns/company/:id/setting", func(w http.ResponseWriter, r *http.Request) {
+/*var companySetting = web.Route{"GET", "/cns/company/:id/setting", func(w http.ResponseWriter, r *http.Request) {
 	var company Company
 	compId := r.FormValue(":id")
 	ok := db.Get("company", compId, &company)
@@ -178,17 +187,26 @@ var companySetting = web.Route{"GET", "/cns/company/:id/setting", func(w http.Re
 	tc.Render(w, r, "company-setting.tmpl", web.Model{
 		"company": company,
 	})
-}}
+}}*/
 
 var companySaveNote = web.Route{"POST", "/cns/company/note", func(w http.ResponseWriter, r *http.Request) {
-	id := strconv.Itoa(int(time.Now().UnixNano()))
-	note := Note{
-		Id:        id,
-		CompanyId: r.FormValue("id"),
-		Body:      r.FormValue("body"),
+	var note Note
+	r.ParseForm()
+	FormToStruct(&note, r.Form, "")
+	if note.Id == "" {
+		fmt.Println("no id")
+		note.Id = strconv.Itoa(int(time.Now().UnixNano()))
 	}
-	db.Add("note", id, note)
-	web.SetSuccessRedirect(w, r, "/cns/company/"+r.FormValue("id"), "Successfully saved note")
+	dt, err := time.Parse("01/02/2006 3:04 PM", r.FormValue("dateTime"))
+	if err != nil {
+		log.Printf("cnsRoutes.go >> companySaveNotes >> time.Parse() >> %v\n", err)
+	}
+	note.StartTime = dt.Unix()
+	note.EndTime = dt.Unix()
+	note.StartTimePretty = r.FormValue("dateTime")
+	note.EndTimePretty = r.FormValue("dateTime")
+	db.Set("note", note.Id, note)
+	web.SetSuccessRedirect(w, r, "/cns/company/"+r.FormValue("companyId"), "Successfully saved note")
 }}
 
 var companySave = web.Route{"POST", "/cns/company", func(w http.ResponseWriter, r *http.Request) {
