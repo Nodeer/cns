@@ -42,6 +42,19 @@ type Company struct {
 	Fax             string  `json:"fax,omitempty"`
 	Email           string  `json:"email,omitempty"`
 	EINNum          string  `json:"einNum,omitempty"`
+	CreditCard      CreditCard
+	NYHutUsername   string `json:"nyHutUsername,omitempty"`
+	NYHutPassword   string `json:"nyHutPassword,omitempty"`
+	NYOscarUsername string `json:"nyOrcarUsername,omitempty"`
+	NYOscarPassword string `json:"nyOscarUsername,omitempty"`
+	KYUseNum        string `json:"kyUseNum,omitempty"`
+	NMHutUsername   string `json:"nmHutUsername,omitempty"`
+	NMHutPassword   string `json:"nmHutPassword,omitempty"`
+	DOTPin          string `json:"dotPin,omitempty"`
+	MCPin           string `json:"mcPin,omitempty"`
+	FMCSAUsername   string `json:"fmcsaUsername,omitempty"`
+	FMCSAPassword   string `json:"fmcsaPassword,omitempty"`
+	IRPNum          string `json:"irpNum,omitempty"`
 	//Slug            string  `json:"slug,omitempty"`
 }
 
@@ -206,4 +219,10 @@ func (n NoteRevSort) Swap(i, j int) {
 type QuickNote struct {
 	Name string
 	Body string
+}
+
+type CreditCard struct {
+	Number         string `json:"number,omitempty"`
+	ExpirationDate string `json:"expirationDate,omitempty"`
+	SecurityCode   string `json:"securityCode,omitempty"`
 }
