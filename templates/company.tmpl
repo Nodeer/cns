@@ -40,12 +40,12 @@
                                 </ul>
                                 <div class="tabPane clearfix">
                                     <div class="row">
-                                        <div id="infoPane" class="col-lg-6">
-                                            <div class="profile-desk">
+
+                                        <div id="view"  class="profile-desk">
+                                            <div id="infoPane" class="col-lg-6">
                                                 <h1 class="clearfix">
                                                     {{ if .company.Id }}{{ .company.Name }}{{ else }}New{{ end }}
                                                     <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
-                                                    <button class="btn btn-danger btn-xs pull-right hide" id="cancelButton">Cancel</button>
                                                 </h1>
                                                 <table id="view" class="table table-condensed" style="margin-bottom:0;">
                                                     <tbody>
@@ -105,8 +105,63 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
+                                            </div>
 
-                                                <form id="edit" class="hide" action="/cns/company" method="post">
+                                            <div class="col-lg-6" style="height:520px;">
+                                                <div class="profile-desk">
+                                                    <div style="height:510px; overflow:auto;">
+                                                        <h1 class="clearfix">
+                                                            Notes
+                                                            <button class="btn btn-primary btn-xs pull-right" id="addNote">Add</button>
+                                                        </h1>
+                                                        <table class="table table-condensed table-hover" style="margin-bottom:0;">
+                                                            <tbody>
+                                                                {{ range $note := .notes }}
+                                                                    <tr class="clickable" data-note='{{ toJson $note }}'>
+                                                                        <td>
+                                                                            {{ $note.Body }}
+                                                                        </td>
+                                                                    </tr>
+                                                                {{ end }}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <table id="view" class="table table-condensed" style="margin-bottom:0;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><b>Credit Card</b></td>
+                                                                <td>
+                                                                    {{ .company.CreditCard.Number }}
+                                                                    {{ .company.CreditCard.ExpirationDate}} {{ .company.CreditCard.SecurityCode }}
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <table id="view" class="table table-condensed" style="margin-bottom:0;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><b></b></td>
+                                                                <td></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="edit"  class="profile-desk hide">
+                                            <div class="col-lg-6">
+                                                <h1 class="clearfix">
+                                                    {{ if .company.Id }}{{ .company.Name }}{{ else }}New{{ end }}
+                                                    <button class="btn btn-danger btn-xs pull-right" id="cancelButton">Cancel</button>
+                                                </h1>
+                                                <form id="edit" action="/cns/company" method="post">
                                                     <table  class="table table-condensed" style="margin-bottom:0;">
                                                         <tbody>
                                                             <tr>
@@ -216,29 +271,9 @@
                                                     </div>
                                                 </form>
 
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-desk">
-                                                <div class="">
-                                                    <h1 class="clearfix">
-                                                        Notes
-                                                        <button class="btn btn-primary btn-xs pull-right" id="addNote">Add</button>
-                                                    </h1>
-                                                    <table class="table table-condensed table-hover" style="margin-bottom:0;">
-                                                        <tbody>
-                                                            {{ range $note := .notes }}
-                                                                <tr class="clickable" data-note='{{ toJson $note }}'>
-                                                                    <td>
-                                                                        {{ $note.Body }}
-                                                                    </td>
-                                                                </tr>
-                                                            {{ end }}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
+
+
+
                                     </div>
                                 </div>
                             </div>
@@ -382,10 +417,8 @@
             });
 
             $('button#editButton').click(function() {
-                $('table#view').addClass('hide');
-                $('button#editButton').addClass('hide');
-                $('form#edit').removeClass('hide');
-                $("button#cancelButton").removeClass('hide');
+                $('div#view').addClass('hide');
+                $('div#edit').removeClass('hide');
             });
 
             $('button#cancelButton').click(function() {
@@ -393,10 +426,8 @@
                     window.location.href = '/cns/company';
                     return;
                 }
-                $('form#edit').addClass('hide');
-                $("button#cancelButton").addClass('hide');
-                $('table#view').removeClass('hide');
-                $('button#editButton').removeClass('hide');
+                $('div#edit').addClass('hide');
+                $('div#view').removeClass('hide');
                 $('form#edit')[0].reset();
                 if ($('input#sameYes')[0].checked) {
                     $('span#mailingAddress').addClass('hide');
