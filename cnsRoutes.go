@@ -123,6 +123,7 @@ var companyView = web.Route{"GET", "/cns/company/:id", func(w http.ResponseWrite
 		"notes":      notes,
 		"employees":  employees,
 		"quickNotes": quickNotes,
+		"userId":     web.GetSess(r, "id"),
 	})
 }}
 

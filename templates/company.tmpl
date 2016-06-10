@@ -432,19 +432,6 @@
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="form-group">
-                                        <label>Date ane Time</label>
-                                        <div class="input-group date" id="datetimepicker">
-                                            <input type="text" class="form-control" name="dateTime" id="dateTime"/>
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="form-group">
                                         <label>Communication</label>
                                         <select id="communication" class="form-control" name="communication">
                                             <option value="called">Called</option>
@@ -456,6 +443,15 @@
                                     <div class="form-group">
                                         <label>Representative</label>
                                         <input id="representative" class="form-control" type="text" name="representative" value="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Date ane Time</label>
+                                        <div class="input-group date" id="datetimepicker">
+                                            <input type="text" class="form-control" name="dateTime" id="dateTime"/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -478,26 +474,48 @@
                                     <div class="form-group">
                                         <label>Employee</label>
                                         <select id="employeeId" class="form-control" name="employeeId">
+                                            {{ $userId := .userId }}
                                             {{ range $employee := .employees}}
-                                                <option value="{{ $employee.Id }}">{{ $employee.FirstName }} {{ $employee.LastName }}</option>
+                                                <option value="{{ $employee.Id }}" {{ if eq $userId $employee.Id }}selected{{ end }}>{{ $employee.FirstName }} {{ $employee.LastName }}</option>
                                             {{ end }}
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label>Email Another Employee</label><br>
-                                        <div class="radio-inline">
-                                            <label class="cr-styled" for="emailEmployeeTrue">
-                                                <input type="radio" id="emailEmployeeTrue" name="emailEmployee" value="true">
-                                                <i class="fa"></i>
-                                                Yes
-                                            </label>
+                                        <div style="height:34px;">
+                                            <div class="radio-inline">
+                                                <label class="cr-styled" for="emailEmployeeTrue">
+                                                    <input type="radio" id="emailEmployeeTrue" name="emailEmployee" value="true">
+                                                    <i class="fa"></i>
+                                                    Yes
+                                                </label>
+                                            </div>
+                                            <div class="radio-inline">
+                                                <label class="cr-styled" for="emailEmployeeFalse">
+                                                    <input type="radio" id="emailEmployeeFalse" name="emailEmployee" value="false" checked>
+                                                    <i class="fa"></i>
+                                                    No
+                                                </label>
+                                            </div>
                                         </div>
-                                        <div class="radio-inline">
-                                            <label class="cr-styled" for="emailEmployeeFalse">
-                                                <input type="radio" id="emailEmployeeFalse" name="emailEmployee" value="false" checked>
-                                                <i class="fa"></i>
-                                                No
-                                            </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Billable</label><br>
+                                        <div style="height:34px;">
+                                            <div class="radio-inline">
+                                                <label class="cr-styled" for="billableTrue">
+                                                    <input type="radio" id="billableTrue" name="billable" value="true">
+                                                    <i class="fa"></i>
+                                                    Yes
+                                                </label>
+                                            </div>
+                                            <div class="radio-inline">
+                                                <label class="cr-styled" for="billableFalse">
+                                                    <input type="radio" id="billableFalse" name="billable" value="false" checked>
+                                                    <i class="fa"></i>
+                                                    No
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -608,6 +626,9 @@
                 $('form#noteForm input#id').val(note.id);
                 if (note.emailEmployee) {
                     $('form#noteForm input#emailEmployeeTrue')[0].checked = true;
+                }
+                if (note.billable) {
+                    $('form#noteForm input#billableTrue')[0].checked = true;
                 }
                 $('#noteModal').modal('show');
             });
