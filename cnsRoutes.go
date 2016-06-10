@@ -194,7 +194,6 @@ var companySaveNote = web.Route{"POST", "/cns/company/note", func(w http.Respons
 	r.ParseForm()
 	FormToStruct(&note, r.Form, "")
 	if note.Id == "" {
-		fmt.Println("no id")
 		note.Id = strconv.Itoa(int(time.Now().UnixNano()))
 	}
 	dt, err := time.Parse("01/02/2006 3:04 PM", r.FormValue("dateTime"))

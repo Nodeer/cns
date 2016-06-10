@@ -39,15 +39,14 @@
                                     <li class=""><a id="notesTab" class="tab"  href="/cns/company/{{ .company.Id }}/driver">Drivers</a></li>
                                 </ul>
                                 <div class="tabPane clearfix">
-                                    <div class="row">
-
-                                        <div id="view"  class="profile-desk">
+                                    <div id="view"  class="profile-desk">
+                                        <div class="row">
                                             <div id="infoPane" class="col-lg-6">
                                                 <h1 class="clearfix">
                                                     {{ if .company.Id }}{{ .company.Name }}{{ else }}New{{ end }}
                                                     <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
                                                 </h1>
-                                                <table id="view" class="table table-condensed" style="margin-bottom:0;">
+                                                <table class="table table-condensed" style="margin-bottom:0;">
                                                     <tbody>
                                                         <tr>
                                                             <td><b>DOT #</b></td>
@@ -103,65 +102,105 @@
                                                             </td>
                                                             <td></td>
                                                         </tr>
+                                                        <tr>
+                                                            <td><b>NY HUT Username</b></td>
+                                                            <td>{{ .company.NYHutUsername }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>NY HUT Password</b></td>
+                                                            <td>{{ .company.NYHutPassword }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>NY OSCAR Username</b></td>
+                                                            <td>{{ .company.NYOscarUsername }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>NY OSCAR Password</b></td>
+                                                            <td>{{ .company.NYOscarPassword }}</td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
 
-                                            <div class="col-lg-6" style="height:520px;">
+                                            <div class="col-lg-6 clearfix">
                                                 <div class="profile-desk">
-                                                    <div style="height:510px; overflow:auto;">
+                                                    <div style="height:315px;">
                                                         <h1 class="clearfix">
                                                             Notes
                                                             <button class="btn btn-primary btn-xs pull-right" id="addNote">Add</button>
                                                         </h1>
-                                                        <table class="table table-condensed table-hover" style="margin-bottom:0;">
-                                                            <tbody>
-                                                                {{ range $note := .notes }}
-                                                                    <tr class="clickable" data-note='{{ toJson $note }}'>
-                                                                        <td>
-                                                                            {{ $note.Body }}
-                                                                        </td>
-                                                                    </tr>
-                                                                {{ end }}
-                                                            </tbody>
-                                                        </table>
+                                                        <div style="height:285px; overflow:auto;">
+                                                            <table class="table table-condensed table-hover table-bordered" style="margin-bottom:0;">
+                                                                <tbody>
+                                                                    {{ range $note := .notes }}
+                                                                        <tr class="clickable" data-note='{{ toJson $note }}'>
+                                                                            <td>
+                                                                                {{ $note.Body }}
+                                                                            </td>
+                                                                            <td>{{ $note.StartTimePretty }}</td>
+                                                                        </tr>
+                                                                    {{ end }}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <table id="view" class="table table-condensed" style="margin-bottom:0;">
+                                                    <br>
+                                                    <table class="table table-condensed" style="margin-bottom:0;">
                                                         <tbody>
                                                             <tr>
                                                                 <td><b>Credit Card</b></td>
                                                                 <td>
-                                                                    {{ .company.CreditCard.Number }}
-                                                                    {{ .company.CreditCard.ExpirationDate}} {{ .company.CreditCard.SecurityCode }}
+                                                                    {{ .company.CreditCard.Number }}<br>
+                                                                    {{ formatDate .company.CreditCard.ExpirationDate}} {{ .company.CreditCard.SecurityCode }}
                                                                 </td>
                                                             </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <table id="view" class="table table-condensed" style="margin-bottom:0;">
-                                                        <tbody>
                                                             <tr>
-                                                                <td><b></b></td>
-                                                                <td></td>
+                                                                <td><b>DOT Pin</b></td>
+                                                                <td>{{ .company.DOTPin }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>MC Pin</b></td>
+                                                                <td>{{ .company.MCPin }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>IRP Account Number</b></td>
+                                                                <td>{{ .company.IRPNum }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>FMCSA Username</b></td>
+                                                                <td>{{ .company.FMCSAUsername }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>FMCSA Password</b></td>
+                                                                <td>{{ .company.FMCSAPassword }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>KY Use Num</b></td>
+                                                                <td>{{ .company.KYUseNum }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>NM Hut Username</b></td>
+                                                                <td>{{ .company.NMHutUsername }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>NM Hut Password</b></td>
+                                                                <td>{{ .company.NMHutPassword }}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div id="edit"  class="profile-desk hide">
-                                            <div class="col-lg-6">
-                                                <h1 class="clearfix">
-                                                    {{ if .company.Id }}{{ .company.Name }}{{ else }}New{{ end }}
-                                                    <button class="btn btn-danger btn-xs pull-right" id="cancelButton">Cancel</button>
-                                                </h1>
-                                                <form id="edit" action="/cns/company" method="post">
+                                    <div id="edit"  class="profile-desk hide">
+                                        <div class="row">
+                                            <form id="edit" action="/cns/company" method="post">
+                                                <div class="col-lg-6">
+                                                    <h1 class="clearfix">
+                                                        {{ if .company.Id }}{{ .company.Name }}{{ else }}New{{ end }}
+                                                        <a class="btn btn-danger btn-xs pull-right" id="cancelButton">Cancel</a>
+                                                    </h1>
                                                     <table  class="table table-condensed" style="margin-bottom:0;">
                                                         <tbody>
                                                             <tr>
@@ -210,12 +249,18 @@
                                                                         <div class="col-lg-6">
                                                                             Same as Physical
                                                                         </div>
-                                                                        <div class="col-lg-6">
-                                                                            <label class="radio-inline">
-                                                                                <input type="radio" name="sameAddress" value="true" id="sameYes" {{ if .company.SameAddress}}checked{{ end }}> Yes
+                                                                        <div class="radio-inline">
+                                                                            <label class="cr-styled" for="sameYes">
+                                                                                <input type="radio" name="sameAddress" value="true" id="sameYes" {{ if .company.SameAddress}}checked{{ end }}>
+                                                                                <i class="fa"></i>
+                                                                                Yes
                                                                             </label>
-                                                                            <label class="radio-inline">
-                                                                                <input type="radio" name="sameAddress" value="false" id="sameNo" {{ if not .company.SameAddress}}checked{{ end }}> No
+                                                                        </div>
+                                                                        <div class="radio-inline">
+                                                                            <label class="cr-styled" for="sameNo">
+                                                                                <input type="radio" name="sameAddress" value="false" id="sameNo" {{ if not .company.SameAddress}}checked{{ end }}>
+                                                                                <i class="fa"></i>
+                                                                                No
                                                                             </label>
                                                                         </div>
                                                                     </div>
@@ -261,19 +306,107 @@
                                                                 </td>
                                                                 <td></td>
                                                             </tr>
+                                                            <tr>
+                                                                <td><b>NY HUT Username</b></td>
+                                                                <td><input type="text" class="form-control" name="nYHutUsername" value="{{ .company.NYHutUsername }}" placeholder="NY HUT Username"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>NY HUT Password</b></td>
+                                                                <td><input type="text" class="form-control" name="nYHutPassword" value="{{ .company.NYHutPassword }}" placeholder="NY HUT Password"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>NY OSCAR Username</b></td>
+                                                                <td><input type="text" class="form-control" name="nYOscarUsername" value="{{ .company.NYOscarUsername }}" placeholder="NY OSCAR Username"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>NY OSCAR Password</b></td>
+                                                                <td><input type="text" class="form-control" name="nYOscarPassword" value="{{ .company.NYOscarPassword }}" placeholder="NY OSCAR Password"></td>
+                                                            </tr>
                                                         </tbody>
                                                     </table>
                                                     {{ if .company.Id }}
                                                         <input type="hidden" name="id" value="{{ .company.Id }}">
                                                     {{ end }}
-                                                    <div class="form-group">
-                                                        <button class="btn btn-success btn-block">Save</button>
+                                                    <button class="btn btn-success btn-block">Save</button>
+                                                </div>
+
+                                                <div class="col-lg-6">
+                                                    <div class="profile-desk">
+                                                        <div style="height:315px;">
+                                                            <!-- <h1 class="clearfix">
+                                                                Notes
+                                                                <button class="btn btn-primary btn-xs pull-right" id="addNote">Add</button>
+                                                            </h1>
+                                                            <div style="height:285px; overflow:auto;">
+                                                                <table class="table table-condensed table-hover table-bordered" style="margin-bottom:0;">
+                                                                    <tbody>
+                                                                        {{ range $note := .notes }}
+                                                                            <tr class="clickable" data-note='{{ toJson $note }}'>
+                                                                                <td>
+                                                                                    {{ $note.Body }}
+                                                                                </td>
+                                                                                <td>{{ $note.StartTimePretty }}</td>
+                                                                            </tr>
+                                                                        {{ end }}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div> -->
+                                                        </div>
+                                                        <br>
+                                                        <table class="table table-condensed" style="margin-bottom:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><b>Credit Card</b></td>
+                                                                    <td>
+                                                                        <input type="text" class="form-control" name="creditCard.Number" value="{{ .company.CreditCard.Number }}" placeholder="Number"><br>
+                                                                        <div class="row">
+                                                                            <div class="col-lg-6">
+                                                                                <input type="date" class="form-control" name="creditCard.ExpirationDate" value="{{ .company.CreditCard.ExpirationDate }}" placeholder="Experation Date">
+                                                                            </div>
+                                                                            <div class="col-lg-6">
+                                                                                <input type="text" class="form-control" name="creditCard.SecurityCode" value="{{ .company.CreditCard.SecurityCode }}" placeholder="Security Code">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>DOT Pin</b></td>
+                                                                    <td><input type="text" class="form-control" name="dOTPin" value="{{ .company.DOTPin }}" placeholder="DOT Pin"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>MC Pin</b></td>
+                                                                    <td><input type="text" class="form-control" name="mCPin" value="{{ .company.MCPin }}" placeholder="MC Pin"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>IRP Account Number</b></td>
+                                                                    <td><input type="text" class="form-control" name="iRPNum" value="{{ .company.IRPNum }}" placeholder="IRP Account Number"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>FMCSA Username</b></td>
+                                                                    <td><input type="text" class="form-control" name="fMCSAUsername" value="{{ .company.FMCSAUsername }}" placeholder="FMCSA Username"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>FMCSA Password</b></td>
+                                                                    <td><input type="text" class="form-control" name="fMCSAPassword" value="{{ .company.FMCSAPassword }}" placeholder="FMCSA Password"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>KY Use Tax Num</b></td>
+                                                                    <td><input type="text" class="form-control" name="kYUseNum" value="{{ .company.KYUseNum }}" placeholder="KY Use Tax Num"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>NM Hut Username</b></td>
+                                                                    <td><input type="text" class="form-control" name="nMHutUsername" value="{{ .company.NMHutUsername }}" placeholder="NM HUT Username"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>NM Hut Password</b></td>
+                                                                    <td><input type="text" class="form-control" name="nMHutPassword" value="{{ .company.NMHutPassword }}" placeholder="NM HUT Password"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
-                                                </form>
-
-
-
-
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -421,7 +554,7 @@
                 $('div#edit').removeClass('hide');
             });
 
-            $('button#cancelButton').click(function() {
+            $('a#cancelButton').click(function() {
                 if (newComp) {
                     window.location.href = '/cns/company';
                     return;
