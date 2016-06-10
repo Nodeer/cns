@@ -8,10 +8,11 @@
         <link href="/static/sweet-alert/sweet-alert.min.css" rel="stylesheet">
         <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
 
+        <link href="/static/timepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
 
         <link href="/static/toggles/toggles.css" rel="stylesheet" />
 
-        <title>Company</title>
+        <title>Customer</title>
     </head>
     <body>
 
@@ -27,7 +28,7 @@
                     <div class="col-sm-12">
 
                         <p class="lead">
-                            Company: {{ if .company.Id}}{{ .company.Name }}{{ else }}NEW{{ end }}
+                            Customer: {{ if .company.Id}}{{ .company.Name }}{{ else }}NEW{{ end }}
                         </p>
 
                         <div class="panel panel-default p-0">
@@ -151,7 +152,7 @@
                                                                 <td><b>Credit Card</b></td>
                                                                 <td>
                                                                     {{ .company.CreditCard.Number }}<br>
-                                                                    {{ formatDate .company.CreditCard.ExpirationDate}} {{ .company.CreditCard.SecurityCode }}
+                                                                    {{ .company.CreditCard.ExpirationDate}} {{ .company.CreditCard.SecurityCode }}
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -361,7 +362,10 @@
                                                                         <input type="text" class="form-control" name="creditCard.Number" value="{{ .company.CreditCard.Number }}" placeholder="Number"><br>
                                                                         <div class="row">
                                                                             <div class="col-lg-6">
-                                                                                <input type="date" class="form-control" name="creditCard.ExpirationDate" value="{{ .company.CreditCard.ExpirationDate }}" placeholder="Experation Date">
+                                                                                <div class="input-group">
+                                                                                    <input type="text" class="form-control datepicker" name="creditCard.ExpirationDate" value="{{ .company.CreditCard.ExpirationDate }}" placeholder="Experation Date">
+                                                                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                                </div>
                                                                             </div>
                                                                             <div class="col-lg-6">
                                                                                 <input type="text" class="form-control" name="creditCard.SecurityCode" value="{{ .company.CreditCard.SecurityCode }}" placeholder="Security Code">
@@ -550,8 +554,11 @@
         <script src="/static/toggles/toggles.min.js"></script>
         <script src="/static/date-time-picker/moment-with-locales.js" charset="utf-8"></script>
         <script type="text/javascript" src="/static/date-time-picker/bootstrap-datetimepicker.js"></script>
+        <script src="/static/timepicker/bootstrap-datepicker.js"></script>
 
         <script type="text/javascript">
+
+            jQuery('.datepicker').datepicker();
 
             var newComp = {{ if .company.Id }}false{{ else }}true{{ end }};
 
@@ -586,10 +593,8 @@
             });
 
             if (newComp) {
-                $('table#view').addClass('hide');
-                $('button#editButton').addClass('hide');
-                $('form#edit').removeClass('hide');
-                $("button#cancelButton").removeClass('hide');
+                $('div#view').addClass('hide');
+                $('div#edit').removeClass('hide');
             }
 
             $('a.tab').click(function(e) {

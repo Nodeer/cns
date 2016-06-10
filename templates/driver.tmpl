@@ -6,6 +6,7 @@
 
         <!-- sweet alerts -->
         <link href="/static/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+        <link href="/static/timepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
 
         <title>Driver</title>
 
@@ -68,7 +69,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td><b>Date of Birth</b></td>
-                                                                <td>{{ formatDate .driver.DOB }}</td>
+                                                                <td>{{ .driver.DOB }}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>Age</b></td>
@@ -97,31 +98,31 @@
                                                             </tr>
                                                             <tr>
                                                                 <td><b>License Expiration</b></td>
-                                                                <td>{{ formatDate .driver.LicenseExpire }}</td>
+                                                                <td>{{ .driver.LicenseExpire }}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>Medical Card Expiration</b></td>
-                                                                <td>{{ formatDate .driver.MedCardExpiry }}</td>
+                                                                <td>{{ .driver.MedCardExpiry }}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>MVR Expiration</b></td>
-                                                                <td>{{ formatDate .driver.MVRExpiry }}</td>
+                                                                <td>{{ .driver.MVRExpiry }}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>Review Expiration</b></td>
-                                                                <td>{{ formatDate .driver.ReviewExpiry }}</td>
+                                                                <td>{{ .driver.ReviewExpiry }}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>180 Expiration</b></td>
-                                                                <td>{{ formatDate .driver.OneEightyExpiry }}</td>
+                                                                <td>{{ .driver.OneEightyExpiry }}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>Hire Date</b></td>
-                                                                <td>{{ formatDate .driver.HireDate }}</td>
+                                                                <td>{{ .driver.HireDate }}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>Termination Date</b></td>
-                                                                <td>{{ formatDate .driver.TermDate }}</td>
+                                                                <td>{{ .driver.TermDate }}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -171,7 +172,12 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td><b>Date of Birth</b></td>
-                                                                    <td><input type="date" class="form-control" name="dOB" value="{{ .driver.DOB }}" placeholder="Date of Birth"></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="dOB" value="{{ .driver.DOB }}" placeholder="Date of Birth">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td><b>Emergency Contact</b></td>
@@ -196,31 +202,66 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td><b>License Expiration</b></td>
-                                                                    <td><input type="date" class="form-control" name="licenseExpire" value="{{ .driver.LicenseExpire }}" placeholder="License Expiration"></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="licenseExpire" value="{{ .driver.LicenseExpire }}" placeholder="License Expiration">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td><b>Medical Card Expiration</b></td>
-                                                                    <td><input type="date" class="form-control" name="medCardExpiry" value="{{ .driver.MedCardExpiry }}" placeholder="Medical Card Expiration"></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="medCardExpiry" value="{{ .driver.MedCardExpiry }}" placeholder="Medical Card Expiration">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td><b>MVR Expiration</b></td>
-                                                                    <td><input type="date" class="form-control" name="mVRExpiry" value="{{ .driver.MVRExpiry }}" placeholder="MVR Expiration"></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="mVRExpiry" value="{{ .driver.MVRExpiry }}" placeholder="MVR Expiration">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td><b>Review Expiration</b></td>
-                                                                    <td><input type="date" class="form-control" name="reviewExpiry" value="{{ .driver.ReviewExpiry }}" placeholder="Review Expiration"></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="reviewExpiry" value="{{ .driver.ReviewExpiry }}" placeholder="Review Expiration">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td><b>180 Expiration</b></td>
-                                                                    <td><input type="date" class="form-control" name="oneEightyExpiry" value="{{ .driver.OneEightyExpiry }}" placeholder="180 Expiration"></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="oneEightyExpiry" value="{{ .driver.OneEightyExpiry }}" placeholder="180 Expiration">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td><b>Hire Date</b></td>
-                                                                    <td><input type="date" class="form-control" name="hireDate" value="{{ .driver.HireDate }}" placeholder="Hire Date"></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="hireDate" value="{{ .driver.HireDate }}" placeholder="Hire Date">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td><b>Termination Date</b></td>
-                                                                    <td><input type="date" class="form-control" name="termDate" value="{{ .driver.TermDate }}" placeholder="Termination Date"></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="termDate" value="{{ .driver.TermDate }}" placeholder="Termination Date">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td colspan="2">
@@ -254,10 +295,14 @@
         <script src="/static/dropzone/dropzone.min.js"></script>
         <script src="/static/datatables/jquery.dataTables.min.js"></script>
         <script src="/static/datatables/dataTables.bootstrap.js"></script>
+        <script src="/static/timepicker/bootstrap-datepicker.js"></script>
         <script src="/static/js/confirm.js" charset="utf-8"></script>
         <script src="/static/datatables/custom.js" charset="utf-8"></script>
 
         <script type="text/javascript">
+
+            jQuery('.datepicker').datepicker();
+
             $('button#editButton').click(function() {
                 $('div#view').addClass('hide');
                 $('div#edit').removeClass('hide');

@@ -6,6 +6,7 @@
 
         <!-- sweet alerts -->
         <link href="/static/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+        <link href="/static/timepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
 
         <title>Company</title>
     </head>
@@ -164,11 +165,18 @@
                                                         </tr>
                                                         <tr>
                                                             <td><b>Purchase Price</b></td>
-                                                            <td><input type="text" class="form-control" name="purchasePrice" value="{{ .vehicle.PurchasePrice }}" placeholder="Purchase Price"></td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="purchasePrice" value="{{ .vehicle.PurchasePrice }}" placeholder="Purchase Price">
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td><b>Purchase Date</b></td>
-                                                            <td><input type="date" class="form-control" name="purchaseDate" value="{{ .vehicle.PurchaseDate }}" placeholder="Purchase Date"></td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <input type="date" class="form-control datepicker" name="purchaseDate" value="{{ .vehicle.PurchaseDate }}" placeholder="Purchase Date">
+                                                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                </div>
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td><b>Current Value</b></td>
@@ -211,8 +219,10 @@
         {{ template "scripts.tmpl" . }}
 
         <script src="/static/js/jquery.scrollTo.min.js"></script>
-
+        <script src="/static/timepicker/bootstrap-datepicker.js"></script>
         <script type="text/javascript">
+
+            jQuery('.datepicker').datepicker();
 
             var newVehicle = {{ if .vehicle.Id }}false{{ else }}true{{ end }};
 
