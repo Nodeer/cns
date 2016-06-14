@@ -18,6 +18,7 @@ import (
 // global vars
 var mx *web.Mux = web.NewMux()
 var tc *web.TmplCache
+
 var db *adb.DB = adb.NewDB()
 
 // initialize routes
