@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        {{ template "head.tmpl" . }}
+
+        <!-- sweet alerts -->
+        <link href="/static/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+
+        <title>Customer</title>
+    </head>
+    <body>
+
+        {{ template "side-nav.tmpl" . }}
+
+        <!--Main Content Start -->
+        <section class="content">
+
+            {{ template "nav.tmpl" . }}
+
+            <div class="wraper container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <p class="lead">
+                            Company: {{ if .company.Id}}{{ .company.Name }}{{ else }}NEW{{ end }}
+                        </p>
+
+                        <div class="panel panel-default p-0">
+                            <div class="panel-body p-0">
+                                <ul class="nav nav-tabs profile-tabs">
+                                    <li class=""><a id="infoTab" href="/cns/company/{{ .company.Id }}">Customer Center</a></li>
+                                    <li class="active"><a id="serviceTab" href="/cns/company/{{ .company.Id }}/service">Service</a></li>
+                                    <li class=""><a id="vehiclesTab" href="/cns/company/{{ .company.Id }}/vehicle" >Vehicles</a></li>
+                                    <li class=""><a id="notesTab" href="/cns/company/{{ .company.Id }}/driver">Drivers</a></li>
+                                </ul>
+
+                                <div class="tabPane clearfix">
+                                    <div class="profile-desk">
+                                        <div class="col-lg-3">
+
+                                        <div class="form-group">
+                                            <label>Apportion</label><br>
+                                            <div style="height:34px;">
+                                                <div class="radio-inline">
+                                                    <label class="cr-styled" for="apportionTrue">
+                                                        <input type="radio" id="apportionTrue" name="apportion" value="true">
+                                                        <i class="fa"></i>
+                                                        Yes
+                                                    </label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <label class="cr-styled" for="apportionFalse">
+                                                        <input type="radio" id="apportionFalse" name="apportion" value="false" checked>
+                                                        <i class="fa"></i>
+                                                        No
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control datepicker" name="creditCard.ExpirationDate" value="{{ .company.CreditCard.ExpirationDate }}" placeholder="Experation Date">
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                        *APPORTION   (*dates will have to be entered manually for this section. Need two automatic email boxes to enter manually)
+                                        *FUEL TAX PROGRAM Sub boxes NY, KY, NM   (*Automatic email goes out on the last 3/31, 6/30, 9/30, 12/31)
+                                        *DRUG CONSORTIUM (*need one automatic email for renewal set manually)
+                                        *Driver File Management (*need one automatic email for renewal set manually)
+                                        *DOT UPDATE  (*need one automatic email for renewal set manually)
+                                        *2290 (*need one automatic email for renewal sent out on June 1st)
+                                        *UCR (*need one automatic email for renewal sent out on October 1st)
+                                        *Log Auditing (email sent out monthly on the 7th day of the month)
+
+                                        CSA Service (dates will have to be entered manually for this section.)
+                                        NY (dates will have to be entered manually for this section.)
+                                        GPS (dates will have to be entered manually for this section.)
+                                        Training (dates will have to be entered manually for this section.)
+                                        IFTA Renewal (November 15th)
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{ template "footer.tmpl" . }}
+
+        </section>
+        <!-- Main Content Ends -->
+
+        {{ template "scripts.tmpl" . }}
+
+        <script src="/static/js/jquery.scrollTo.min.js"></script>
+        <script src="/static/js/confirm.js" charset="utf-8"></script>
+
+        <script type="text/javascript">
+            jQuery('.datepicker').datepicker();
+        </script>
+
+  </body>
+</html>

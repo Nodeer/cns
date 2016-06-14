@@ -1,6 +1,7 @@
 package main
 
 import (
+	//"bytes"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -124,6 +125,18 @@ var companyView = web.Route{"GET", "/cns/company/:id", func(w http.ResponseWrite
 		"employees":  employees,
 		"quickNotes": quickNotes,
 		"userId":     web.GetSess(r, "id"),
+	})
+}}
+
+var companyService = web.Route{"GET", "/cns/company/:id/service", func(w http.ResponseWriter, r *http.Request) {
+	var company Company
+	compId := r.FormValue(":id")
+	if !db.Get("company", compId, &company) {
+		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
+		return
+	}
+	tc.Render(w, r, "company-service.tmpl", web.Model{
+		"company": company,
 	})
 }}
 
@@ -296,9 +309,20 @@ var viewDriver = web.Route{"GET", "/cns/driver/:id", func(w http.ResponseWriter,
 		web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
 		return
 	}
+	companyId := r.FormValue("cid")
+	var company Company
+	if driverId == "new" && r.FormValue("cid") == "" {
+		web.SetErrorRedirect(w, r, "/cns/company", "Error adding new driver. Please try again")
+		return
+	} else {
+		db.Get("company", driver.CompanyId, &company)
+
+	}
 
 	tc.Render(w, r, "driver.tmpl", web.Model{
-		"driver": driver,
+		"driver":    driver,
+		"companyId": companyId,
+		"company":   company,
 	})
 }}
 

@@ -101,7 +101,7 @@ func (d Driver) FormatDOB() string {
 }
 
 func (d Driver) GetAge() int32 {
-	dobT, err := time.Parse("2006-1-02", d.DOB)
+	dobT, err := time.Parse("01/02/2006", d.DOB)
 	if err != nil {
 		return 0
 	}
