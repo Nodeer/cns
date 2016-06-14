@@ -134,8 +134,8 @@ type Document struct {
 var DQFS = [][]string{
 	[]string{"100", "Driver's Application"},
 	[]string{"180", "Certification of Violations"},
-	//[]string{"200", "Annual Inquery & Review"},
-	//[]string{"250", "Road Test Certication"},
+	[]string{"200", "Annual Inquery & Review"},
+	[]string{"250", "Road Test Certication"},
 	[]string{"300", "Previous Driver Inquires"},
 	[]string{"400", "Drug & Alcohol Records Request"},
 	[]string{"450", "Drug & Alcohol Certified Receipt"},
@@ -144,6 +144,18 @@ var DQFS = [][]string{
 	[]string{"700", "New Hire Stmt On Duty Hours"},
 	[]string{"750", "Other Ompensated Work"},
 	[]string{"775", "Fair Credit Reporting Act"},
+}
+
+var CompanyForms = [][]string{
+	[]string{"MV 550", ""},
+	[]string{"MV 550A", ""},
+	[]string{"MV 551", ""},
+	[]string{"MV-552A", ""},
+	[]string{"MV 558", ""},
+	[]string{"MV41", ""},
+	[]string{"TMT-39", ""},
+	[]string{"PUC App", ""},
+	[]string{"MCS 150", ""},
 }
 
 type Event struct {

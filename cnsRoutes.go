@@ -1,7 +1,6 @@
 package main
 
 import (
-	//"bytes"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -140,22 +139,6 @@ var companyService = web.Route{"GET", "/cns/company/:id/service", func(w http.Re
 	})
 }}
 
-var companyDriver = web.Route{"GET", "/cns/company/:id/driver", func(w http.ResponseWriter, r *http.Request) {
-	var company Company
-	var drivers []Driver
-	compId := r.FormValue(":id")
-	ok := db.Get("company", compId, &company)
-	if !ok {
-		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
-		return
-	}
-	db.TestQuery("driver", &drivers, adb.Eq("companyId", `"`+company.Id+`"`))
-	tc.Render(w, r, "company-driver.tmpl", web.Model{
-		"company": company,
-		"drivers": drivers,
-	})
-}}
-
 var companyVehicle = web.Route{"GET", "/cns/company/:id/vehicle", func(w http.ResponseWriter, r *http.Request) {
 	var company Company
 	var vehicles []Vehicle
@@ -173,35 +156,38 @@ var companyVehicle = web.Route{"GET", "/cns/company/:id/vehicle", func(w http.Re
 	})
 }}
 
-/*var companyNote = web.Route{"GET", "/cns/company/:id/note", func(w http.ResponseWriter, r *http.Request) {
+var companyDriver = web.Route{"GET", "/cns/company/:id/driver", func(w http.ResponseWriter, r *http.Request) {
 	var company Company
-	var notes []Note
+	var drivers []Driver
 	compId := r.FormValue(":id")
 	ok := db.Get("company", compId, &company)
 	if !ok {
 		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
 		return
 	}
-	db.TestQuery("note", &notes, adb.Eq("companyId", `"`+company.Id+`"`))
-
-	tc.Render(w, r, "company-note.tmpl", web.Model{
+	db.TestQuery("driver", &drivers, adb.Eq("companyId", `"`+company.Id+`"`))
+	tc.Render(w, r, "company-driver.tmpl", web.Model{
 		"company": company,
-		"notes":   notes,
+		"drivers": drivers,
 	})
-}}*/
+}}
 
-/*var companySetting = web.Route{"GET", "/cns/company/:id/setting", func(w http.ResponseWriter, r *http.Request) {
+var companyForm = web.Route{"GET", "/cns/company/:id/form", func(w http.ResponseWriter, r *http.Request) {
 	var company Company
-	compId := r.FormValue(":id")
-	ok := db.Get("company", compId, &company)
-	if !ok {
+	companyId := r.FormValue(":id")
+	var docs []Document
+	if !db.Get("company", companyId, &company) {
 		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
 		return
 	}
-	tc.Render(w, r, "company-setting.tmpl", web.Model{
+	db.TestQuery("document", &docs, adb.Eq("companyId", `"`+company.Id+`"`))
+	tc.Render(w, r, "company-form.tmpl", web.Model{
 		"company": company,
+		"docs":    docs,
+		"forms":   CompanyForms,
 	})
-}}*/
+
+}}
 
 var companySaveNote = web.Route{"POST", "/cns/company/note", func(w http.ResponseWriter, r *http.Request) {
 	var note Note
