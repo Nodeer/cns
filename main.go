@@ -39,7 +39,7 @@ func init() {
 
 	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee, settings)
 
-	mx.AddSecureRoutes(EMPLOYEE, companyAll, companyView, companyDriver, companySave, companySaveNote, companyService, companyForm)
+	mx.AddSecureRoutes(EMPLOYEE, companyAll, companyView, companyDriver, companySave, companySaveNote, companyService, companyForm, companyAddForm)
 	mx.AddSecureRoutes(EMPLOYEE, companyVehicle, companyVehicleView, companyVehicleSave)
 
 	mx.AddSecureRoutes(EMPLOYEE, allDriver, viewDriver, saveDriver, driverFiles, driverForms)
@@ -82,7 +82,7 @@ var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.Respon
 		doc := Document{
 			Id:         id,
 			Name:       "dqf-" + docId,
-			DocumentId: docId,
+			DocumentId: "dqf-" + docId,
 			Complete:   false,
 			CompanyId:  driver.CompanyId,
 			DriverId:   driver.Id,
@@ -202,13 +202,9 @@ var viewDocument = web.Route{"GET", "/document/:id", func(w http.ResponseWriter,
 		web.SetErrorRedirect(w, r, "/", "Error, retrieving document.")
 		return
 	}
-	ok = db.Get("driver", document.DriverId, &driver)
-	if !ok {
-		web.SetErrorRedirect(w, r, "/", "Error, document is not associated with a driver.")
-		return
-	}
+	db.Get("driver", document.DriverId, &driver)
 	db.Get("company", driver.CompanyId, &company)
-	tc.Render(w, r, "dqf-"+document.DocumentId+".tmpl", web.Model{
+	tc.Render(w, r, document.DocumentId+".tmpl", web.Model{
 		"document": document,
 		"driver":   driver,
 		"company":  company,

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/cagnosolutions/adb"
@@ -272,6 +273,30 @@ var companyVehicleSave = web.Route{"POST", "/cns/company/:compId/vehicle", func(
 	FormToStruct(&vehicle, r.Form, "")
 	db.Set("vehicle", vehicle.Id, vehicle)
 	web.SetSuccessRedirect(w, r, "/cns/company/"+compId+"/vehicle/"+vehicle.Id, "Successfully saved vehicle")
+	return
+}}
+
+var companyAddForm = web.Route{"POST", "/cns/company/:id/form", func(w http.ResponseWriter, r *http.Request) {
+	compId := r.FormValue(":id")
+	var company Company
+	if !db.Get("company", compId, &company) {
+		web.SetErrorRedirect(w, r, "/cns/company/", "Error finding company")
+		return
+	}
+	docIds := strings.Split(r.FormValue("docIds"), ",")
+	for _, docId := range docIds {
+		id := strconv.Itoa(int(time.Now().UnixNano()))
+		doc := Document{
+			Id:         id,
+			Name:       docId,
+			DocumentId: strings.Replace(docId, " ", "_", -1),
+			Complete:   false,
+			CompanyId:  compId,
+		}
+		db.Add("document", id, doc)
+	}
+
+	web.SetSuccessRedirect(w, r, "/cns/company/"+company.Id+"/form", "Successfully added forms")
 	return
 }}
 
