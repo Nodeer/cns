@@ -204,10 +204,13 @@ var viewDocument = web.Route{"GET", "/document/:id", func(w http.ResponseWriter,
 	}
 	db.Get("driver", document.DriverId, &driver)
 	db.Get("company", driver.CompanyId, &company)
+	role := web.GetRole(r)
+	employee := (role == "ADMIN" || role == "EMPLOYEE" || role == "DEVELOPER")
 	tc.Render(w, r, document.DocumentId+".tmpl", web.Model{
 		"document": document,
 		"driver":   driver,
 		"company":  company,
+		"employee": employee,
 	})
 	return
 }}
@@ -217,7 +220,8 @@ var saveDocument = web.Route{"POST", "/document/save", func(w http.ResponseWrite
 	db.Get("document", r.FormValue("id"), &document)
 	document.Data = r.FormValue("data")
 	db.Set("document", document.Id, document)
-	ajaxErrorResponse(w, `{"status":"success","msg":"Successfully saved document"}`)
+	web.SetFlash(w, "alertSuccess", "Successfully saved form")
+	ajaxErrorResponse(w, `{"status":"success","msg":"Successfully saved document", "redirect":"`+r.FormValue("redirect")+`"}`)
 	return
 }}
 

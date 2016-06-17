@@ -1,5 +1,6 @@
 function readyData() {
 	var submitData = {
+		redirect: redirect,
 		id: id,
 		data: JSON.stringify(inputTools.getJSON())
 	};
@@ -12,8 +13,10 @@ function send(url) {
 		data: readyData(),
 		method: 'POST',
 		success: function(resp) {
+			test = resp
 			if (resp.status === 'success') {
-				alert(resp.msg);
+				//alert(resp.msg);
+				window.location.pathname = resp.redirect
 			}
 		},
 		error: function(data) {

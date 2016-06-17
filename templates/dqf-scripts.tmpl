@@ -3,8 +3,12 @@
 <script src="/static/js/input-tools.js"></script>
 <script src="/static/js/document.js"></script>
 <script>
+    {{ if .employee }}
+        var redirect = '/cns/driver/{{ .driver.Id }}/form';
+    {{ else }}
+        var redirect = '/document/';
+    {{ end }}
     var url = '/document';
     var id = '{{ .document.Id }}';
-    var slug = '{{ .company.Slug }}';
     var data = '{{ .document.Data }}';
 </script>

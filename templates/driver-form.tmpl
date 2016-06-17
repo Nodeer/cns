@@ -85,7 +85,7 @@
                                                     <tbody>
                                                         {{ $driver := .driver }}
                                                         {{ range $doc := .docs }}
-                                                            <tr class="clickable" data-url="/document/{{ $doc.Id }}" data-target="_blank">
+                                                            <tr class="clickable" data-url="/document/{{ $doc.Id }}" >
                                                                 <td>{{ $doc.DocumentId }}</td>
                                                                 <td>{{ $doc.Complete }}</td>
                                                                 <td class="text-center"><a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ $driver.Id }}/{{ $doc.Id }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
