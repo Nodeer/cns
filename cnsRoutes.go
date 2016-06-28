@@ -120,11 +120,12 @@ var companyView = web.Route{"GET", "/cns/company/:id", func(w http.ResponseWrite
 	sort.Stable(notes)
 	db.All("employee", &employees)
 	tc.Render(w, r, "company.tmpl", web.Model{
-		"company":    company,
-		"notes":      notes,
-		"employees":  employees,
-		"quickNotes": quickNotes,
-		"userId":     web.GetSess(r, "id"),
+		"company":       company,
+		"notes":         notes,
+		"employees":     employees,
+		"quickNotes":    quickNotes,
+		"userId":        web.GetSess(r, "id"),
+		"companyConsts": GetCompanyConsts(),
 	})
 }}
 
@@ -251,8 +252,9 @@ var companyVehicleView = web.Route{"GET", "/cns/company/:compId/vehicle/:vId", f
 	}
 
 	tc.Render(w, r, "company-vehicle-view.tmpl", web.Model{
-		"company": company,
-		"vehicle": vehicle,
+		"company":       company,
+		"vehicle":       vehicle,
+		"vehicleConsts": GetVehicleConsts(),
 	})
 }}
 

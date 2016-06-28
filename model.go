@@ -24,38 +24,115 @@ type Employee struct {
 	Address
 }
 
+type BusinessType int
+
+const (
+	SOLE_PROPRIETOR BusinessType = iota
+	CORPORATION
+	PARTNERSHIP
+	LLC
+	LLP
+	BUSINESS_OTHER
+)
+
+type CarrierType int
+
+const (
+	PRIVATE CarrierType = iota
+	COMMON
+	CONTRACT
+	CARRIER_OTHER
+)
+
 type Company struct {
-	Id              string  `json:"id"`
-	DOTNum          string  `json:"dotNum,omitempty"`
-	Name            string  `json:"name,omitempty"`
-	ContactName     string  `json:"contactName,omitempty"`
-	ContactTitle    string  `json:"contactTitle,omitempty"`
-	ContactPhone    string  `json:"contactPhone,omitempty"`
-	SecondName      string  `json:"secondName,omitempty"`
-	SecondTitle     string  `json:"secondTitle,omitempty"`
-	SecondPhone     string  `json:"secondPhone,omitempty"`
-	SameAddress     bool    `json:"sameAddress"`
-	PhysicalAddress Address `json:"pysicalAddress,omitempty"`
-	MailingAddress  Address `json:"mailingAddress,omitempty"`
-	MCNum           string  `json:"mcNum,omitempty"`
-	PUCNum          string  `json:"pucNum,omitempty"`
-	Fax             string  `json:"fax,omitempty"`
-	Email           string  `json:"email,omitempty"`
-	EINNum          string  `json:"einNum,omitempty"`
-	CreditCard      CreditCard
-	NYHutUsername   string `json:"nyHutUsername,omitempty"`
-	NYHutPassword   string `json:"nyHutPassword,omitempty"`
-	NYOscarUsername string `json:"nyOrcarUsername,omitempty"`
-	NYOscarPassword string `json:"nyOscarUsername,omitempty"`
-	KYUseNum        string `json:"kyUseNum,omitempty"`
-	NMHutUsername   string `json:"nmHutUsername,omitempty"`
-	NMHutPassword   string `json:"nmHutPassword,omitempty"`
-	DOTPin          string `json:"dotPin,omitempty"`
-	MCPin           string `json:"mcPin,omitempty"`
-	FMCSAUsername   string `json:"fmcsaUsername,omitempty"`
-	FMCSAPassword   string `json:"fmcsaPassword,omitempty"`
-	IRPNum          string `json:"irpNum,omitempty"`
+	Id                string       `json:"id"`
+	DOTNum            string       `json:"dotNum,omitempty"`
+	Name              string       `json:"name,omitempty"`
+	ContactName       string       `json:"contactName,omitempty"`
+	DBA               string       `json:"dba,omitempty"`
+	ContactTitle      string       `json:"contactTitle,omitempty"`
+	ContactSSN        string       `jsni:"contactSSN,omitempty"`
+	ContactPhone      string       `json:"contactPhone,omitempty"`
+	SecondName        string       `json:"secondName,omitempty"`
+	SecondTitle       string       `json:"secondTitle,omitempty"`
+	SecondPhone       string       `json:"secondPhone,omitempty"`
+	SameAddress       bool         `json:"sameAddress"`
+	PhysicalAddress   Address      `json:"pysicalAddress,omitempty"`
+	MailingAddress    Address      `json:"mailingAddress,omitempty"`
+	BusinessType      BusinessType `json:"businessType,omitempty"`
+	BusinessTypeOther string       `json:"businessTypeOther,omitempty"`
+	MCNum             string       `json:"mcNum,omitempty"`
+	PUCNum            string       `json:"pucNum,omitempty"`
+	Fax               string       `json:"fax,omitempty"`
+	Email             string       `json:"email,omitempty"`
+	EINNum            string       `json:"einNum,omitempty"`
+	ARPAccountNum     string       `json:"arpAccountNum,omitempty"`
+	CarrierType       CarrierType  `json:"carrierType,omitempty"`
+	CarrierTypeOther  string       `json:"carrierTypeOther,omitempty"`
+	EntityNum         string       `jaon:"entityNum,omitempty"`
+	CreditCard        CreditCard
+	NYHutUsername     string `json:"nyHutUsername,omitempty"`
+	NYHutPassword     string `json:"nyHutPassword,omitempty"`
+	NYOscarUsername   string `json:"nyOrcarUsername,omitempty"`
+	NYOscarPassword   string `json:"nyOscarUsername,omitempty"`
+	KYUseNum          string `json:"kyUseNum,omitempty"`
+	NMHutUsername     string `json:"nmHutUsername,omitempty"`
+	NMHutPassword     string `json:"nmHutPassword,omitempty"`
+	DOTPin            string `json:"dotPin,omitempty"`
+	MCPin             string `json:"mcPin,omitempty"`
+	FMCSAUsername     string `json:"fmcsaUsername,omitempty"`
+	FMCSAPassword     string `json:"fmcsaPassword,omitempty"`
+	IRPNum            string `json:"irpNum,omitempty"`
 	//Slug            string  `json:"slug,omitempty"`
+}
+
+func (c Company) GetBusinessType() string {
+	switch c.BusinessType {
+	case SOLE_PROPRIETOR:
+		return "Sole Proprietor"
+	case CORPORATION:
+		return "Corporation"
+	case PARTNERSHIP:
+		return "Partnership"
+	case LLC:
+		return "LLC"
+	case LLP:
+		return "LLP"
+	case BUSINESS_OTHER:
+		return c.BusinessTypeOther
+	}
+	return ""
+}
+
+func (c Company) GetCarrierType() string {
+	switch c.CarrierType {
+	case PRIVATE:
+		return "Private"
+	case COMMON:
+		return "Common"
+	case CONTRACT:
+		return "Contract"
+	case CARRIER_OTHER:
+		return c.CarrierTypeOther
+	}
+	return ""
+}
+
+func GetCompanyConsts() map[string]interface{} {
+	m := map[string]interface{}{
+		"SOLE_PROPRIETOR": SOLE_PROPRIETOR,
+		"CORPORATION":     CORPORATION,
+		"PARTNERSHIP":     PARTNERSHIP,
+		"LLC":             LLC,
+		"LLP":             LLP,
+		"BUSINESS_OTHER":  BUSINESS_OTHER,
+		"PRIVATE":         PRIVATE,
+		"COMMON":          COMMON,
+		"CONTRACT":        CONTRACT,
+		"CARRIER_OTHER":   CARRIER_OTHER,
+	}
+
+	return m
 }
 
 /*func (c *Company) CreateSlug() {
@@ -115,10 +192,11 @@ type Address struct {
 	City   string `json:"city,omitempty"`
 	State  string `json:"state,omitempty"`
 	Zip    string `json:"zip,omitempty"`
+	County string `json:"county,omitempty"`
 }
 
 func (a Address) AddrHTML() string {
-	return a.Street + "<br>" + a.City + ",  " + a.State + " " + a.Zip
+	return a.Street + "<br>" + a.City + ", " + a.County + ", " + a.State + " " + a.Zip
 }
 
 type Document struct {
@@ -179,22 +257,68 @@ type Comment struct {
 	Closed bool   `json:"closed"`
 }
 
+type BodyType int
+
+const (
+	TT BodyType = iota
+	TK
+	TRL
+	BUS
+	SW
+	BODY_OTHER
+)
+
 type Vehicle struct {
-	Id            string  `json:"id"`
-	CompanyId     string  `json:"companyId,omitempty"`
-	VehicleType   string  `json:"vehicleType,omitempty"`
-	UnitNumber    string  `json:"unitNumber,omitempty"`
-	Make          string  `json:"make,omitempty"`
-	VIN           string  `json:"vin,omitempty"`
-	Title         string  `json:"title,omitempty"`
-	GVW           string  `json:"gvw,omitempty"`
-	GCR           string  `json:"gcr,omitempty"`
-	UnladenWeight string  `json:"unladenWeight,omitempty"`
-	PurchasePrice float32 `json:"purchacePrice,omitempty"`
-	PurchaseDate  string  `json:"purchaseDate,omitempty"`
-	CurrentValue  float32 `json:"currentValue,omitempty"`
-	AxleType      string  `json:"axleType,omitempty"`
-	FuelType      string  `json:"fuelType,omitempty"`
+	Id            string   `json:"id"`
+	CompanyId     string   `json:"companyId,omitempty"`
+	VehicleType   string   `json:"vehicleType,omitempty"`
+	UnitNumber    string   `json:"unitNumber,omitempty"`
+	Make          string   `json:"make,omitempty"`
+	VIN           string   `json:"vin,omitempty"`
+	Title         string   `json:"title,omitempty"`
+	GVW           string   `json:"gvw,omitempty"`
+	GCR           string   `json:"gcr,omitempty"`
+	UnladenWeight string   `json:"unladenWeight,omitempty"`
+	PurchasePrice float32  `json:"purchacePrice,omitempty"`
+	PurchaseDate  string   `json:"purchaseDate,omitempty"`
+	CurrentValue  float32  `json:"currentValue,omitempty"`
+	AxleAmmount   int      `json:"axleAmmount,omitempty"`
+	FuelType      string   `json:"fuelType,omitempty"`
+	Active        bool     `json:"active"`
+	Owner         string   `json:"owner,omitempty"`
+	Year          string   `json:"year,omitempty"`
+	PlateNum      string   `json:"plateNum,omitempty"`
+	PlateExpire   string   `json:"plateExpire,omitempty"`
+	BodyType      BodyType `json:"bodyType,omitempty"`
+	BodyTypeOther string   `json:"bodyTypeOther,omitempty"`
+}
+
+func (v Vehicle) GetBodyType() string {
+	switch v.BodyType {
+	case TT:
+		return "TT"
+	case TK:
+		return "TK"
+	case TRL:
+		return "TRL"
+	case BUS:
+		return "Bus"
+	case BODY_OTHER:
+		return v.BodyTypeOther
+	}
+	return ""
+}
+
+func GetVehicleConsts() map[string]interface{} {
+	m := map[string]interface{}{
+		"TT":         TT,
+		"TK":         TK,
+		"TRL":        TRL,
+		"BUS":        BUS,
+		"SW":         SW,
+		"BODY_OTHER": BODY_OTHER,
+	}
+	return m
 }
 
 type Note struct {

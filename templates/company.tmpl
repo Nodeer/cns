@@ -59,6 +59,10 @@
                                                             <td>{{ .company.Name }}</td>
                                                         </tr>
                                                         <tr>
+                                                            <td><b>DBA</b></td>
+                                                            <td>{{ .company.DBA }}</td>
+                                                        </tr>
+                                                        <tr>
                                                             <td><b>Primary Contact</b></td>
                                                             <td>
                                                                 {{ .company.ContactName }}<br>
@@ -83,6 +87,10 @@
                                                             <td>{{ .company.MailingAddress.AddrHTML }}</td>
                                                         </tr>
                                                         <tr>
+                                                            <td><b>Business Type</b></td>
+                                                            <td>{{ .company.GetBusinessType }}</td>
+                                                        </tr>
+                                                        <tr>
                                                             <td>
                                                                 <b>MC #</b> &nbsp;&nbsp;{{ .company.MCNum }}
                                                             </td>
@@ -102,15 +110,21 @@
                                                             <td>
                                                                 <b>EIN #</b> &nbsp;&nbsp;{{ .company.EINNum }}
                                                             </td>
-                                                            <td></td>
+                                                            <td>
+                                                                <b>ARP Account #</b> &nbsp;&nbsp;{{ .company.ARPAccountNum }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
-                                                            <td><b>NY HUT Username</b></td>
-                                                            <td>{{ .company.NYHutUsername }}</td>
+                                                            <td>
+                                                                <b>Entity #</b> &nbsp;&nbsp;{{ .company.EntityNum }}
+                                                            </td>
+                                                            <td>
+                                                                <b>Carrier Type</b> &nbsp;&nbsp;{{ .company.GetCarrierType }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
-                                                            <td><b>NY HUT Password</b></td>
-                                                            <td>{{ .company.NYHutPassword }}</td>
+                                                            <td><b>KY Use Tax Num</b></td>
+                                                            <td>{{ .company.KYUseNum }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td><b>NY OSCAR Username</b></td>
@@ -153,7 +167,8 @@
                                                                 <td><b>Credit Card</b></td>
                                                                 <td>
                                                                     {{ .company.CreditCard.Number }}<br>
-                                                                    {{ .company.CreditCard.ExpirationDate}} {{ .company.CreditCard.SecurityCode }}
+                                                                    Exp. {{ .company.CreditCard.ExpirationDate}}<br>
+                                                                    Security Code {{ .company.CreditCard.SecurityCode }}
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -177,8 +192,12 @@
                                                                 <td>{{ .company.FMCSAPassword }}</td>
                                                             </tr>
                                                             <tr>
-                                                                <td><b>KY Use Num</b></td>
-                                                                <td>{{ .company.KYUseNum }}</td>
+                                                                <td><b>NY HUT Username</b></td>
+                                                                <td>{{ .company.NYHutUsername }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>NY HUT Password</b></td>
+                                                                <td>{{ .company.NYHutPassword }}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>NM Hut Username</b></td>
@@ -214,6 +233,10 @@
                                                                 <td><input type="text" class="form-control" name="name" value="{{ .company.Name }}" placeholder="Name"></td>
                                                             </tr>
                                                             <tr>
+                                                                <td><b>DBA</b></td>
+                                                                <td><input type="text" class="form-control" name="dBA" value="{{ .company.DBA }}" placeholder="DBA"></td>
+                                                            </tr>
+                                                            <tr>
                                                                 <td><b>Primary Contact</b></td>
                                                                 <td>
                                                                     <input type="text" class="form-control" name="contactName" value="{{ .company.ContactName }}" placeholder="Name"><br>
@@ -234,6 +257,7 @@
                                                                 <td>
                                                                     <input type="text" class="form-control" name="physicalAddress.Street" value="{{ .company.PhysicalAddress.Street }}" placeholder="Street"><br>
                                                                     <input type="text" class="form-control" name="physicalAddress.City" value="{{ .company.PhysicalAddress.City }}" placeholder="City"><br>
+                                                                    <input type="text" class="form-control" name="physicalAddress.County" value="{{ .company.PhysicalAddress.County }}" placeholder="County"><br>
                                                                     <div class="row">
                                                                         <div class="col-lg-6">
                                                                             <input type="text" class="form-control" name="physicalAddress.State" value="{{ .company.PhysicalAddress.State }}" placeholder="State">
@@ -270,6 +294,7 @@
                                                                         <br>
                                                                         <input type="text" class="form-control" name="mailingAddress.Street" value="{{ .company.MailingAddress.Street }}" placeholder="Street"><br>
                                                                         <input type="text" class="form-control" name="mailingAddress.City" value="{{ .company.MailingAddress.City }}" placeholder="City"><br>
+                                                                        <input type="text" class="form-control" name="physicalAddress.County" value="{{ .company.PhysicalAddress.County }}" placeholder="County"><br>
                                                                         <div class="row">
                                                                             <div class="col-lg-6">
                                                                                 <input type="text" class="form-control" name="mailingAddress.State" value="{{ .company.MailingAddress.State }}" placeholder="State">
@@ -282,39 +307,72 @@
                                                                 </td>
                                                             </tr>
                                                             <tr>
+                                                                <td><b>Business Type</b></td>
                                                                 <td>
-                                                                    <b>MC #</b><br><br>
+                                                                    <div id="businessTypeDiv" class="">
+                                                                        <select id="businessType" class="form-control" name="businessType">
+                                                                            <option value="{{ .companyConsts.SOLE_PROPRIETOR }}" {{ if eq .company.BusinessType .companyConsts.SOLE_PROPRIETOR }}selected{{ end }}>Sole Proprietor</option>
+                                                                            <option value="{{ .companyConsts.CORPORATION }}" {{ if eq .company.BusinessType .companyConsts.CORPORATION }}selected{{ end }}>Corporation</option>
+                                                                            <option value="{{ .companyConsts.PARTNERSHIP }}" {{ if eq .company.BusinessType .companyConsts.PARTNERSHIP }}selected{{ end }}>Partnership</option>
+                                                                            <option value="{{ .companyConsts.LLC }}" {{ if eq .company.BusinessType .companyConsts.LLC }}selected{{ end }}>LLC</option>
+                                                                            <option value="{{ .companyConsts.LLP }}" {{ if eq .company.BusinessType .companyConsts.LLP }}selected{{ end }}>LLP</option>
+                                                                            <option value="{{ .companyConsts.BUSINESS_OTHER }}" {{ if eq .company.BusinessType .companyConsts.BUSINESS_OTHER }}selected{{ end }}>Other</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <input id="businessTypeOther" class="form-control hide" type="text" name="businessTypeOther" value="{{ .company.BusinessTypeOther }}" placeholder="Business Type">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <b>MC #</b>
                                                                     <input type="text" class="form-control" name="mCNum" value="{{ .company.MCNum }}" placeholder="MC#">
                                                                 </td>
                                                                 <td>
-                                                                    <b>PUC #</b><br><br>
+                                                                    <b>PUC #</b>
                                                                     <input type="text" class="form-control" name="pUCNum" value="{{ .company.PUCNum }}" placeholder="PUC#">
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td>
-                                                                    <b>Fax</b><br><br>
+                                                                    <b>Fax</b>
                                                                     <input type="text" class="form-control" name="fax" value="{{ .company.Fax }}" placeholder="Fax">
                                                                 </td>
                                                                 <td>
-                                                                    <b>Email</b><br><br>
+                                                                    <b>Email</b>
                                                                     <input type="email" class="form-control" name="email" value="{{ .company.Email }}" placeholder="Email">
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td>
-                                                                    <b>EIN #</b><br><br>
+                                                                    <b>EIN #</b>
                                                                     <input type="text" class="form-control" name="eINNum" value="{{ .company.EINNum }}" placeholder="EIN#">
                                                                 </td>
-                                                                <td></td>
+                                                                <td>
+                                                                    <b>ARP Account #</b>
+                                                                    <input type="text" class="form-control" name="aRPAccountNum" value="{{ .company.ARPAccountNum }}" placeholder="ARP Account #">
+                                                                </td>
                                                             </tr>
                                                             <tr>
-                                                                <td><b>NY HUT Username</b></td>
-                                                                <td><input type="text" class="form-control" name="nYHutUsername" value="{{ .company.NYHutUsername }}" placeholder="NY HUT Username"></td>
+                                                                <td>
+                                                                    <b>Entity #</b>
+                                                                    <input type="text" class="form-control" name="entityNum" value="{{ .company.EntityNum }}" placeholder="Entity #">
+                                                                </td>
+                                                                <td>
+                                                                    <b>Carrier Type</b>
+                                                                    <div id="carrierTypeDiv" class="">
+                                                                        <select id="carrierType" class="form-control" name="carrierType">
+                                                                            <option {{ if eq .company.CarrierType .companyConsts.PRIVATE}}selected{{ end }}value="{{ .companyConsts.PRIVATE }}">Private</option>
+                                                                            <option {{ if eq .company.CarrierType .companyConsts.COMMON}}selected{{ end }}value="{{ .companyConsts.COMMON }}">Common</option>
+                                                                            <option {{ if eq .company.CarrierType .companyConsts.CONTRACT}}selected{{ end }}value="{{ .companyConsts.CONTRACT }}">Contract</option>
+                                                                            <option {{ if eq .company.CarrierType .companyConsts.CARRIER_OTHER}}selected{{ end }}value="{{ .companyConsts.CARRIER_OTHER }}">Other</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <input id="carrierTypeOther" class="form-control hide" type="text" name="carrierTypeOther" value="{{ .company.CarrierTypeOther }}" placeholder="Carrier Type">
+                                                                </td>
                                                             </tr>
                                                             <tr>
-                                                                <td><b>NY HUT Password</b></td>
-                                                                <td><input type="text" class="form-control" name="nYHutPassword" value="{{ .company.NYHutPassword }}" placeholder="NY HUT Password"></td>
+                                                                <td><b>KY Use Tax Num</b></td>
+                                                                <td><input type="text" class="form-control" name="kYUseNum" value="{{ .company.KYUseNum }}" placeholder="KY Use Tax Num"></td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>NY OSCAR Username</b></td>
@@ -364,7 +422,7 @@
                                                                         <div class="row">
                                                                             <div class="col-lg-6">
                                                                                 <div class="input-group">
-                                                                                    <input type="text" class="form-control datepicker" name="creditCard.ExpirationDate" value="{{ .company.CreditCard.ExpirationDate }}" placeholder="Experation Date">
+                                                                                    <input type="text" class="form-control datepicker" name="creditCard.ExpirationDate" value="{{ .company.CreditCard.ExpirationDate }}" placeholder="Expiration Date">
                                                                                     <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                                                 </div>
                                                                             </div>
@@ -394,10 +452,16 @@
                                                                     <td><b>FMCSA Password</b></td>
                                                                     <td><input type="text" class="form-control" name="fMCSAPassword" value="{{ .company.FMCSAPassword }}" placeholder="FMCSA Password"></td>
                                                                 </tr>
+
                                                                 <tr>
-                                                                    <td><b>KY Use Tax Num</b></td>
-                                                                    <td><input type="text" class="form-control" name="kYUseNum" value="{{ .company.KYUseNum }}" placeholder="KY Use Tax Num"></td>
+                                                                    <td><b>NY HUT Username</b></td>
+                                                                    <td><input type="text" class="form-control" name="nYHutUsername" value="{{ .company.NYHutUsername }}" placeholder="NY HUT Username"></td>
                                                                 </tr>
+                                                                <tr>
+                                                                    <td><b>NY HUT Password</b></td>
+                                                                    <td><input type="text" class="form-control" name="nYHutPassword" value="{{ .company.NYHutPassword }}" placeholder="NY HUT Password"></td>
+                                                                </tr>
+
                                                                 <tr>
                                                                     <td><b>NM Hut Username</b></td>
                                                                     <td><input type="text" class="form-control" name="nMHutUsername" value="{{ .company.NMHutUsername }}" placeholder="NM HUT Username"></td>
@@ -647,6 +711,34 @@
             $('#addNote').click(function() {
                 $('form#noteForm input#dateTime').val(moment().format('MM/DD/YYYY hh:mm A'));
                 $('#noteModal').modal('show');
+            });
+
+            $('select#businessType').change(function() {
+                if ($(this).val() === '{{ .companyConsts.BUSINESS_OTHER }}') {
+                    $('#businessTypeDiv').addClass('form-group');
+                    $('#businessTypeOther').removeClass('hide');
+                    $('#businessTypeOther').val('');
+                    $('#businessTypeOther').prop('required', true);
+                } else {
+                    $('#businessTypeDiv').removeClass('form-group');
+                    $('#businessTypeOther').addClass('hide');
+                    $('#businessTypeOther').val('');
+                    $('#businessTypeOther').prop('required', false);
+                }
+            });
+
+            $('select#carrierType').change(function() {
+                if ($(this).val() === '{{ .companyConsts.CARRIER_OTHER }}') {
+                    $('#carrierTypeDiv').addClass('form-group');
+                    $('#carrierTypeOther').removeClass('hide');
+                    $('#carrierTypeOther').val('');
+                    $('#carrierTypeOther').prop('required', true);
+                } else {
+                    $('#carrierTypeDiv').removeClass('form-group');
+                    $('#carrierTypeOther').addClass('hide');
+                    $('#carrierTypeOther').val('');
+                    $('#carrierTypeOther').prop('required', false);
+                }
             });
 
         </script>

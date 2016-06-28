@@ -100,6 +100,8 @@ func MakeCompanies() [COMP]string {
 		company.PhysicalAddress.City = fmt.Sprintf("%dville", i)
 		company.PhysicalAddress.State = fmt.Sprintf("%d state", i)
 		company.PhysicalAddress.Zip = fmt.Sprintf("1234%d", i)
+		company.BusinessType = 1
+		company.CarrierType = 2
 		//company.CreateSlug()
 		if i%2 == 0 {
 			company.SameAddress = true
@@ -201,8 +203,15 @@ func MakeVehicles(compIds [COMP]string) {
 			PurchasePrice: float32(i),
 			PurchaseDate:  fmt.Sprintf("199%d-03-1%d", i, i),
 			CurrentValue:  float32(i),
-			AxleType:      fmt.Sprintf("axle-%d", i),
-			FuelType:      fmt.Sprintf("fuel-%d", i),
+			//AxleAmmount:      fmt.Sprintf("axle-%d", i),
+			FuelType: fmt.Sprintf("fuel-%d", i),
+		}
+		if i%3 == 0 {
+			vehicle.AxleAmmount = 2
+		} else if i%2 == 0 {
+			vehicle.AxleAmmount = 3
+		} else {
+			vehicle.AxleAmmount = 4
 		}
 
 		db.Add("vehicle", id, vehicle)

@@ -41,6 +41,8 @@
                                     <div id="view" class="profile-desk">
                                         <h1>
                                             {{ .vehicle.VehicleType }}
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <small>{{ if .vehicle.Active }}Active{{ else }}Inactive{{ end }}</small>
                                             <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
                                         </h1>
 
@@ -71,14 +73,6 @@
                                                         <td><b>GCR</b></td>
                                                         <td>{{ .vehicle.GCR }}</td>
                                                     </tr>
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                        <div class="col-lg-6">
-                                            <table class="table table-condensed" style="margin-bottom:0;">
-                                                <tbody>
                                                     <tr>
                                                         <td><b>Unladen Weight</b></td>
                                                         <td>{{ .vehicle.UnladenWeight }}</td>
@@ -91,17 +85,45 @@
                                                         <td><b>Purchase Date</b></td>
                                                         <td>{{ formatDate .vehicle.PurchaseDate }}</td>
                                                     </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <table class="table table-condensed" style="margin-bottom:0;">
+                                                <tbody>
                                                     <tr>
                                                         <td><b>Current Value</b></td>
                                                         <td>{{ .vehicle.CurrentValue }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td><b>Axle Type</b></td>
-                                                        <td>{{ .vehicle.AxleType }}</td>
+                                                        <td><b>Axle Ammount</b></td>
+                                                        <td>{{ .vehicle.AxleAmmount }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td><b>Fuel Type</b></td>
                                                         <td>{{ .vehicle.FuelType }}</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td><b>Owner</b></td>
+                                                        <td>{{ .vehicle.Owner }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Year</b></td>
+                                                        <td>{{ .vehicle.Year }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Plate Number</b></td>
+                                                        <td>{{ .vehicle.PlateNum }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Plate Expiration</b></td>
+                                                        <td>{{ .vehicle.PlateExpire }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Body Type</b></td>
+                                                        <td>{{ .vehicle.GetBodyType }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -112,14 +134,32 @@
                                         <form id="edit" action="/cns/company/{{ .company.Id }}/vehicle" method="post">
                                             <div class="row">
                                                 <h1 class="col-lg-12">
-                                                    <div class="col-lg-4">
+                                                    <div class="col-lg-2">
                                                         <select class="form-control" name="vehicleType">
                                                             <option {{ if eq .vehicle.VehicleType "TRUCK" }}selected {{ end }}value="TRUCK">Truck</option>
                                                             <option {{ if eq .vehicle.VehicleType "TRACTOR" }}selected {{ end }}value="TRACTOR">Tractor</option>
                                                             <option {{ if eq .vehicle.VehicleType "TRAILER" }}selected {{ end }}value="TRAILER">Trailer</option>
                                                         </select>
                                                     </div>
-                                                    <div class="col-lg-8">
+                                                    <small>
+                                                        <div class="col-lg-4">
+                                                            <div class="radio-inline">
+                                                                <label class="cr-styled" for="activeYes">
+                                                                    <input type="radio" name="active" value="true" id="activees" {{ if .vehicle.Active }}checked{{ end }}>
+                                                                    <i class="fa"></i>
+                                                                    Yes
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio-inline">
+                                                                <label class="cr-styled" for="activeNo">
+                                                                    <input type="radio" name="active" value="false" id="activeNo" {{ if not .vehicle.Active }}checked{{ end }}>
+                                                                    <i class="fa"></i>
+                                                                    No
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </small>
+                                                    <div class="col-lg-6">
                                                         <a class="btn btn-danger btn-xs pull-right" id="cancelButton">Cancel</a>
                                                     </div>
                                                 </h1>
@@ -152,14 +192,6 @@
                                                             <td><b>GCR</b></td>
                                                             <td><input type="text" class="form-control" name="gCR" value="{{ .vehicle.GCR }}" placeholder="GCR"></td>
                                                         </tr>
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-
-                                            <div class="col-lg-6">
-                                                <table class="table table-condensed" style="margin-bottom:0;">
-                                                    <tbody>
                                                         <tr>
                                                             <td><b>Unladen Weight</b></td>
                                                             <td><input type="text" class="form-control" name="unladenWeight" value="{{ .vehicle.UnladenWeight }}" placeholder="Unladen Weight"></td>
@@ -179,17 +211,58 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <table class="table table-condensed" style="margin-bottom:0;">
+                                                    <tbody>
                                                         <tr>
                                                             <td><b>Current Value</b></td>
                                                             <td><input type="text" class="form-control" name="currentValue" value="{{ .vehicle.CurrentValue }}" placeholder="Current Value"></td>
                                                         </tr>
                                                         <tr>
-                                                            <td><b>Axle Type</b></td>
-                                                            <td><input type="text" class="form-control" name="axleType" value="{{ .vehicle.AxleType }}" placeholder="Axle Type"></td>
+                                                            <td><b>Axle Ammount</b></td>
+                                                            <td><input type="text" class="form-control" name="axleAmmount" value="{{ .vehicle.AxleAmmount }}" placeholder="Axle Ammount"></td>
                                                         </tr>
                                                         <tr>
                                                             <td><b>Fuel Type</b></td>
                                                             <td><input type="text" class="form-control" name="fuelType" value="{{ .vehicle.FuelType }}" placeholder="Fuel Type"></td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td><b>Owner</b></td>
+                                                            <td><input type="text" class="form-control" name="owner" value="{{ .vehicle.Owner }}" placeholder="Owner"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Year</b></td>
+                                                            <td><input type="text" class="form-control" name="year" value="{{ .vehicle.Year }}" placeholder="Year"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Plate Number</b></td>
+                                                            <td><input type="text" class="form-control" name="plateNum" value="{{ .vehicle.PlateNum }}" placeholder="Plate Number"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Plate Expiration</b></td>
+                                                            <td><input type="text" class="form-control" name="plateExpire" value="{{ .vehicle.PlateExpire }}" placeholder="Plate Expire"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Body Type</b></td>
+                                                            <td>
+                                                                {{ $isOther := eq .vehicle.BodyType .vehicleConsts.BODY_OTHER }}
+                                                                <div id="bodyTypeDiv" class="{{ if $isOther }}form-group{{ end }}">
+                                                                    <select id="bodyType" class="form-control" name="bodyType">
+                                                                        <option value="{{ .vehicleConsts.TT }}" {{ if eq .vehicle.BodyType .vehicleConsts.TT }}selected{{ end }}>TT</option>
+                                                                        <option value="{{ .vehicleConsts.TK }}" {{ if eq .vehicle.BodyType .vehicleConsts.TK }}selected{{ end }}>TK</option>
+                                                                        <option value="{{ .vehicleConsts.TRL }}" {{ if eq .vehicle.BodyType .vehicleConsts.TRL }}selected{{ end }}>TRL</option>
+                                                                        <option value="{{ .vehicleConsts.BUS }}" {{ if eq .vehicle.BodyType .vehicleConsts.BUS }}selected{{ end }}>Bus</option>
+                                                                        <option value="{{ .vehicleConsts.SW }}" {{ if eq .vehicle.BodyType .vehicleConsts.SW }}selected{{ end }}>SW</option>
+                                                                        <option value="{{ .vehicleConsts.BODY_OTHER }}" {{ if eq .vehicle.BodyType .vehicleConsts.BODY_OTHER }}selected{{ end }}>Other</option>
+                                                                    </select>
+                                                                </div>
+                                                                <input id="bodyTypeOther" class="form-control {{ if not $isOther }}hide{{ end }}" type="text" name="bodyTypeOther" value="{{ .vehicle.BodyTypeOther }}" placeholder="Body Type">
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -246,6 +319,20 @@
                 $('div#view').addClass('hide');
                 $('div#edit').removeClass('hide');
             }
+
+            $('select#bodyType').change(function() {
+                if ($(this).val() === '{{ .vehicleConsts.BODY_OTHER }}') {
+                    $('#bodyTypeDiv').addClass('form-group');
+                    $('#bodyTypeOther').removeClass('hide');
+                    $('#bodyTypeOther').val('');
+                    $('#bodyTypeOther').prop('required', true);
+                } else {
+                    $('#bodyTypeDiv').removeClass('form-group');
+                    $('#bodyTypeOther').addClass('hide');
+                    $('#bodyTypeOther').val('');
+                    $('#bodyTypeOther').prop('required', false);
+                }
+            });
 
         </script>
 
