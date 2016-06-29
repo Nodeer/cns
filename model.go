@@ -83,6 +83,10 @@ type Company struct {
 	FMCSAUsername     string `json:"fmcsaUsername,omitempty"`
 	FMCSAPassword     string `json:"fmcsaPassword,omitempty"`
 	IRPNum            string `json:"irpNum,omitempty"`
+	InsuranceCompany  string `json:"insuranceCompany,omitempty"`
+	PolicyNum         string `json:"policyNum,omitempty"`
+	EffectiveDate     string `json:"effectiveDate,omitempty"`
+	ExpirationDate    string `json:"expirationDate,omitempty"`
 	//Slug            string  `json:"slug,omitempty"`
 }
 
@@ -199,14 +203,21 @@ func (a Address) AddrHTML() string {
 	return a.Street + "<br>" + a.City + ", " + a.County + ", " + a.State + " " + a.Zip
 }
 
+type CreditCard struct {
+	Number         string `json:"number,omitempty"`
+	ExpirationDate string `json:"expirationDate,omitempty"`
+	SecurityCode   string `json:"securityCode,omitempty"`
+}
+
 type Document struct {
-	Id         string `json:"id,omitempty"`
-	Name       string `json:"name,omitempty"`
-	DocumentId string `json:"documentId,omitempty"`
-	Complete   bool   `json:"complete"`
-	Data       string `json:"data,omitempty"`
-	CompanyId  string `json:"companyId,omitempty"`
-	DriverId   string `json:"driverId,omitempty"`
+	Id         string   `json:"id,omitempty"`
+	Name       string   `json:"name,omitempty"`
+	DocumentId string   `json:"documentId,omitempty"`
+	Complete   bool     `json:"complete"`
+	Data       string   `json:"data,omitempty"`
+	CompanyId  string   `json:"companyId,omitempty"`
+	DriverId   string   `json:"driverId,omitempty"`
+	VehicleIds []string `json:"vehicleIds,omitempty"`
 }
 
 var DQFS = [][]string{
@@ -225,36 +236,15 @@ var DQFS = [][]string{
 }
 
 var CompanyForms = [][]string{
-	[]string{"MV 550", ""},
-	[]string{"MV 550A", ""},
-	[]string{"MV 551", ""},
-	[]string{"MV-552A", ""},
-	[]string{"MV 558", ""},
-	[]string{"MV41", ""},
+	[]string{"MV 550", "2"},
+	[]string{"MV 550A", "1"},
+	[]string{"MV 551", "2"},
+	[]string{"MV-552A", "2"},
+	[]string{"MV 558", "2"},
+	[]string{"MV41", "1"},
 	[]string{"TMT-39", ""},
 	[]string{"PUC App", ""},
 	[]string{"MCS 150", ""},
-}
-
-type Event struct {
-	Id        string    `json:"id,omitempty"`
-	Name      string    `json:"name"`
-	Title     string    `json:"title,omitempty"`
-	AllDay    bool      `json:"allDay,omitempty"`
-	Start     time.Time `json:"start"`
-	End       time.Time `json:"end,omitempty"`
-	URL       string    `json:"url,omitempty"`
-	ClassName string    `json:"className,omitempty"`
-	Editable  bool      `json:"editable"`
-	Overlap   bool      `json:"overlap,omitempty"`
-}
-
-type Comment struct {
-	Id     string `json:"id"`
-	Body   string `json:"body"`
-	Url    string `json:"url"`
-	Page   string `json:"page"`
-	Closed bool   `json:"closed"`
 }
 
 type BodyType int
@@ -352,13 +342,28 @@ func (n NoteRevSort) Swap(i, j int) {
 	n[i], n[j] = n[j], n[i]
 }
 
+type Event struct {
+	Id        string    `json:"id,omitempty"`
+	Name      string    `json:"name"`
+	Title     string    `json:"title,omitempty"`
+	AllDay    bool      `json:"allDay,omitempty"`
+	Start     time.Time `json:"start"`
+	End       time.Time `json:"end,omitempty"`
+	URL       string    `json:"url,omitempty"`
+	ClassName string    `json:"className,omitempty"`
+	Editable  bool      `json:"editable"`
+	Overlap   bool      `json:"overlap,omitempty"`
+}
+
+type Comment struct {
+	Id     string `json:"id"`
+	Body   string `json:"body"`
+	Url    string `json:"url"`
+	Page   string `json:"page"`
+	Closed bool   `json:"closed"`
+}
+
 type QuickNote struct {
 	Name string
 	Body string
-}
-
-type CreditCard struct {
-	Number         string `json:"number,omitempty"`
-	ExpirationDate string `json:"expirationDate,omitempty"`
-	SecurityCode   string `json:"securityCode,omitempty"`
 }

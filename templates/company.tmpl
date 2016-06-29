@@ -10,7 +10,7 @@
 
         <link href="/static/timepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
 
-        <link href="/static/toggles/toggles.css" rel="stylesheet" />
+        <!-- <link href="/static/toggles/toggles.css" rel="stylesheet" /> -->
 
         <title>Customer</title>
     </head>
@@ -309,7 +309,8 @@
                                                             <tr>
                                                                 <td><b>Business Type</b></td>
                                                                 <td>
-                                                                    <div id="businessTypeDiv" class="">
+                                                                    {{ $isBusinessOther := eq .company.BusinessType .companyConsts.BUSINESS_OTHER }}
+                                                                    <div id="businessTypeDiv" class="{{ if $isBusinessOther }}form-group{{ end }}">
                                                                         <select id="businessType" class="form-control" name="businessType">
                                                                             <option value="{{ .companyConsts.SOLE_PROPRIETOR }}" {{ if eq .company.BusinessType .companyConsts.SOLE_PROPRIETOR }}selected{{ end }}>Sole Proprietor</option>
                                                                             <option value="{{ .companyConsts.CORPORATION }}" {{ if eq .company.BusinessType .companyConsts.CORPORATION }}selected{{ end }}>Corporation</option>
@@ -319,7 +320,7 @@
                                                                             <option value="{{ .companyConsts.BUSINESS_OTHER }}" {{ if eq .company.BusinessType .companyConsts.BUSINESS_OTHER }}selected{{ end }}>Other</option>
                                                                         </select>
                                                                     </div>
-                                                                    <input id="businessTypeOther" class="form-control hide" type="text" name="businessTypeOther" value="{{ .company.BusinessTypeOther }}" placeholder="Business Type">
+                                                                    <input id="businessTypeOther" class="form-control {{if not $isBusinessOther}}hide{{ end }}" type="text" name="businessTypeOther" value="{{ .company.BusinessTypeOther }}" placeholder="Business Type">
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -359,15 +360,16 @@
                                                                 </td>
                                                                 <td>
                                                                     <b>Carrier Type</b>
-                                                                    <div id="carrierTypeDiv" class="">
+                                                                    {{ $isCarrierOther := eq .company.CarrierType .companyConsts.CARRIER_OTHER }}
+                                                                    <div id="carrierTypeDiv" class="{{ if $isCarrierOther }}form-group{{ end }}">
                                                                         <select id="carrierType" class="form-control" name="carrierType">
-                                                                            <option {{ if eq .company.CarrierType .companyConsts.PRIVATE}}selected{{ end }}value="{{ .companyConsts.PRIVATE }}">Private</option>
-                                                                            <option {{ if eq .company.CarrierType .companyConsts.COMMON}}selected{{ end }}value="{{ .companyConsts.COMMON }}">Common</option>
-                                                                            <option {{ if eq .company.CarrierType .companyConsts.CONTRACT}}selected{{ end }}value="{{ .companyConsts.CONTRACT }}">Contract</option>
-                                                                            <option {{ if eq .company.CarrierType .companyConsts.CARRIER_OTHER}}selected{{ end }}value="{{ .companyConsts.CARRIER_OTHER }}">Other</option>
+                                                                            <option value="{{ .companyConsts.PRIVATE }}" {{ if eq .company.CarrierType .companyConsts.PRIVATE}}selected{{ end }}>Private</option>
+                                                                            <option value="{{ .companyConsts.COMMON }}" {{ if eq .company.CarrierType .companyConsts.COMMON}}selected{{ end }}>Common</option>
+                                                                            <option value="{{ .companyConsts.CONTRACT }}" {{ if eq .company.CarrierType .companyConsts.CONTRACT}}selected{{ end }}>Contract</option>
+                                                                            <option value="{{ .companyConsts.CARRIER_OTHER }}" {{ if eq .company.CarrierType .companyConsts.CARRIER_OTHER}}selected{{ end }}>Other</option>
                                                                         </select>
                                                                     </div>
-                                                                    <input id="carrierTypeOther" class="form-control hide" type="text" name="carrierTypeOther" value="{{ .company.CarrierTypeOther }}" placeholder="Carrier Type">
+                                                                    <input id="carrierTypeOther" class="form-control {{ if not $isCarrierOther }}hide{{ end }}" type="text" name="carrierTypeOther" value="{{ .company.CarrierTypeOther }}" placeholder="Carrier Type">
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -616,7 +618,7 @@
 
         <script src="/static/js/jquery.scrollTo.min.js"></script>
 
-        <script src="/static/toggles/toggles.min.js"></script>
+        <!-- <script src="/static/toggles/toggles.min.js"></script> -->
         <script src="/static/date-time-picker/moment-with-locales.js" charset="utf-8"></script>
         <script type="text/javascript" src="/static/date-time-picker/bootstrap-datetimepicker.js"></script>
         <script src="/static/timepicker/bootstrap-datepicker.js"></script>
@@ -642,6 +644,17 @@
             $('button#editButton').click(function() {
                 $('div#view').addClass('hide');
                 $('div#edit').removeClass('hide');
+                if ($('select#businessType').val() === '{{ .companyConsts.BUSINESS_OTHER }}') {
+                    $('#businessTypeDiv').addClass('form-group');
+                    $('#businessTypeOther').removeClass('hide');
+                    $('#businessTypeOther').prop('required', true);
+                }
+
+                if ($('select#carrierType').val() === '{{ .companyConsts.CARRIER_OTHER }}') {
+                    $('#carrierTypeDiv').addClass('form-group');
+                    $('#carrierTypeOther').removeClass('hide');
+                    $('#carrierTypeOther').prop('required', true);
+                }
             });
 
             $('a#cancelButton').click(function() {
@@ -655,6 +668,19 @@
                 if ($('input#sameYes')[0].checked) {
                     $('span#mailingAddress').addClass('hide');
                 }
+                if ($('select#businessTypr').val() !== '{{ .companyConsts.BUSINESS_OTHER }}') {
+                    $('#businessTypeDiv').removeClass('form-group');
+                    $('#businessTypeOther').addClass('hide');
+                    $('#businessTypeOther').prop('required', false);
+                }
+
+                if ($('select#carrierType').val() !== '{{ .companyConsts.CARRIER_OTHER }}') {
+                    $('#carrierTypeDiv').removeClass('form-group');
+                    $('#carrierTypeOther').addClass('hide');
+                    $('#carrierTypeOther').prop('required', false);
+                }
+
+
             });
 
             if (newComp) {

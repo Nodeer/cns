@@ -145,7 +145,7 @@
                                                         <div class="col-lg-4">
                                                             <div class="radio-inline">
                                                                 <label class="cr-styled" for="activeYes">
-                                                                    <input type="radio" name="active" value="true" id="activees" {{ if .vehicle.Active }}checked{{ end }}>
+                                                                    <input type="radio" name="active" value="true" id="activeYes" {{ if .vehicle.Active }}checked{{ end }}>
                                                                     <i class="fa"></i>
                                                                     Yes
                                                                 </label>
@@ -303,6 +303,11 @@
             $('button#editButton').click(function() {
                 $('div#view').addClass('hide');
                 $('div#edit').removeClass('hide');
+                if ($('select#bodyType').val() === '{{ .vehicleConsts.BODY_OTHER }}') {
+                    $('#bodyTypeDiv').addClass('form-group');
+                    $('#bodyTypeOther').removeClass('hide');
+                    $('#bodyTypeOther').prop('required', true);
+                }
             });
 
             $('a#cancelButton').click(function() {
@@ -310,9 +315,16 @@
                     window.location.href = '/cns/company/{{ .company.Id }}/vehicle';
                     return;
                 }
+                $('form#edit')[0].reset();
                 $('div#edit').addClass('hide');
                 $('div#view').removeClass('hide');
-                $('form#edit')[0].reset();
+
+                if ($('select#bodyType').val() !== '{{ .vehicleConsts.BODY_OTHER }}') {
+                    console.log('in if');
+                    $('#bodyTypeDiv').removeClass('form-group');
+                    $('#bodyTypeOther').addClass('hide');
+                    $('#bodyTypeOther').prop('required', false);
+                }
             });
 
             if (newVehicle) {

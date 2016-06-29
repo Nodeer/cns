@@ -43,19 +43,22 @@
 
                                 <div class="tabPane clearfix">
                                     <div class="profile-desk">
-
-                                        <div class="col-lg-4">
-                            				<h2>Add Documents</h2>
+                                        <div class="col-lg-3">
+                            				<h1>Add State Form</h1>
                             				<div id="docs" class="list-group">
                             					{{ range $form := .forms }}
                                                     <p>
-                                                        {{ index $form 0 }} - {{ index $form 1 }}
-                            							<button id="addDoc" data-added="0" data-docId="{{ index $form 0 }}" class="btn-default btn btn-xs pull-right check">
+                                                        {{ index $form 0 }}
+                                                        <button class="btn btn-success btn-xs pull-right add" data-name="{{ index $form 0 }}" data-vehicles="{{ index $form 1 }}">
+                                                            Add
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                            							<!-- <button id="addDoc" data-added="0" data-docId="{{ index $form 0 }}" class="btn-default btn btn-xs pull-right check">
                             								<i class="fa fa-check"></i>
-                            							</button>
+                            							</button> -->
                             						</p>
                             					{{ end }}
-                                                <p>
+                                                <!-- <p>
                             						<form id="documentForm" class="text-center" method="post" action="/cns/company/{{ .company.Id }}/form">
                             							<input type="hidden"  id="docIds" name="docIds">
                                                         <div class="form-group">
@@ -64,10 +67,10 @@
                                                             </button>
                                                         </div>
                             						</form>
-                                                </p>
+                                                </p> -->
                             				</div>
                                 		</div>
-                                        <div class="col-lg-8">
+                                        <div class="col-lg-9">
                                             <div class="table-responsive">
                                                 <table id="formsTable" class="table table-bordered table-hover">
                                                     <thead>
@@ -95,7 +98,6 @@
                                                 </table>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -107,6 +109,28 @@
             {{ template "footer.tmpl" . }}
 
         </section>
+
+        <div class="modal fade" id="stateFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="stateFormModalTitle">Add Form</h4>
+                    </div>
+                    <div id="stateFormModalBody" class="modal-body">
+                        <div id="stateFormModalForm" class="form-horizontal">
+                        </div>
+                        <form id="stateFormModalForm" class="form-horizontal" action="index.html" method="post">
+                            <input id="stateFormCompanyId" type="hidden" name="companyId" value="{{ .company.Id }}">
+                            <input id="stateFormVehicleIds" type="hidden" name="vehicleIds">
+                            <input id="stateFormName" type="hidden" name="name">
+                            <button id="stateFormButton" class="btn btn-primary btn-block">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Main Content Ends -->
 
         {{ template "scripts.tmpl" . }}
@@ -120,37 +144,71 @@
         <script src="/static/toggles/toggles.min.js"></script>
 
         <script type="text/javascript">
-
-            var docId = [];
-            $('button[id="addDoc"]').click(function() {
-                var b = $(this);
-                if (b.attr('data-added') == '0') {
-                    docId.push(b.attr('data-docId'));
-                    b.removeClass('btn-default');
-                    b.addClass('btn-success');
-                    b.attr('data-added', '1');
-                    $('button[id="done"]').removeAttr('disabled');
-                    $('button[id="done"]').text('Add Documents To Company');
-                } else {
-                    var idx = docId.indexOf(b.attr('data-docId'));
-                    if (idx > -1) {
-                        docId.splice(idx, 1);
-                    }
-                    b.removeClass('btn-success');
-                    b.addClass('btn-default');
-                    b.attr('data-added', '0');
-                    if(docId.length < 1) {
-                        $('button[id="done"]').attr('disabled', 'disabled');
-                        $('button[id="done"]').text('Please Select Forms');
-                    }
+            $('button.add').click(function() {
+                $('#stateFormModalTitle').text('Add ' + $(this).attr('data-name'));
+                var vehicles =+ $(this).attr('data-vehicles');
+                for (var i = 0; i < vehicles; i++) {
+                    var v = $('<label class="control-label col-lg-4">Vehicle ' + (i + 1) + '</label>'+
+                        '<div class="form-group col-lg-8">'+
+                            '<select class="form-control vehicleIds">'+
+                                {{ range $vehicle := .vehicles }}
+                                    '<option value="{{ $vehicle.Id }}">{{ $vehicle.VIN }}</option>' +
+                                {{ end }}
+                            '</select>'+
+                        '</div>');
+                    $('#stateFormModalForm').append(v);
                 }
+                $('#stateFormName').val($(this).attr('data-name'));
+                $('#stateFormModal').modal();
             });
 
-            $('button[id="done"]').click(function(e){
-                e.preventDefault();
-                $('input#docIds').val(docId.join(','));
-                $('form#documentForm').submit();
+            $('#stateFormModal').on('hidden.bs.modal', function () {
+                $('#stateFormName').val('');
+                $('div#stateFormModalForm').html('');
             });
+
+            $('#stateFormButton').click(function(e) {
+                e.preventDefault();
+                var selects = $('.vehicleIds');
+                var vehicleIds = [];
+                for (var i = 0; i < selects.length; i++) {
+                    var vid = selects[i].value;
+                    vehicleIds.push(vid);
+                }
+                console.log(vehicleIds);
+                $('#stateFormVehicleIds').val(vehicleIds);
+            });
+
+            // var docId = [];
+            // $('button[id="addDoc"]').click(function() {
+            //     var b = $(this);
+            //     if (b.attr('data-added') == '0') {
+            //         docId.push(b.attr('data-docId'));
+            //         b.removeClass('btn-default');
+            //         b.addClass('btn-success');
+            //         b.attr('data-added', '1');
+            //         $('button[id="done"]').removeAttr('disabled');
+            //         $('button[id="done"]').text('Add Documents To Company');
+            //     } else {
+            //         var idx = docId.indexOf(b.attr('data-docId'));
+            //         if (idx > -1) {
+            //             docId.splice(idx, 1);
+            //         }
+            //         b.removeClass('btn-success');
+            //         b.addClass('btn-default');
+            //         b.attr('data-added', '0');
+            //         if(docId.length < 1) {
+            //             $('button[id="done"]').attr('disabled', 'disabled');
+            //             $('button[id="done"]').text('Please Select Forms');
+            //         }
+            //     }
+            // });
+            //
+            // $('button[id="done"]').click(function(e){
+            //     e.preventDefault();
+            //     $('input#docIds').val(docId.join(','));
+            //     $('form#documentForm').submit();
+            // });
 
         </script>
 

@@ -183,10 +183,13 @@ var companyForm = web.Route{"GET", "/cns/company/:id/form", func(w http.Response
 		return
 	}
 	db.TestQuery("document", &docs, adb.Eq("companyId", `"`+company.Id+`"`))
+	var vehicles []Vehicle
+	db.TestQuery("vehicle", &vehicles, adb.Eq("companyId", `"`+company.Id+`"`))
 	tc.Render(w, r, "company-form.tmpl", web.Model{
-		"company": company,
-		"docs":    docs,
-		"forms":   CompanyForms,
+		"company":  company,
+		"docs":     docs,
+		"forms":    CompanyForms,
+		"vehicles": vehicles,
 	})
 
 }}
@@ -233,6 +236,10 @@ var companySave = web.Route{"POST", "/cns/company", func(w http.ResponseWriter, 
 		company.MailingAddress = company.PhysicalAddress
 	}
 	db.Set("company", company.Id, company)
+	if r.FormValue("from") == "vehicle" {
+		web.SetSuccessRedirect(w, r, "/cns/company/"+company.Id+"/vehicle", "Successfully updated insurance information")
+		return
+	}
 	web.SetSuccessRedirect(w, r, "/cns/company/"+company.Id, "Successfully saved company")
 	return
 }}

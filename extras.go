@@ -330,5 +330,5 @@ var alert = web.Route{"GET", "/alert", func(w http.ResponseWriter, r *http.Reque
 }}
 
 var form = web.Route{"GET", "/form", func(w http.ResponseWriter, r *http.Request) {
-	tc.Render(w, r, "form-elements.tmpl", nil)
+	tc.Render(w, r, "form-advanced.tmpl", nil)
 }}
