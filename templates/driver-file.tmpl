@@ -101,6 +101,8 @@
         <script src="/static/datatables/custom.js" charset="utf-8"></script>
         <script src="/static/js/flash.js" charset="utf-8"></script>
 
+        {{ template "session.tmpl" . }}
+
         {{ if not .driver.Id}}
             <script type="text/javascript">
                 $('a#settingsTab').tab('show');

@@ -1,0 +1,55 @@
+<script src="/static/js/session-monitor.js" charset="utf-8"></script>
+<script src="/static/js/cookie.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+
+    var sessionLength = 15;
+    var preTimeoutWarning = 2;
+    var pingInterval = 1;
+
+    // Configure and start the session timeout monitor
+    sessMon = sessionMonitor({
+        // Subtract 1 minute to ensure the backend doesn't expire the session first
+        sessionLifetime: (sessionLength - 1) * 60 * 1000,
+        timeBeforeWarning: preTimeoutWarning * 60 * 1000,
+        minPingInterval: pingInterval * 60 * 1000,
+        pingUrl: '/updateSession',
+        logoutUrl: '/logout',
+        timeoutUrl: '/logout',
+        // The "mouseup" event was used instead of "click" because some of the
+        // inner elements on some pages have click event handlers that stop propagation.
+        activityEvents: 'keyup',
+        onbeforetimeout: function() {
+            console.log('before timeout');
+            sessionAlert();
+        },
+        ontimeout: function() {
+            alert('timeout');
+            //window.location.href = self.timeoutUrl;
+        },
+        onwarning: function() {
+            swal({
+                title: 'Your session is about to expire!',
+                text: 'Your session will expire in ' + Math.round(sessMon.timeBeforeWarning / 60 / 1000) + ' minutes.',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#33b86c',
+                confirmButtonText: 'Stay Logged In',
+                cancelButtonText: 'Log me out',
+                closeOnConfirm: true,
+                closeOnCancel: true
+            }, function(isConfirm){
+                if (isConfirm) {
+                    sessMon.extendsess();
+                } else {
+                    sessMon.logout();
+                }
+            });
+        }
+    });
+
+    window.sessMon = sessMon;
+</script>
+
+
+<!--  YWxlcnRUaW1lb3V0OllvdSBoYXZlIGJlZW4gbG9nZ2VkIG91dA	 -->

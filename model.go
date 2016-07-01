@@ -236,15 +236,15 @@ var DQFS = [][]string{
 }
 
 var CompanyForms = [][]string{
-	[]string{"MV 550", "2"},
-	[]string{"MV 550A", "1"},
-	[]string{"MV 551", "2"},
+	[]string{"MV-550", "2"},
+	[]string{"MV-550A", "1"},
+	[]string{"MV-551", "2"},
 	[]string{"MV-552A", "2"},
-	[]string{"MV 558", "2"},
-	[]string{"MV41", "1"},
+	[]string{"MV-558", "2"},
+	[]string{"MV-41", "1"},
 	[]string{"TMT-39", ""},
 	[]string{"PUC App", ""},
-	[]string{"MCS 150", ""},
+	[]string{"MCS-150", ""},
 }
 
 type BodyType int

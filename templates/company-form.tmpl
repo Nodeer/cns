@@ -88,7 +88,7 @@
                                                     <tbody>
                                                         {{ $company := .company }}
                                                         {{ range $doc := .docs }}
-                                                            <tr class="clickable" data-url="/document/{{ $doc.Id }}" data-target="_blank">
+                                                            <tr class="clickable" data-url="/test/form/{{ $doc.Id }}" data-target="_blank">
                                                                 <td>{{ $doc.Name }}</td>
                                                                 <td>{{ $doc.Complete }}</td>
                                                                 <td class="text-center"><a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ $company.Id }}/{{ $doc.Id }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
@@ -120,7 +120,7 @@
                     <div id="stateFormModalBody" class="modal-body">
                         <div id="stateFormModalForm" class="form-horizontal">
                         </div>
-                        <form id="stateFormModalForm" class="form-horizontal" action="index.html" method="post">
+                        <form id="stateFormModalForm" class="form-horizontal" action="/cns/company/{{ .company.Id }}/form" method="post">
                             <input id="stateFormCompanyId" type="hidden" name="companyId" value="{{ .company.Id }}">
                             <input id="stateFormVehicleIds" type="hidden" name="vehicleIds">
                             <input id="stateFormName" type="hidden" name="name">
@@ -143,7 +143,10 @@
 
         <script src="/static/toggles/toggles.min.js"></script>
 
+        {{ template "session.tmpl" . }}
+
         <script type="text/javascript">
+
             $('button.add').click(function() {
                 $('#stateFormModalTitle').text('Add ' + $(this).attr('data-name'));
                 var vehicles =+ $(this).attr('data-vehicles');
@@ -159,6 +162,10 @@
                     $('#stateFormModalForm').append(v);
                 }
                 $('#stateFormName').val($(this).attr('data-name'));
+                if (vehicles < 1) {
+                    $('form#stateFormModalForm').submit();
+                    return
+                }
                 $('#stateFormModal').modal();
             });
 
@@ -175,9 +182,13 @@
                     var vid = selects[i].value;
                     vehicleIds.push(vid);
                 }
-                console.log(vehicleIds);
                 $('#stateFormVehicleIds').val(vehicleIds);
+                $('form#stateFormModalForm').submit();
             });
+
+            confirm.yes = function(btn) {
+                $('<form method="post" action="' + btn.attr('data-url') + '"><input name="redirect" value="/cns/company/{{ .company.Id}}/form"></form>').submit();
+            }
 
             // var docId = [];
             // $('button[id="addDoc"]').click(function() {

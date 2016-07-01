@@ -14,4 +14,9 @@
     <script type="text/javascript">
         $.Notification.autoHideNotify('success', 'top right', '{{ .alertSuccess }}');
     </script>
+{{ else if .alertTimeout }}
+    <script type="text/javascript">
+        $.Notification.notify('warning','top center', 'You have been logged out')
+    </script>
+
 {{ end }}

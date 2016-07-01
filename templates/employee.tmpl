@@ -131,6 +131,8 @@
         {{ template "scripts.tmpl" . }}
         <script src="/static/js/jquery.scrollTo.min.js"></script>
 
+        {{ template "session.tmpl" . }}
+
         {{ if not .employee.Id}}
             <script type="text/javascript">
                 $('a#settingsTab').tab('show');

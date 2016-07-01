@@ -92,6 +92,8 @@
         <script src="/static/js/confirm.js" charset="utf-8"></script>
         <script src="/static/datatables/custom.js" charset="utf-8"></script>
 
+        {{ template "session.tmpl" . }}
+
         <script type="text/javascript">
 
             var table = $('#driversTable').DataTable({

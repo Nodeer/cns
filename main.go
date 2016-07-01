@@ -40,11 +40,11 @@ func init() {
 	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee, settings)
 
 	mx.AddSecureRoutes(EMPLOYEE, companyAll, companyView, companyDriver, companySave, companySaveNote, companyService, companyForm, companyAddForm)
-	mx.AddSecureRoutes(EMPLOYEE, companyVehicle, companyVehicleView, companyVehicleSave)
+	mx.AddSecureRoutes(EMPLOYEE, companyVehicle, companyVehicleView, companyVehicleSave, testCompanyFormView, companyFormDel)
 
 	mx.AddSecureRoutes(EMPLOYEE, allDriver, viewDriver, saveDriver, driverFiles, driverForms)
 
-	mx.AddSecureRoutes(AJAX, uploadDriverFile, addDriverDocument, viewDriverFile, delDriverFile, documentDel)
+	mx.AddSecureRoutes(AJAX, updateSession, uploadDriverFile, addDriverDocument, viewDriverFile, delDriverFile, documentDel)
 
 	mx.AddRoutes(calendar, calendarEvents, calendarEvent)
 
@@ -64,7 +64,11 @@ func main() {
 
 var logout = web.Route{"GET", "/logout", func(w http.ResponseWriter, r *http.Request) {
 	web.Logout(w)
-	web.SetSuccessRedirect(w, r, "/login", "Successfully logged out")
+	http.Redirect(w, r, "/login", 303)
+}}
+
+var updateSession = web.Route{"POST", "/updateSession", func(w http.ResponseWriter, r *http.Request) {
+	return
 }}
 
 var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.ResponseWriter, r *http.Request) {

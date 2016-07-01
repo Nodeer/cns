@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -292,20 +293,61 @@ var companyAddForm = web.Route{"POST", "/cns/company/:id/form", func(w http.Resp
 		web.SetErrorRedirect(w, r, "/cns/company/", "Error finding company")
 		return
 	}
-	docIds := strings.Split(r.FormValue("docIds"), ",")
-	for _, docId := range docIds {
-		id := strconv.Itoa(int(time.Now().UnixNano()))
-		doc := Document{
-			Id:         id,
-			Name:       docId,
-			DocumentId: strings.Replace(docId, " ", "_", -1),
-			Complete:   false,
-			CompanyId:  compId,
-		}
-		db.Add("document", id, doc)
+
+	id := strconv.Itoa(int(time.Now().UnixNano()))
+	docId := r.FormValue("name")
+	var vehicleIds []string
+	if r.FormValue("vehicleIds") != "" {
+		vehicleIds = strings.Split(r.FormValue("vehicleIds"), ",")
 	}
+	doc := Document{
+		Id:         id,
+		Name:       docId,
+		DocumentId: strings.ToLower(strings.Replace(docId, " ", "_", -1)),
+		Complete:   false,
+		CompanyId:  compId,
+		VehicleIds: vehicleIds,
+	}
+	db.Add("document", id, doc)
+
+	// docIds := strings.Split(r.FormValue("docIds"), ",")
+	// for _, docId := range docIds {
+	// 	id := strconv.Itoa(int(time.Now().UnixNano()))
+	// 	doc := Document{
+	// 		Id:         id,
+	// 		Name:       docId,
+	// 		DocumentId: strings.Replace(docId, " ", "_", -1),
+	// 		Complete:   false,
+	// 		CompanyId:  compId,
+	// 	}
+	// 	db.Add("document", id, doc)
+	// }
 
 	web.SetSuccessRedirect(w, r, "/cns/company/"+company.Id+"/form", "Successfully added forms")
+	return
+}}
+
+var companyFormDel = web.Route{"POST", "/cns/company/:companyId/form/:formId", func(w http.ResponseWriter, r *http.Request) {
+	var form Document
+	if !db.Get("document", r.FormValue(":formId"), &form) || form.CompanyId != r.FormValue(":companyId") {
+		web.SetErrorRedirect(w, r, "/cns/company/"+r.FormValue(":companyId")+"/form", "Error deleting from")
+		return
+	}
+	db.Del("document", form.Id)
+	web.SetSuccessRedirect(w, r, "/cns/company/"+r.FormValue(":companyId")+"/form", "Successfully deleted form")
+	return
+
+}}
+
+var testCompanyFormView = web.Route{"GET", "/test/form/:id", func(w http.ResponseWriter, r *http.Request) {
+	var form Document
+	db.Get("document", r.FormValue(":id"), &form)
+	b, err := json.Marshal(form)
+	if err != nil {
+		fmt.Fprintf(w, "Error marshaling json")
+		return
+	}
+	fmt.Fprintf(w, "%s", b)
 	return
 }}
 

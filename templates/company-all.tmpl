@@ -76,6 +76,8 @@
         <script src="/static/datatables/dataTables.bootstrap.js"></script>
         <script src="/static/datatables/custom.js" charset="utf-8"></script>
 
+        {{ template "session.tmpl" . }}
+
         <script type="text/javascript">
 
                 var table = $('#companies').DataTable({

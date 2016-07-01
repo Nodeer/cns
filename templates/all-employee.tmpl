@@ -76,18 +76,19 @@
         <script src="/static/datatables/dataTables.bootstrap.js"></script>
         <script src="/static/datatables/custom.js" charset="utf-8"></script>
 
+        {{ template "session.tmpl" . }}
 
         <script type="text/javascript">
-                var table = $('#employees').DataTable({
-                    "lengthMenu":[10,15,20],
-                    "dom": 'lrtip',
-                    "columnDefs": [
-                        { "orderable": false, "targets": [3] },
-                        { "name": "name",  "targets": 1 },
-                        { "name": "email",   "targets": 2 },
-                        { "name": "phone",   "targets": 3 },
-                    ]
-                });
+            var table = $('#employees').DataTable({
+                "lengthMenu":[10,15,20],
+                "dom": 'lrtip',
+                "columnDefs": [
+                    { "orderable": false, "targets": [3] },
+                    { "name": "name",  "targets": 1 },
+                    { "name": "email",   "targets": 2 },
+                    { "name": "phone",   "targets": 3 },
+                ]
+            });
         </script>
 
     </body>
