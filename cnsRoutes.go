@@ -183,7 +183,13 @@ var companyForm = web.Route{"GET", "/cns/company/:id/form", func(w http.Response
 		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
 		return
 	}
-	db.TestQuery("document", &docs, adb.Eq("companyId", `"`+company.Id+`"`))
+	db.TestQuery("document", &docs, adb.Eq("companyId", `"`+company.Id+`"`), adb.Eq("stateForm", "true"))
+	// var d []Document
+	// for _, doc := range docs {
+	// 	if doc.DriverId == "" {
+	// 		d = append(d, doc)
+	// 	}
+	// }
 	var vehicles []Vehicle
 	db.TestQuery("vehicle", &vehicles, adb.Eq("companyId", `"`+company.Id+`"`))
 	tc.Render(w, r, "company-form.tmpl", web.Model{
@@ -239,6 +245,10 @@ var companySave = web.Route{"POST", "/cns/company", func(w http.ResponseWriter, 
 	db.Set("company", company.Id, company)
 	if r.FormValue("from") == "vehicle" {
 		web.SetSuccessRedirect(w, r, "/cns/company/"+company.Id+"/vehicle", "Successfully updated insurance information")
+		return
+	}
+	if r.FormValue("from") == "service" {
+		web.SetSuccessRedirect(w, r, "/cns/company/"+company.Id+"/service", "Successfully updated service information")
 		return
 	}
 	web.SetSuccessRedirect(w, r, "/cns/company/"+company.Id, "Successfully saved company")
@@ -307,6 +317,7 @@ var companyAddForm = web.Route{"POST", "/cns/company/:id/form", func(w http.Resp
 		Complete:   false,
 		CompanyId:  compId,
 		VehicleIds: vehicleIds,
+		StateForm:  true,
 	}
 	db.Add("document", id, doc)
 

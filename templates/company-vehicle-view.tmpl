@@ -83,7 +83,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td><b>Purchase Date</b></td>
-                                                        <td>{{ formatDate .vehicle.PurchaseDate }}</td>
+                                                        <td>{{ .vehicle.PurchaseDate }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -97,8 +97,8 @@
                                                         <td>{{ .vehicle.CurrentValue }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td><b>Axle Ammount</b></td>
-                                                        <td>{{ .vehicle.AxleAmmount }}</td>
+                                                        <td><b>Axle Amount</b></td>
+                                                        <td>{{ .vehicle.AxleAmount }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td><b>Fuel Type</b></td>
@@ -142,20 +142,23 @@
                                                         </select>
                                                     </div>
                                                     <small>
-                                                        <div class="col-lg-4">
-                                                            <div class="radio-inline">
-                                                                <label class="cr-styled" for="activeYes">
-                                                                    <input type="radio" name="active" value="true" id="activeYes" {{ if .vehicle.Active }}checked{{ end }}>
-                                                                    <i class="fa"></i>
-                                                                    Yes
-                                                                </label>
-                                                            </div>
-                                                            <div class="radio-inline">
-                                                                <label class="cr-styled" for="activeNo">
-                                                                    <input type="radio" name="active" value="false" id="activeNo" {{ if not .vehicle.Active }}checked{{ end }}>
-                                                                    <i class="fa"></i>
-                                                                    No
-                                                                </label>
+                                                        <div class="col-lg-4" style="height:34px;display: table;">
+                                                            <div style="vertical-align: middle;display: table-cell;">
+                                                                <label>Active</label>
+                                                                <div class="radio-inline">
+                                                                    <label class="cr-styled" for="activeYes">
+                                                                        <input type="radio" name="active" value="true" id="activeYes" {{ if .vehicle.Active }}checked{{ end }}>
+                                                                        <i class="fa"></i>
+                                                                        Yes
+                                                                    </label>
+                                                                </div>
+                                                                <div class="radio-inline">
+                                                                    <label class="cr-styled" for="activeNo">
+                                                                        <input type="radio" name="active" value="false" id="activeNo" {{ if not .vehicle.Active }}checked{{ end }}>
+                                                                        <i class="fa"></i>
+                                                                        No
+                                                                    </label>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </small>
@@ -206,7 +209,7 @@
                                                             <td><b>Purchase Date</b></td>
                                                             <td>
                                                                 <div class="input-group">
-                                                                    <input type="date" class="form-control datepicker" name="purchaseDate" value="{{ .vehicle.PurchaseDate }}" placeholder="Purchase Date">
+                                                                    <input type="text" class="form-control datepicker" name="purchaseDate" value="{{ .vehicle.PurchaseDate }}" placeholder="Purchase Date">
                                                                     <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                                 </div>
                                                             </td>
@@ -223,8 +226,8 @@
                                                             <td><input type="text" class="form-control" name="currentValue" value="{{ .vehicle.CurrentValue }}" placeholder="Current Value"></td>
                                                         </tr>
                                                         <tr>
-                                                            <td><b>Axle Ammount</b></td>
-                                                            <td><input type="text" class="form-control" name="axleAmmount" value="{{ .vehicle.AxleAmmount }}" placeholder="Axle Ammount"></td>
+                                                            <td><b>Axle Amount</b></td>
+                                                            <td><input type="text" class="form-control" name="axleAmount" value="{{ .vehicle.AxleAmount }}" placeholder="Axle Amount"></td>
                                                         </tr>
                                                         <tr>
                                                             <td><b>Fuel Type</b></td>

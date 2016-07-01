@@ -20,12 +20,7 @@
         // inner elements on some pages have click event handlers that stop propagation.
         activityEvents: 'keyup',
         onbeforetimeout: function() {
-            console.log('before timeout');
             sessionAlert();
-        },
-        ontimeout: function() {
-            alert('timeout');
-            //window.location.href = self.timeoutUrl;
         },
         onwarning: function() {
             swal({

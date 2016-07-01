@@ -45,48 +45,49 @@ const (
 )
 
 type Company struct {
-	Id                string       `json:"id"`
-	DOTNum            string       `json:"dotNum,omitempty"`
-	Name              string       `json:"name,omitempty"`
-	ContactName       string       `json:"contactName,omitempty"`
-	DBA               string       `json:"dba,omitempty"`
-	ContactTitle      string       `json:"contactTitle,omitempty"`
-	ContactSSN        string       `jsni:"contactSSN,omitempty"`
-	ContactPhone      string       `json:"contactPhone,omitempty"`
-	SecondName        string       `json:"secondName,omitempty"`
-	SecondTitle       string       `json:"secondTitle,omitempty"`
-	SecondPhone       string       `json:"secondPhone,omitempty"`
-	SameAddress       bool         `json:"sameAddress"`
-	PhysicalAddress   Address      `json:"pysicalAddress,omitempty"`
-	MailingAddress    Address      `json:"mailingAddress,omitempty"`
-	BusinessType      BusinessType `json:"businessType,omitempty"`
-	BusinessTypeOther string       `json:"businessTypeOther,omitempty"`
-	MCNum             string       `json:"mcNum,omitempty"`
-	PUCNum            string       `json:"pucNum,omitempty"`
-	Fax               string       `json:"fax,omitempty"`
-	Email             string       `json:"email,omitempty"`
-	EINNum            string       `json:"einNum,omitempty"`
-	ARPAccountNum     string       `json:"arpAccountNum,omitempty"`
-	CarrierType       CarrierType  `json:"carrierType,omitempty"`
-	CarrierTypeOther  string       `json:"carrierTypeOther,omitempty"`
-	EntityNum         string       `jaon:"entityNum,omitempty"`
-	CreditCard        CreditCard
-	NYHutUsername     string `json:"nyHutUsername,omitempty"`
-	NYHutPassword     string `json:"nyHutPassword,omitempty"`
-	NYOscarUsername   string `json:"nyOrcarUsername,omitempty"`
-	NYOscarPassword   string `json:"nyOscarUsername,omitempty"`
-	KYUseNum          string `json:"kyUseNum,omitempty"`
-	NMHutUsername     string `json:"nmHutUsername,omitempty"`
-	NMHutPassword     string `json:"nmHutPassword,omitempty"`
-	DOTPin            string `json:"dotPin,omitempty"`
-	MCPin             string `json:"mcPin,omitempty"`
-	FMCSAUsername     string `json:"fmcsaUsername,omitempty"`
-	FMCSAPassword     string `json:"fmcsaPassword,omitempty"`
-	IRPNum            string `json:"irpNum,omitempty"`
-	InsuranceCompany  string `json:"insuranceCompany,omitempty"`
-	PolicyNum         string `json:"policyNum,omitempty"`
-	EffectiveDate     string `json:"effectiveDate,omitempty"`
-	ExpirationDate    string `json:"expirationDate,omitempty"`
+	Id                string         `json:"id"`
+	DOTNum            string         `json:"dotNum,omitempty"`
+	Name              string         `json:"name,omitempty"`
+	ContactName       string         `json:"contactName,omitempty"`
+	DBA               string         `json:"dba,omitempty"`
+	ContactTitle      string         `json:"contactTitle,omitempty"`
+	ContactSSN        string         `jsni:"contactSSN,omitempty"`
+	ContactPhone      string         `json:"contactPhone,omitempty"`
+	SecondName        string         `json:"secondName,omitempty"`
+	SecondTitle       string         `json:"secondTitle,omitempty"`
+	SecondPhone       string         `json:"secondPhone,omitempty"`
+	SameAddress       bool           `json:"sameAddress"`
+	PhysicalAddress   Address        `json:"pysicalAddress,omitempty"`
+	MailingAddress    Address        `json:"mailingAddress,omitempty"`
+	BusinessType      BusinessType   `json:"businessType,omitempty"`
+	BusinessTypeOther string         `json:"businessTypeOther,omitempty"`
+	MCNum             string         `json:"mcNum,omitempty"`
+	PUCNum            string         `json:"pucNum,omitempty"`
+	Fax               string         `json:"fax,omitempty"`
+	Email             string         `json:"email,omitempty"`
+	EINNum            string         `json:"einNum,omitempty"`
+	ARPAccountNum     string         `json:"arpAccountNum,omitempty"`
+	CarrierType       CarrierType    `json:"carrierType,omitempty"`
+	CarrierTypeOther  string         `json:"carrierTypeOther,omitempty"`
+	EntityNum         string         `jaon:"entityNum,omitempty"`
+	CreditCard        CreditCard     `json:"crediCard,omitempty"`
+	NYHutUsername     string         `json:"nyHutUsername,omitempty"`
+	NYHutPassword     string         `json:"nyHutPassword,omitempty"`
+	NYOscarUsername   string         `json:"nyOrcarUsername,omitempty"`
+	NYOscarPassword   string         `json:"nyOscarUsername,omitempty"`
+	KYUseNum          string         `json:"kyUseNum,omitempty"`
+	NMHutUsername     string         `json:"nmHutUsername,omitempty"`
+	NMHutPassword     string         `json:"nmHutPassword,omitempty"`
+	DOTPin            string         `json:"dotPin,omitempty"`
+	MCPin             string         `json:"mcPin,omitempty"`
+	FMCSAUsername     string         `json:"fmcsaUsername,omitempty"`
+	FMCSAPassword     string         `json:"fmcsaPassword,omitempty"`
+	IRPNum            string         `json:"irpNum,omitempty"`
+	InsuranceCompany  string         `json:"insuranceCompany,omitempty"`
+	PolicyNum         string         `json:"policyNum,omitempty"`
+	EffectiveDate     string         `json:"effectiveDate,omitempty"`
+	ExpirationDate    string         `json:"expirationDate,omitempty"`
+	Service           CompanyService `json:"service,omitempty"`
 	//Slug            string  `json:"slug,omitempty"`
 }
 
@@ -148,6 +149,34 @@ func GetCompanyConsts() map[string]interface{} {
 	}
 	c.Slug = strings.ToLower(strings.Replace(strings.Trim(r.ReplaceAllString(c.Name, ""), " "), " ", "-", -1))
 }*/
+
+type CompanyService struct {
+	Apportion                bool   `json:"apportion"`
+	ApportionDateOne         string `json:"apportionDateOne,omitempty"`
+	ApportionDateTwo         string `json:"apportionDateTwo,omitempty"`
+	FuelTaxProgram           bool   `json:"fuelTaxProgram"`
+	FuelTaxNY                bool   `json:"fuelTaxNY"`
+	FuelTaxKY                bool   `json:"fuelTaxKY"`
+	FuelTaxNM                bool   `json:"fuelTaxNM"`
+	DrugConsortium           bool   `json:"drugConsortium"`
+	DrugConsortiumDate       string `json:"drugConsortiumDate,omitempty"`
+	DriverFileManagement     bool   `json:"driverFileManagement"`
+	DriverFileManagementDate string `json:"driverFileManagementDate,omitempty"`
+	DOTUpdate                bool   `json:"dotUpdate"`
+	DOTUpdateDate            string `json:"dotUpdateDate,omitempty"`
+	TwentyTwoNinety          bool   `json:"twentyTwoNinety"`
+	UCR                      bool   `json:"ucr"`
+	LogAuditing              bool   `json:"logAuditing"`
+	CSAService               bool   `json:"csaService"`
+	CSAServiceDate           string `json:"csaServiceDate,omitempty"`
+	NY                       bool   `json:"ny"`
+	NYDate                   string `json:"nyDate"`
+	GPS                      bool   `json:"gps"`
+	GPSDate                  string `json:"gpsDate,omitempty"`
+	Training                 bool   `json:"training"`
+	TrainingDate             string `json:"trainingDate,omitempty"`
+	IFTARenewal              bool   `json:"iftaRenewal"`
+}
 
 type Driver struct {
 	Auth
@@ -218,6 +247,7 @@ type Document struct {
 	CompanyId  string   `json:"companyId,omitempty"`
 	DriverId   string   `json:"driverId,omitempty"`
 	VehicleIds []string `json:"vehicleIds,omitempty"`
+	StateForm  bool     `json:"stateForm,omitempty"`
 }
 
 var DQFS = [][]string{
@@ -272,7 +302,7 @@ type Vehicle struct {
 	PurchasePrice float32  `json:"purchacePrice,omitempty"`
 	PurchaseDate  string   `json:"purchaseDate,omitempty"`
 	CurrentValue  float32  `json:"currentValue,omitempty"`
-	AxleAmmount   int      `json:"axleAmmount,omitempty"`
+	AxleAmount    int      `json:"axleAmount,omitempty"`
 	FuelType      string   `json:"fuelType,omitempty"`
 	Active        bool     `json:"active"`
 	Owner         string   `json:"owner,omitempty"`

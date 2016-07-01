@@ -103,12 +103,6 @@
 
         {{ template "session.tmpl" . }}
 
-        {{ if not .driver.Id}}
-            <script type="text/javascript">
-                $('a#settingsTab').tab('show');
-            </script>
-        {{ end }}
-
         <script>
             var table = $('#filesTable').DataTable({
                 "lengthMenu":[5,10,15,20],

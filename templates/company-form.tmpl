@@ -147,6 +147,15 @@
 
         <script type="text/javascript">
 
+            var table = $('#formsTable').DataTable({
+                "lengthMenu":[5,10,15,20],
+                "dom": 'lrtip',
+                "columnDefs": [
+                    { "orderable": false, "targets": [1,2] },
+                    { "name": "form",   "targets": 0 }
+                ]
+            });
+
             $('button.add').click(function() {
                 $('#stateFormModalTitle').text('Add ' + $(this).attr('data-name'));
                 var vehicles =+ $(this).attr('data-vehicles');

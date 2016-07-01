@@ -203,15 +203,15 @@ func MakeVehicles(compIds [COMP]string) {
 			PurchasePrice: float32(i),
 			PurchaseDate:  fmt.Sprintf("199%d-03-1%d", i, i),
 			CurrentValue:  float32(i),
-			//AxleAmmount:      fmt.Sprintf("axle-%d", i),
+			//AxleAmount:      fmt.Sprintf("axle-%d", i),
 			FuelType: fmt.Sprintf("fuel-%d", i),
 		}
 		if i%3 == 0 {
-			vehicle.AxleAmmount = 2
+			vehicle.AxleAmount = 2
 		} else if i%2 == 0 {
-			vehicle.AxleAmmount = 3
+			vehicle.AxleAmount = 3
 		} else {
-			vehicle.AxleAmmount = 4
+			vehicle.AxleAmount = 4
 		}
 
 		db.Add("vehicle", id, vehicle)
