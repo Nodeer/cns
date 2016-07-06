@@ -301,9 +301,9 @@ type Vehicle struct {
 	Make          string   `json:"make,omitempty"`
 	VIN           string   `json:"vin,omitempty"`
 	Title         string   `json:"title,omitempty"`
-	GVW           string   `json:"gvw,omitempty"`
-	GCR           string   `json:"gcr,omitempty"`
-	UnladenWeight string   `json:"unladenWeight,omitempty"`
+	GVW           int      `json:"gvw,omitempty"`
+	GCR           int      `json:"gcr,omitempty"`
+	UnladenWeight int      `json:"unladenWeight,omitempty"`
 	PurchasePrice float32  `json:"purchacePrice,omitempty"`
 	PurchaseDate  string   `json:"purchaseDate,omitempty"`
 	CurrentValue  float32  `json:"currentValue,omitempty"`
@@ -316,6 +316,13 @@ type Vehicle struct {
 	PlateExpire   string   `json:"plateExpire,omitempty"`
 	BodyType      BodyType `json:"bodyType,omitempty"`
 	BodyTypeOther string   `json:"bodyTypeOther,omitempty"`
+}
+
+func (v Vehicle) HigherWeight() int {
+	if v.GVW > v.GCR {
+		return v.GVW
+	}
+	return v.GCR
 }
 
 func (v Vehicle) GetBodyType() string {
