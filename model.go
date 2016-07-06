@@ -48,8 +48,8 @@ type Company struct {
 	Id                string         `json:"id"`
 	DOTNum            string         `json:"dotNum,omitempty"`
 	Name              string         `json:"name,omitempty"`
-	ContactName       string         `json:"contactName,omitempty"`
 	DBA               string         `json:"dba,omitempty"`
+	ContactName       string         `json:"contactName,omitempty"`
 	ContactTitle      string         `json:"contactTitle,omitempty"`
 	ContactSSN        string         `jsni:"contactSSN,omitempty"`
 	ContactPhone      string         `json:"contactPhone,omitempty"`
@@ -229,7 +229,12 @@ type Address struct {
 }
 
 func (a Address) AddrHTML() string {
-	return a.Street + "<br>" + a.City + ", " + a.County + ", " + a.State + " " + a.Zip
+	address := a.Street + "<br>" + a.City + ", "
+	if a.County != "" {
+		address += a.County + ", "
+	}
+	address += a.State + " " + a.Zip
+	return address
 }
 
 type CreditCard struct {

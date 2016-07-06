@@ -47,11 +47,8 @@ var loginPost = web.Route{"POST", "/login", func(w http.ResponseWriter, r *http.
 var allEmployee = web.Route{"GET", "/cns/employee", func(w http.ResponseWriter, r *http.Request) {
 	var employees []Employee
 	//ok := db.Match("user", `"role":"EMPLOYEE"`, &employees)
-	ok := db.TestQuery("employee", &employees, adb.Eq("role", "EMPLOYEE"))
-	if !ok {
-		fmt.Println("error")
-	}
-	tc.Render(w, r, "all-employee.tmpl", web.Model{
+	db.TestQuery("employee", &employees, adb.Gt("id", `"1"`))
+	tc.Render(w, r, "employee-all.tmpl", web.Model{
 		"employees": employees,
 	})
 }}
@@ -71,9 +68,9 @@ var viewEmployee = web.Route{"GET", "/cns/employee/:id", func(w http.ResponseWri
 	})
 }}
 
-var settings = web.Route{"GET", "/cns/settings", func(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/cns/employee/"+web.GetSess(r, "id").(string), 303)
-}}
+// var settings = web.Route{"GET", "/cns/settings", func(w http.ResponseWriter, r *http.Request) {
+// 	http.Redirect(w, r, "/cns/employee/"+web.GetSess(r, "id").(string), 303)
+// }}
 
 var saveEmployee = web.Route{"POST", "/cns/employee", func(w http.ResponseWriter, r *http.Request) {
 	empId := r.FormValue("id")
@@ -82,9 +79,6 @@ var saveEmployee = web.Route{"POST", "/cns/employee", func(w http.ResponseWriter
 	FormToStruct(&employee, r.Form, "")
 	if employee.Id == "" && empId == "" {
 		employee.Id = strconv.Itoa(int(time.Now().UnixNano()))
-		employee.Password = employee.Email
-		employee.Role = "EMPLOYEE"
-		employee.Active = true
 	}
 
 	var employees []Employee
@@ -370,7 +364,7 @@ var allDriver = web.Route{"GET", "/cns/driver", func(w http.ResponseWriter, r *h
 	if !ok {
 		fmt.Println("error")
 	}
-	tc.Render(w, r, "all-driver.tmpl", web.Model{
+	tc.Render(w, r, "driver-all.tmpl", web.Model{
 		"drivers": drivers,
 	})
 }}

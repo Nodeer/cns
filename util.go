@@ -146,7 +146,7 @@ func PrettySize(size int64) string {
 	return fmt.Sprintf("%.1f %s", sizef, ind)
 }
 
-func ajaxErrorResponse(w http.ResponseWriter, msg string) {
+func ajaxResponse(w http.ResponseWriter, msg string) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, msg)

@@ -12,10 +12,13 @@
             <li>
                 <a href="/cns/driver"><i class="ion-man text-center"></i><span class="nav-label">Driver</span></a>
             </li>
+            {{ if eq .session.ROLE "ADMIN" }}
+                <li>
+                    <a href="/cns/employee"><i class="ion-person text-center"></i><span class="nav-label">Employee</span></a>
+                </li>
+            {{ end }}
 
-            <!-- <li>
-                <a href="/cns/employee"><i class="ion-person text-center"></i><span class="nav-label">Employee</span></a>
-            </li>
+            <!--
             <li>
                 <a href="/cns/calendar"><i class="fa fa-calendar text-center"></i><span class="nav-label">Calendar</span></a>
             </li>

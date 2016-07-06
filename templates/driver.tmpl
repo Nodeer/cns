@@ -34,14 +34,14 @@
                                 <ul class="nav nav-tabs profile-tabs">
                                     <li class="active"><a class="tab" href="">Information</a></li>
                                     <li><a class="tab" href="/cns/driver/{{ .driver.Id }}/form">Forms</a></li>
-                                    <li><a class="tab" href="/cns/driver/{{ .driver.Id }}/file">Uploaded Files</a></li>
+                                    <li><a class="tab" href="/cns/driver/{{ .driver.Id }}/file">Files</a></li>
                                 </ul>
 
                                 <div class="tabPane clearfix">
                                     <div class="profile-desk">
                                         <div id="view">
                                             <h1 class="clearfix">
-                                                {{ if  .company.Id }}Works For: <a href="/cns/company/{{ .company.Id }}">{{ .company.Name }}</a>{{ end }}
+                                                {{ if  .company.Id }}Works For: <a href="/cns/company/{{ .company.Id }}" style="color:blue;">{{ .company.Name }}</a>{{ end }}
                                                 <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
                                             </h1>
                                             <div class="row">

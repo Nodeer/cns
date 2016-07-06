@@ -203,8 +203,7 @@ func MakeVehicles(compIds [COMP]string) {
 			PurchasePrice: float32(i),
 			PurchaseDate:  fmt.Sprintf("199%d-03-1%d", i, i),
 			CurrentValue:  float32(i),
-			//AxleAmount:      fmt.Sprintf("axle-%d", i),
-			FuelType: fmt.Sprintf("fuel-%d", i),
+			FuelType:      fmt.Sprintf("fuel-%d", i),
 		}
 		if i%3 == 0 {
 			vehicle.AxleAmount = 2
@@ -217,92 +216,6 @@ func MakeVehicles(compIds [COMP]string) {
 		db.Add("vehicle", id, vehicle)
 	}
 }
-
-var makeEmployees = web.Route{"GET", "/makeEmployees", func(w http.ResponseWriter, r *http.Request) {
-	for i := 0; i < 10; i++ {
-		id := strconv.Itoa(int(time.Now().UnixNano()))
-
-		employee := Employee{
-			FirstName: "John",
-			LastName:  fmt.Sprintf("Smith the %dth", (i + 4)),
-			Phone:     fmt.Sprintf("717-777-777%d", i),
-		}
-
-		employee.Id = id
-		employee.Email = fmt.Sprintf("%d@cns.com", i)
-		employee.Password = fmt.Sprintf("Password-%d", i)
-		employee.Active = (i%2 == 0)
-		employee.Role = "EMPLOYEE"
-
-		employee.Street = fmt.Sprintf("12%d Main Street", 1)
-		employee.City = fmt.Sprintf("%dville", i)
-		employee.State = fmt.Sprintf("%d state", i)
-		employee.Zip = fmt.Sprintf("1234%d", i)
-
-		db.Add("employee", id, employee)
-	}
-	web.SetSuccessRedirect(w, r, "/", "success")
-	return
-}}
-
-/*
-var makeCompanies = web.Route{"GET", "/makeComps", func(w http.ResponseWriter, r *http.Request) {
-	for i := 0; i < 10; i++ {
-		id := strconv.Itoa(int(time.Now().UnixNano()))
-
-		company := Company{
-			Name:    fmt.Sprintf("Company %d", i),
-			Contact: fmt.Sprintf("Bobbi Sue the %dth", (i + 4)),
-			Phone:   fmt.Sprintf("717-777-777%d", i),
-		}
-
-		company.Id = id
-		company.Email = fmt.Sprintf("%d@company%d.com", i, i)
-		company.Password = fmt.Sprintf("Password-%d", i)
-		company.Active = (i%2 == 0)
-		company.Role = "COMPANY"
-
-		company.Street = fmt.Sprintf("12%d Main Street", 1)
-		company.City = fmt.Sprintf("%dville", i)
-		company.State = fmt.Sprintf("%d state", i)
-		company.Zip = fmt.Sprintf("1234%d", i)
-
-		company.CreateSlug()
-		db.Add("company", id, company)
-	}
-	web.SetSuccessRedirect(w, r, "/", "success")
-	return
-}}*/
-
-var makeDrivers = web.Route{"GET", "/makeDrive", func(w http.ResponseWriter, r *http.Request) {
-	for i := 0; i < 10; i++ {
-		id := strconv.Itoa(int(time.Now().UnixNano()))
-
-		driver := Driver{
-			FirstName:    "Daniel",
-			LastName:     fmt.Sprintf("Jones the %dth", (i + 4)),
-			Phone:        fmt.Sprintf("717-777-777%d", i),
-			DOB:          fmt.Sprintf("198%d-03-1%d", i, i),
-			LicenseNum:   fmt.Sprintf("1234567%d", i),
-			LicenseState: fmt.Sprintf("%d state", i),
-		}
-
-		driver.Id = id
-		driver.Email = fmt.Sprintf("%d@%d.com", i, i)
-		driver.Password = fmt.Sprintf("Password-%d", i)
-		driver.Active = (i%2 == 0)
-		driver.Role = "DRIVER"
-
-		driver.Street = fmt.Sprintf("12%d Main Street", 1)
-		driver.City = fmt.Sprintf("%dville", i)
-		driver.State = fmt.Sprintf("%d state", i)
-		driver.Zip = fmt.Sprintf("1234%d", i)
-
-		db.Add("driver", id, driver)
-	}
-	web.SetSuccessRedirect(w, r, "/", "success")
-	return
-}}
 
 var upload = web.Route{"GET", "/upload", func(w http.ResponseWriter, r *http.Request) {
 	tc.Render(w, r, "form-uploads.tmpl", nil)

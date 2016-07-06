@@ -166,9 +166,11 @@
                                                             <tr>
                                                                 <td><b>Credit Card</b></td>
                                                                 <td>
-                                                                    {{ .company.CreditCard.Number }}<br>
-                                                                    Exp. {{ .company.CreditCard.ExpirationDate}}<br>
-                                                                    Security Code {{ .company.CreditCard.SecurityCode }}
+                                                                    {{ if.company.CreditCard.Number }}
+                                                                        {{ .company.CreditCard.Number }}<br>
+                                                                        Exp. {{ .company.CreditCard.ExpirationDate}}<br>
+                                                                        Security Code: {{ .company.CreditCard.SecurityCode }}
+                                                                    {{ end }}
                                                                 </td>
                                                             </tr>
                                                             <tr>
