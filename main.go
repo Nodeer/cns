@@ -20,6 +20,16 @@ var tc *web.TmplCache
 
 var db *adb.DB = adb.NewDB()
 
+type maxBytesHandler struct {
+	h http.Handler
+	n int64
+}
+
+func (h *maxBytesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	r.Body = http.MaxBytesReader(w, r.Body, h.n)
+	h.h.ServeHTTP(w, r)
+}
+
 // initialize routes
 func init() {
 
@@ -59,7 +69,8 @@ func init() {
 // main http listener
 func main() {
 	fmt.Println("DID YOU REGISTER ANY NEW ROUTES?")
-	log.Fatal(http.ListenAndServe(":8080", mx))
+	log.Fatal(http.ListenAndServe(":8080", &maxBytesHandler{h: mx, n: 8192}))
+	//log.Fatal(http.ListenAndServe(":8080", mx))
 }
 
 var logout = web.Route{"GET", "/logout", func(w http.ResponseWriter, r *http.Request) {
@@ -163,7 +174,7 @@ var viewDocument = web.Route{"GET", "/document/:id", func(w http.ResponseWriter,
 		return
 	}
 	db.Get("driver", document.DriverId, &driver)
-	db.Get("company", driver.CompanyId, &company)
+	db.Get("company", document.CompanyId, &company)
 	for _, vId := range document.VehicleIds {
 		var vehicle Vehicle
 		db.Get("vehicle", vId, &vehicle)
@@ -182,6 +193,7 @@ var viewDocument = web.Route{"GET", "/document/:id", func(w http.ResponseWriter,
 var saveDocument = web.Route{"POST", "/document/save", func(w http.ResponseWriter, r *http.Request) {
 	var document Document
 	db.Get("document", r.FormValue("id"), &document)
+	fmt.Println(r.FormValue("id"))
 	document.Data = r.FormValue("data")
 	db.Set("document", document.Id, document)
 	web.SetFlash(w, "alertSuccess", "Successfully saved form")

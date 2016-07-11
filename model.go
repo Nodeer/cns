@@ -53,6 +53,7 @@ type Company struct {
 	ContactTitle      string         `json:"contactTitle,omitempty"`
 	ContactSSN        string         `jsni:"contactSSN,omitempty"`
 	ContactPhone      string         `json:"contactPhone,omitempty"`
+	ContactAddress    Address        `json:"contactAddress,omitempty"`
 	SecondName        string         `json:"secondName,omitempty"`
 	SecondTitle       string         `json:"secondTitle,omitempty"`
 	SecondPhone       string         `json:"secondPhone,omitempty"`
@@ -294,28 +295,30 @@ const (
 )
 
 type Vehicle struct {
-	Id            string   `json:"id"`
-	CompanyId     string   `json:"companyId,omitempty"`
-	VehicleType   string   `json:"vehicleType,omitempty"`
-	UnitNumber    string   `json:"unitNumber,omitempty"`
-	Make          string   `json:"make,omitempty"`
-	VIN           string   `json:"vin,omitempty"`
-	Title         string   `json:"title,omitempty"`
-	GVW           int      `json:"gvw,omitempty"`
-	GCR           int      `json:"gcr,omitempty"`
-	UnladenWeight int      `json:"unladenWeight,omitempty"`
-	PurchasePrice float32  `json:"purchacePrice,omitempty"`
-	PurchaseDate  string   `json:"purchaseDate,omitempty"`
-	CurrentValue  float32  `json:"currentValue,omitempty"`
-	AxleAmount    int      `json:"axleAmount,omitempty"`
-	FuelType      string   `json:"fuelType,omitempty"`
-	Active        bool     `json:"active"`
-	Owner         string   `json:"owner,omitempty"`
-	Year          string   `json:"year,omitempty"`
-	PlateNum      string   `json:"plateNum,omitempty"`
-	PlateExpire   string   `json:"plateExpire,omitempty"`
-	BodyType      BodyType `json:"bodyType,omitempty"`
-	BodyTypeOther string   `json:"bodyTypeOther,omitempty"`
+	Id               string   `json:"id"`
+	CompanyId        string   `json:"companyId,omitempty"`
+	VehicleType      string   `json:"vehicleType,omitempty"`
+	UnitNumber       string   `json:"unitNumber,omitempty"`
+	Make             string   `json:"make,omitempty"`
+	VIN              string   `json:"vin,omitempty"`
+	Title            string   `json:"title,omitempty"`
+	GVW              int      `json:"gvw,omitempty"`
+	GCR              int      `json:"gcr,omitempty"`
+	UnladenWeight    int      `json:"unladenWeight,omitempty"`
+	PurchasePrice    float32  `json:"purchasePrice,omitempty"`
+	PurchaseDate     string   `json:"purchaseDate,omitempty"`
+	CurrentValue     float32  `json:"currentValue,omitempty"`
+	AxleAmount       int      `json:"axleAmount,omitempty"`
+	FuelType         string   `json:"fuelType,omitempty"`
+	Active           bool     `json:"active"`
+	Owner            string   `json:"owner,omitempty"`
+	Year             string   `json:"year,omitempty"`
+	PlateNum         string   `json:"plateNum,omitempty"`
+	PlateExpire      string   `json:"plateExpire,omitempty"`
+	PlateExpireMonth string   `json:"plateExpireYear,omitempty"`
+	PlateExpireYear  string   `json:"plateExpireYear,omitempty"`
+	BodyType         BodyType `json:"bodyType,omitempty"`
+	BodyTypeOther    string   `json:"bodyTypeOther,omitempty"`
 }
 
 func (v Vehicle) HigherWeight() int {

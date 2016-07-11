@@ -201,9 +201,14 @@ func MakeVehicles(compIds [COMP]string) {
 			GCR:           1155 * i,
 			UnladenWeight: 1357 * i,
 			PurchasePrice: float32(i),
-			PurchaseDate:  fmt.Sprintf("199%d-03-1%d", i, i),
+			PurchaseDate:  fmt.Sprintf("03/1%d/199%d", i, i),
 			CurrentValue:  float32(i),
 			FuelType:      fmt.Sprintf("fuel-%d", i),
+			Active:        i%2 == 0,
+			Owner:         fmt.Sprintf("Vinny P number %d", i),
+			Year:          fmt.Sprintf("%d", 1980+compIdx),
+			PlateNum:      fmt.Sprintf("%d", 658231+compIdx),
+			PlateExpire:   fmt.Sprintf("03/1%d/%d", 1992+compIdx, i),
 		}
 		if i%3 == 0 {
 			vehicle.AxleAmount = 2

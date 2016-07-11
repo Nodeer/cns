@@ -1,0 +1,17 @@
+<br>
+    <div style="text-align:right;">
+        <button class="btn btn-primary" type="button" name="button" id="save" >Save</button>
+        <button class="btn btn-success" type="button" name="button" id="complete" >Complete</button>
+    </div>
+<br/><br/>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="/static/js/input-tools.js"></script>
+<script>
+    var redirect = '/cns/company/{{ .company.Id }}/form';
+    var url = '/document';
+    var id = '{{ .document.Id }}';
+    var data = '{{ .document.Data }}';
+</script>
+<script src="/static/js/document.js"></script>

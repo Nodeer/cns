@@ -307,7 +307,7 @@ var companyAddForm = web.Route{"POST", "/cns/company/:id/form", func(w http.Resp
 	doc := Document{
 		Id:         id,
 		Name:       docId,
-		DocumentId: strings.ToLower(strings.Replace(docId, " ", "_", -1)),
+		DocumentId: "st-" + strings.ToLower(strings.Replace(docId, " ", "_", -1)),
 		Complete:   false,
 		CompanyId:  compId,
 		VehicleIds: vehicleIds,
