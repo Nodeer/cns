@@ -20,16 +20,6 @@ var tc *web.TmplCache
 
 var db *adb.DB = adb.NewDB()
 
-type maxBytesHandler struct {
-	h http.Handler
-	n int64
-}
-
-func (h *maxBytesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	r.Body = http.MaxBytesReader(w, r.Body, h.n)
-	h.h.ServeHTTP(w, r)
-}
-
 // initialize routes
 func init() {
 
@@ -42,20 +32,31 @@ func init() {
 	db.AddStore("note")
 	db.AddStore("comment")
 
+	// unsecure routes
 	mx.AddRoutes(login, loginPost, logout, GetComment, PostComent)
 
+	// main page
 	mx.AddSecureRoutes(EMPLOYEE, index)
 
+	// employee management routes
 	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee)
 
-	mx.AddSecureRoutes(EMPLOYEE, companyAll, companyView, companyDriver, companySave, companySaveNote, companyService, companyForm, companyAddForm)
-	mx.AddSecureRoutes(EMPLOYEE, companyVehicle, companyVehicleView, companyVehicleSave, testCompanyFormView, companyFormDel)
+	// company management routes
+	mx.AddSecureRoutes(EMPLOYEE, companyAll, companyView, companyDriver, companySave, companySaveNote, companyService)
+	mx.AddSecureRoutes(EMPLOYEE, companyForm, companyAddForm, companyFormDel)
 
+	// company vehicle management routes
+	mx.AddSecureRoutes(EMPLOYEE, companyVehicle, companyVehicleView, companyVehicleSave)
+
+	// driver management routes
 	mx.AddSecureRoutes(EMPLOYEE, allDriver, viewDriver, saveDriver, driverFiles, driverForms)
+	mx.AddSecureRoutes(ALL, uploadDriverFile, viewDriverFile, delDriverFile, addDriverDocument)
 
-	mx.AddSecureRoutes(AJAX, updateSession, uploadDriverFile, addDriverDocument, viewDriverFile, delDriverFile, documentDel, viewDocument, saveDocument, completeDocument)
+	// document management routes
+	mx.AddSecureRoutes(ALL, viewDocument, saveDocument, completeDocument, documentDel)
 
-	//mx.AddRoutes(calendar, calendarEvents, calendarEvent)
+	// update session
+	mx.AddSecureRoutes(ALL, updateSession)
 
 	web.Funcs["lower"] = strings.ToLower
 	web.Funcs["size"] = PrettySize
@@ -69,8 +70,7 @@ func init() {
 // main http listener
 func main() {
 	fmt.Println("DID YOU REGISTER ANY NEW ROUTES?")
-	log.Fatal(http.ListenAndServe(":8080", &maxBytesHandler{h: mx, n: 8192}))
-	//log.Fatal(http.ListenAndServe(":8080", mx))
+	log.Fatal(http.ListenAndServe(":8080", mx))
 }
 
 var logout = web.Route{"GET", "/logout", func(w http.ResponseWriter, r *http.Request) {
@@ -78,39 +78,30 @@ var logout = web.Route{"GET", "/logout", func(w http.ResponseWriter, r *http.Req
 	http.Redirect(w, r, "/login", 303)
 }}
 
-var updateSession = web.Route{"POST", "/updateSession", func(w http.ResponseWriter, r *http.Request) {
-	return
+var login = web.Route{"GET", "/login", func(w http.ResponseWriter, r *http.Request) {
+	tc.Render(w, r, "login.tmpl", web.Model{})
 }}
 
-var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.ResponseWriter, r *http.Request) {
-	driverId := r.FormValue("id")
-	redirect := r.FormValue("redirect")
-	var driver Driver
-	if !db.Get("driver", driverId, &driver) {
-		web.SetErrorRedirect(w, r, redirect, "Error adding documents")
+var loginPost = web.Route{"POST", "/login", func(w http.ResponseWriter, r *http.Request) {
+	email, pass := r.FormValue("email"), r.FormValue("password")
+	var employee Employee
+	if !db.Auth("employee", email, pass, &employee) {
+		web.SetErrorRedirect(w, r, "/login", "Incorrect username or password")
 		return
 	}
-	docIds := strings.Split(r.FormValue("docIds"), ",")
-	for _, docId := range docIds {
-		id := strconv.Itoa(int(time.Now().UnixNano()))
-		doc := Document{
-			Id:         id,
-			Name:       "dqf-" + docId,
-			DocumentId: "dqf-" + docId,
-			Complete:   false,
-			CompanyId:  driver.CompanyId,
-			DriverId:   driver.Id,
-		}
-		db.Add("document", id, doc)
+	sess := web.Login(w, r, employee.Role)
+	sess["id"] = employee.Id
+	sess["email"] = employee.Email
+	web.PutMultiSess(w, r, sess)
+	redirect := "/cns/company"
+	if employee.Home != "" {
+		redirect = employee.Home
 	}
-
-	web.SetSuccessRedirect(w, r, redirect, "Successfully added forms")
+	web.SetSuccessRedirect(w, r, redirect, "Welcome "+employee.FirstName)
 	return
 }}
 
-var documentDel = web.Route{"POST", "/document/del/:driverId/:docId", func(w http.ResponseWriter, r *http.Request) {
-	db.Del("document", r.FormValue(":docId"))
-	web.SetSuccessRedirect(w, r, r.FormValue("redirect"), "Successfully deleted form")
+var updateSession = web.Route{"POST", "/updateSession", func(w http.ResponseWriter, r *http.Request) {
 	return
 }}
 
@@ -163,6 +154,32 @@ var delDriverFile = web.Route{"POST", "/driver/file/:id/:file", func(w http.Resp
 	return
 }}
 
+var addDriverDocument = web.Route{"POST", "/driver/document", func(w http.ResponseWriter, r *http.Request) {
+	driverId := r.FormValue("id")
+	redirect := r.FormValue("redirect")
+	var driver Driver
+	if !db.Get("driver", driverId, &driver) {
+		web.SetErrorRedirect(w, r, redirect, "Error adding documents")
+		return
+	}
+	docIds := strings.Split(r.FormValue("docIds"), ",")
+	for _, docId := range docIds {
+		id := strconv.Itoa(int(time.Now().UnixNano()))
+		doc := Document{
+			Id:         id,
+			Name:       "dqf-" + docId,
+			DocumentId: "dqf-" + docId,
+			Complete:   false,
+			CompanyId:  driver.CompanyId,
+			DriverId:   driver.Id,
+		}
+		db.Add("document", id, doc)
+	}
+
+	web.SetSuccessRedirect(w, r, redirect, "Successfully added forms")
+	return
+}}
+
 var viewDocument = web.Route{"GET", "/document/:id", func(w http.ResponseWriter, r *http.Request) {
 	var document Document
 	var driver Driver
@@ -210,6 +227,14 @@ var completeDocument = web.Route{"POST", "/document/complete", func(w http.Respo
 	ajaxResponse(w, `{"status":"success","msg":"Successfully saved document", "redirect":"`+r.FormValue("redirect")+`"}`)
 	return
 }}
+
+var documentDel = web.Route{"POST", "/document/del/:driverId/:docId", func(w http.ResponseWriter, r *http.Request) {
+	db.Del("document", r.FormValue(":docId"))
+	web.SetSuccessRedirect(w, r, r.FormValue("redirect"), "Successfully deleted form")
+	return
+}}
+
+// comment section for development use only
 
 var GetComment = web.Route{"GET", "/comment", func(w http.ResponseWriter, r *http.Request) {
 	tc.Render(w, r, "comment.tmpl", web.Model{

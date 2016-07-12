@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -16,37 +15,14 @@ import (
 )
 
 var index = web.Route{"GET", "/", func(w http.ResponseWriter, r *http.Request) {
-	tc.Render(w, r, "index.tmpl", web.Model{})
-}}
-
-var login = web.Route{"GET", "/login", func(w http.ResponseWriter, r *http.Request) {
-	tc.Render(w, r, "login.tmpl", web.Model{})
-}}
-
-var loginPost = web.Route{"POST", "/login", func(w http.ResponseWriter, r *http.Request) {
-	email, pass := r.FormValue("email"), r.FormValue("password")
-	var employee Employee
-	if !db.Auth("employee", email, pass, &employee) {
-		web.SetErrorRedirect(w, r, "/login", "Incorrect username or password")
-		return
-	}
-	sess := web.Login(w, r, employee.Role)
-	sess["id"] = employee.Id
-	sess["email"] = employee.Email
-	web.PutMultiSess(w, r, sess)
-	redirect := "/cns/company"
-	if employee.Home != "" {
-		redirect = employee.Home
-	}
-	web.SetSuccessRedirect(w, r, redirect, "Welcome "+employee.FirstName)
-	return
+	//tc.Render(w, r, "index.tmpl", web.Model{})
+	http.Redirect(w, r, "/cns/company", 303)
 }}
 
 /* --- Employee Management --- */
 
 var allEmployee = web.Route{"GET", "/cns/employee", func(w http.ResponseWriter, r *http.Request) {
 	var employees []Employee
-	//ok := db.Match("user", `"role":"EMPLOYEE"`, &employees)
 	db.TestQuery("employee", &employees, adb.Gt("id", `"1"`))
 	tc.Render(w, r, "employee-all.tmpl", web.Model{
 		"employees": employees,
@@ -67,10 +43,6 @@ var viewEmployee = web.Route{"GET", "/cns/employee/:id", func(w http.ResponseWri
 		"employee": employee,
 	})
 }}
-
-// var settings = web.Route{"GET", "/cns/settings", func(w http.ResponseWriter, r *http.Request) {
-// 	http.Redirect(w, r, "/cns/employee/"+web.GetSess(r, "id").(string), 303)
-// }}
 
 var saveEmployee = web.Route{"POST", "/cns/employee", func(w http.ResponseWriter, r *http.Request) {
 	empId := r.FormValue("id")
@@ -178,12 +150,6 @@ var companyForm = web.Route{"GET", "/cns/company/:id/form", func(w http.Response
 		return
 	}
 	db.TestQuery("document", &docs, adb.Eq("companyId", `"`+company.Id+`"`), adb.Eq("stateForm", "true"))
-	// var d []Document
-	// for _, doc := range docs {
-	// 	if doc.DriverId == "" {
-	// 		d = append(d, doc)
-	// 	}
-	// }
 	var vehicles []Vehicle
 	db.TestQuery("vehicle", &vehicles, adb.Eq("companyId", `"`+company.Id+`"`))
 	tc.Render(w, r, "company-form.tmpl", web.Model{
@@ -219,12 +185,7 @@ var companySave = web.Route{"POST", "/cns/company", func(w http.ResponseWriter, 
 	var company Company
 	db.Get("company", compId, &company)
 	if compId == "" && company.Id == "" {
-		//web.SetErrorRedirect(w, r, "/cns/company", "Error saving company. Please try again")
-		//return
 		company.Id = strconv.Itoa(int(time.Now().UnixNano()))
-		//company.Password = company.Email
-		//company.Role = "COMPANY"
-		//company.CreateSlug()
 	}
 	FormToStruct(&company, r.Form, "")
 	var companies []Company
@@ -314,20 +275,6 @@ var companyAddForm = web.Route{"POST", "/cns/company/:id/form", func(w http.Resp
 		StateForm:  true,
 	}
 	db.Add("document", id, doc)
-
-	// docIds := strings.Split(r.FormValue("docIds"), ",")
-	// for _, docId := range docIds {
-	// 	id := strconv.Itoa(int(time.Now().UnixNano()))
-	// 	doc := Document{
-	// 		Id:         id,
-	// 		Name:       docId,
-	// 		DocumentId: strings.Replace(docId, " ", "_", -1),
-	// 		Complete:   false,
-	// 		CompanyId:  compId,
-	// 	}
-	// 	db.Add("document", id, doc)
-	// }
-
 	web.SetSuccessRedirect(w, r, "/cns/company/"+company.Id+"/form", "Successfully added forms")
 	return
 }}
@@ -342,18 +289,6 @@ var companyFormDel = web.Route{"POST", "/cns/company/:companyId/form/:formId", f
 	web.SetSuccessRedirect(w, r, "/cns/company/"+r.FormValue(":companyId")+"/form", "Successfully deleted form")
 	return
 
-}}
-
-var testCompanyFormView = web.Route{"GET", "/test/form/:id", func(w http.ResponseWriter, r *http.Request) {
-	var form Document
-	db.Get("document", r.FormValue(":id"), &form)
-	b, err := json.Marshal(form)
-	if err != nil {
-		fmt.Fprintf(w, "Error marshaling json")
-		return
-	}
-	fmt.Fprintf(w, "%s", b)
-	return
 }}
 
 /* --- Driver Management --- */

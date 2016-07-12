@@ -10,6 +10,7 @@ import (
 	"strings"
 )
 
+// setup quick notes
 var quickNotes = []QuickNote{
 	QuickNote{"Good", "I had good contact with the customer."},
 	QuickNote{"Bad", "I had Bad contact with the customer."},

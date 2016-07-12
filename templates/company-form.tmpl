@@ -199,37 +199,6 @@
                 $('<form method="post" action="' + btn.attr('data-url') + '"><input name="redirect" value="/cns/company/{{ .company.Id}}/form"></form>').submit();
             }
 
-            // var docId = [];
-            // $('button[id="addDoc"]').click(function() {
-            //     var b = $(this);
-            //     if (b.attr('data-added') == '0') {
-            //         docId.push(b.attr('data-docId'));
-            //         b.removeClass('btn-default');
-            //         b.addClass('btn-success');
-            //         b.attr('data-added', '1');
-            //         $('button[id="done"]').removeAttr('disabled');
-            //         $('button[id="done"]').text('Add Documents To Company');
-            //     } else {
-            //         var idx = docId.indexOf(b.attr('data-docId'));
-            //         if (idx > -1) {
-            //             docId.splice(idx, 1);
-            //         }
-            //         b.removeClass('btn-success');
-            //         b.addClass('btn-default');
-            //         b.attr('data-added', '0');
-            //         if(docId.length < 1) {
-            //             $('button[id="done"]').attr('disabled', 'disabled');
-            //             $('button[id="done"]').text('Please Select Forms');
-            //         }
-            //     }
-            // });
-            //
-            // $('button[id="done"]').click(function(e){
-            //     e.preventDefault();
-            //     $('input#docIds').val(docId.join(','));
-            //     $('form#documentForm').submit();
-            // });
-
         </script>
 
   </body>
