@@ -254,7 +254,7 @@ type Vehicle struct {
 	Year             string   `json:"year,omitempty"`
 	PlateNum         string   `json:"plateNum,omitempty"`
 	PlateExpire      string   `json:"plateExpire,omitempty"`
-	PlateExpireMonth string   `json:"plateExpireYear,omitempty"`
+	PlateExpireMonth string   `json:"plateExpireMonth,omitempty"`
 	PlateExpireYear  string   `json:"plateExpireYear,omitempty"`
 	BodyType         BodyType `json:"bodyType,omitempty"`
 	BodyTypeOther    string   `json:"bodyTypeOther,omitempty"`

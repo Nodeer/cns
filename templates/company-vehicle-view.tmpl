@@ -36,7 +36,6 @@
                                     <li class=""><a id="notesTab" href="/cns/company/{{ .company.Id }}/driver">Drivers</a></li>
                                     <li class=""><a class="tab"  href="/cns/company/{{ .company.Id }}/form">Forms</a></li>
                                 </ul>
-
                                 <div class="tabPane clearfix">
                                     <div id="view" class="profile-desk">
                                         <h1>
@@ -248,7 +247,17 @@
                                                         </tr>
                                                         <tr>
                                                             <td><b>Plate Expiration</b></td>
-                                                            <td><input type="text" class="form-control" name="plateExpire" value="{{ .vehicle.PlateExpire }}" placeholder="Plate Expire"></td>
+                                                            <td class="form-horizontal">
+                                                                <label class="col-lg-2 control-label">Month</label>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" class="form-control" name="plateExpireMonth" value="{{ .vehicle.PlateExpireMonth }}">
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">Year</label>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" class="form-control" name="plateExpireYear" value="{{ .vehicle.PlateExpireYear}}">
+                                                                </div>
+                                                            </td>
+                                                            <!-- <td><input type="text" class="form-control" name="plateExpire" value="{{ .vehicle.PlateExpire }}" placeholder="Plate Expire"></td> -->
                                                         </tr>
                                                         <tr>
                                                             <td><b>Body Type</b></td>

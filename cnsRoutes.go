@@ -246,6 +246,8 @@ var companyVehicleSave = web.Route{"POST", "/cns/company/:compId/vehicle", func(
 		vehicle.CompanyId = compId
 	}
 	FormToStruct(&vehicle, r.Form, "")
+	vehicle.PlateExpire = vehicle.PlateExpireMonth + "/" + vehicle.PlateExpireYear
+	fmt.Println(vehicle.PlateExpireMonth)
 	db.Set("vehicle", vehicle.Id, vehicle)
 	web.SetSuccessRedirect(w, r, "/cns/company/"+compId+"/vehicle/"+vehicle.Id, "Successfully saved vehicle")
 	return

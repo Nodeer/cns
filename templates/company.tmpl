@@ -68,6 +68,10 @@
                                                                 {{ .company.ContactName }}<br>
                                                                 {{ .company.ContactTitle }}<br>
                                                                 {{ .company.ContactPhone }}
+                                                                {{ if .company.ContactAddress.Street }}
+                                                                    <br><br>
+                                                                    {{ .company.ContactAddress.AddrHTML }}
+                                                                {{ end }}
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -121,10 +125,6 @@
                                                             <td>
                                                                 <b>Carrier Type</b> &nbsp;&nbsp;{{ .company.GetCarrierType }}
                                                             </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><b>KY Use Tax Num</b></td>
-                                                            <td>{{ .company.KYUseNum }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td><b>NY OSCAR Username</b></td>
@@ -209,6 +209,10 @@
                                                                 <td><b>NM Hut Password</b></td>
                                                                 <td>{{ .company.NMHutPassword }}</td>
                                                             </tr>
+                                                            <tr>
+                                                                <td><b>KY Use Tax Num</b></td>
+                                                                <td>{{ .company.KYUseNum }}</td>
+                                                            </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -244,6 +248,18 @@
                                                                     <input type="text" class="form-control" name="contactName" value="{{ .company.ContactName }}" placeholder="Name"><br>
                                                                     <input type="text" class="form-control" name="contactTitle" value="{{ .company.ContactTitle }}" placeholder="Title"><br>
                                                                     <input type="text" class="form-control" name="contactPhone" value="{{ .company.ContactPhone }}" placeholder="Phone">
+                                                                    <br><br>
+                                                                    <input type="text" class="form-control" name="contactAddress.Street" value="{{ .company.ContactAddress.Street }}" placeholder="Street"><br>
+                                                                    <input type="text" class="form-control" name="contactAddress.City" value="{{ .company.ContactAddress.City }}" placeholder="City"><br>
+                                                                    <input type="text" class="form-control" name="contactAddress.County" value="{{ .company.ContactAddress.County }}" placeholder="County"><br>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6">
+                                                                            <input type="text" class="form-control" name="contactAddress.State" value="{{ .company.ContactAddress.State }}" placeholder="State">
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <input type="text" class="form-control" name="contactAddress.Zip" value="{{ .company.ContactAddress.Zip }}" placeholder="Zip">
+                                                                        </div>
+                                                                    </div>
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -375,10 +391,6 @@
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td><b>KY Use Tax Num</b></td>
-                                                                <td><input type="text" class="form-control" name="kYUseNum" value="{{ .company.KYUseNum }}" placeholder="KY Use Tax Num"></td>
-                                                            </tr>
-                                                            <tr>
                                                                 <td><b>NY OSCAR Username</b></td>
                                                                 <td><input type="text" class="form-control" name="nYOscarUsername" value="{{ .company.NYOscarUsername }}" placeholder="NY OSCAR Username"></td>
                                                             </tr>
@@ -474,6 +486,10 @@
                                                                     <td><b>NM Hut Password</b></td>
                                                                     <td><input type="text" class="form-control" name="nMHutPassword" value="{{ .company.NMHutPassword }}" placeholder="NM HUT Password"></td>
                                                                 </tr>
+                                                                <tr>
+                                                                    <td><b>KY Use Tax Num</b></td>
+                                                                    <td><input type="text" class="form-control" name="kYUseNum" value="{{ .company.KYUseNum }}" placeholder="KY Use Tax Num"></td>
+                                                                </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -506,7 +522,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label>Communication</label>
-                                        <select id="communication" class="form-control" name="communication">
+                                        <select id="communication" class="form-control input-sm" name="communication">
                                             <option value="called">Called</option>
                                             <option value="emailed">Emailed</option>
                                             <option value="walkIn">Walked In</option>
@@ -515,12 +531,12 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Representative</label>
-                                        <input id="representative" class="form-control" type="text" name="representative" value="">
+                                        <input id="representative" class="form-control input-sm" type="text" name="representative" value="">
                                     </div>
                                     <div class="form-group">
-                                        <label>Date ane Time</label>
+                                        <label>Date and Time</label>
                                         <div class="input-group date" id="datetimepicker">
-                                            <input type="text" class="form-control" name="dateTime" id="dateTime"/>
+                                            <input type="text" class="form-control input-sm" name="dateTime" id="dateTime"/>
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
@@ -530,7 +546,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label class="">Pupose</label>
-                                        <select id="purpose" class="form-control" name="purpose">
+                                        <select id="purpose" class="form-control input-sm" name="purpose">
                                             <option value="question">Question</option>
                                             <option value="service">Service</option>
                                             <option value="sales">Sales</option>
@@ -540,13 +556,13 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Call Back Phone Number</label>
-                                        <input id="callBack" class="form-control" type="text" name="callBack" value="">
+                                        <input id="callBack" class="form-control input-sm" type="text" name="callBack" value="">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label>Employee</label>
-                                        <select id="employeeId" class="form-control" name="employeeId">
+                                        <select id="employeeId" class="form-control input-sm" name="employeeId">
                                             {{ $userId := .userId }}
                                             {{ range $employee := .employees}}
                                                 <option value="{{ $employee.Id }}" {{ if eq $userId $employee.Id }}selected{{ end }}>{{ $employee.FirstName }} {{ $employee.LastName }}</option>
@@ -728,7 +744,7 @@
 
             $('#noteModal').on('hidden.bs.modal', function (e) {
                 $('form#noteForm')[0].reset();
-                $('form#noteForm input, select').removeAttr('disabled', '');
+                $('form#noteForm input, select').removeAttr('readonly');
             })
 
             $(document).on('click', 'tr.clickable', function() {
@@ -746,7 +762,7 @@
                 $('form#noteForm select#employeeId').val(note.employeeId);
                 $('form#noteForm input#representative').val(note.representative);
                 $('form#noteForm input#callBack').val(note.callBack);
-                $('form#noteForm div#pre-body').html(note.body + '<br><br>');
+                $('form#noteForm div#pre-body').html('Previous Note:<br><span id="pre-body">' + note.body + '</span><br><br>');
                 //$('form#noteForm textarea#body').val(note.body);
                 $('form#noteForm input#id').val(note.id);
                 if (note.emailEmployee) {
@@ -755,12 +771,15 @@
                 if (note.billable) {
                     $('form#noteForm input#billableTrue')[0].checked = true;
                 }
-                $('form#noteForm input, select').attr('disabled', 'disabled');
+                $('form#noteForm input, select').attr('readonly', 'readonly');
                 $('#noteModal').modal('show');
             });
 
             $('button.quickNote').click(function() {
-                var note = $('form#noteForm textarea#body').val() + '  ' + $(this).attr('data-note');
+                var note = $(this).attr('data-note');
+                if ($('form#noteForm textarea#body').val() !== '') {
+                    note = $('form#noteForm textarea#body').val() + ' ' + note
+                }
                 $('form#noteForm textarea#body').val(note);
             });
 
@@ -768,6 +787,13 @@
                 $('form#noteForm input#dateTime').val(moment().format('MM/DD/YYYY hh:mm A'));
                 $('#noteModal').modal('show');
             });
+
+            $('form#noteForm').submit(function(e) {
+                $('#noteModal').modal('hide');
+                if ($('span#pre-body').text() !== '') {
+                    $('form#noteForm textarea#body').val($('span#pre-body').text() + ' ' + $('form#noteForm textarea#body').val());
+                }
+            })
 
             $('select#businessType').change(function() {
                 if ($(this).val() === '{{ .companyConsts.BUSINESS_OTHER }}') {
