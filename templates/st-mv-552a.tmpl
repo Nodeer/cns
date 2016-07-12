@@ -3,6 +3,7 @@
     <head>
         <title>Page 1</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        {{ template "st-head.tmpl" . }}
         <style type="text/css">
             @media print {
             input,
@@ -132,7 +133,7 @@
 </style>
     </head>
     <body bgcolor="#A0A0A0" vlink="blue" link="blue">
-        <div id="page1-div" style="position:relative;width:1188px;margin:0 auto;">
+        <div id="page1-div" style="position:relative;width:1188px;margin:0 auto;" class="no-print">
             <label for="vehicle1">Vehicle 1</label>
             <select id="vehicle1" class="vehicleSelect" data-vehicle="0">
                 <option value=""></option>
@@ -589,8 +590,9 @@
             <p style="position:absolute;top:846px;left:127px;white-space:nowrap" class="p2ft01">In&#160;state:&#160;&#160;1-800-932-4600&#160;&#160;u&#160;TDD:&#160;&#160;1-800-228-0676&#160;&#160;u&#160;Out-of-State:&#160;&#160;1-717-412-5300&#160;&#160;u&#160;TDD&#160;Out-of-State:&#160;&#160;1-717-412-5380</p>
         </div>
 
-        {{ template "st-scripts.tmpl" . }}
-
+        <div style="position:relative;width:1188px;margin:0 auto;">
+            {{ template "st-scripts.tmpl" . }}
+        </div>
         <script type="text/javascript">
 
             var vehicles = [

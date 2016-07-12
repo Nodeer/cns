@@ -15,12 +15,10 @@ function send(url) {
 		success: function(resp) {
 			test = resp
 			if (resp.status === 'success') {
-				//alert(resp.msg);
 				window.location.pathname = resp.redirect
 			}
 		},
 		error: function(data) {
-			alert("error")
 			console.log(data);
 		}
 	});
@@ -42,7 +40,11 @@ $(document).ready(function() {
 		}
 	});
 
-	if (data !== '') {
-		inputTools.fill(JSON.parse(data));
+	// if (data !== '') {
+	// 	inputTools.fill(JSON.parse(data));
+	// }
+
+	if (!$.isEmptyObject(data)) {
+		inputTools.fill(data);
 	}
 });

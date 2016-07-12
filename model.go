@@ -64,6 +64,7 @@ type Company struct {
 	BusinessTypeOther string         `json:"businessTypeOther,omitempty"`
 	MCNum             string         `json:"mcNum,omitempty"`
 	PUCNum            string         `json:"pucNum,omitempty"`
+	Phone             string         `json:"phone,omitempty"`
 	Fax               string         `json:"fax,omitempty"`
 	Email             string         `json:"email,omitempty"`
 	EINNum            string         `json:"einNum,omitempty"`
@@ -274,13 +275,13 @@ var DQFS = [][]string{
 var CompanyForms = [][]string{
 	[]string{"MV-550", "2"},
 	[]string{"MV-550A", "1"},
-	[]string{"MV-551", "2"},
+	//[]string{"MV-551", "2"},
 	[]string{"MV-552A", "2"},
 	[]string{"MV-558", "2"},
 	[]string{"MV-41", "1"},
 	[]string{"TMT-39", ""},
 	[]string{"PUC App", ""},
-	[]string{"MCS-150", ""},
+	//[]string{"MCS-150", ""},
 }
 
 type BodyType int

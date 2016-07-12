@@ -88,12 +88,9 @@
                                                     <tbody>
                                                         {{ $company := .company }}
                                                         {{ range $doc := .docs }}
-                                                            <tr class="clickable" data-url="/document/{{ $doc.Id }}" data-target="_blank">
+                                                            <tr class="clickable" data-url="/document/{{ $doc.Id }}">
                                                                 <td>{{ $doc.Name }}</td>
                                                                 <td>{{ $doc.Complete }}</td>
-                                                                <td>
-                                                                    {{ $doc.DocumentId }}
-                                                                </td>
                                                                 <td class="text-center"><a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ $company.Id }}/{{ $doc.Id }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
                                                             </tr>
                                                         {{ end }}

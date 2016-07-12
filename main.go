@@ -42,7 +42,7 @@ func init() {
 	db.AddStore("note")
 	db.AddStore("comment")
 
-	mx.AddRoutes(login, loginPost, logout, viewDocument, saveDocument, GetComment, PostComent)
+	mx.AddRoutes(login, loginPost, logout, GetComment, PostComent)
 
 	mx.AddSecureRoutes(EMPLOYEE, index)
 
@@ -53,7 +53,7 @@ func init() {
 
 	mx.AddSecureRoutes(EMPLOYEE, allDriver, viewDriver, saveDriver, driverFiles, driverForms)
 
-	mx.AddSecureRoutes(AJAX, updateSession, uploadDriverFile, addDriverDocument, viewDriverFile, delDriverFile, documentDel)
+	mx.AddSecureRoutes(AJAX, updateSession, uploadDriverFile, addDriverDocument, viewDriverFile, delDriverFile, documentDel, viewDocument, saveDocument, completeDocument)
 
 	//mx.AddRoutes(calendar, calendarEvents, calendarEvent)
 
@@ -193,10 +193,20 @@ var viewDocument = web.Route{"GET", "/document/:id", func(w http.ResponseWriter,
 var saveDocument = web.Route{"POST", "/document/save", func(w http.ResponseWriter, r *http.Request) {
 	var document Document
 	db.Get("document", r.FormValue("id"), &document)
-	fmt.Println(r.FormValue("id"))
 	document.Data = r.FormValue("data")
 	db.Set("document", document.Id, document)
 	web.SetFlash(w, "alertSuccess", "Successfully saved form")
+	ajaxResponse(w, `{"status":"success","msg":"Successfully saved document", "redirect":"`+r.FormValue("redirect")+`"}`)
+	return
+}}
+
+var completeDocument = web.Route{"POST", "/document/complete", func(w http.ResponseWriter, r *http.Request) {
+	var document Document
+	db.Get("document", r.FormValue("id"), &document)
+	document.Data = r.FormValue("data")
+	document.Complete = true
+	db.Set("document", document.Id, document)
+	web.SetFlash(w, "alertSuccess", "Successfully completed form")
 	ajaxResponse(w, `{"status":"success","msg":"Successfully saved document", "redirect":"`+r.FormValue("redirect")+`"}`)
 	return
 }}

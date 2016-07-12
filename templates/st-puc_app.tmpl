@@ -3,6 +3,7 @@
     <head>
         <title>Page 1</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        {{ template "st-head.tmpl" . }}
         <style type="text/css">
             @media print {
             input,
@@ -564,15 +565,15 @@
                 cannot be readily determined. &#160;<i>EXAMPLE:&#160;&#160;John&#160;Doe is the applicant and wants to&#160;<br />use the name&#160;</i>“Johnboy Trucking”<i>&#160;as his trade name. &#160;People cannot readily determine&#160;that&#160;<br />John Doe is the actual operator; therefore, the name is fictitious and must&#160;be&#160;registered&#160;as&#160;<br />such. &#160;Trade names such as&#160;</i>“John
                 Doe Trucking”&#160;<i>or&#160;&#160;</i>“J. Doe Trucking”&#160;<i>are not&#160;considered&#160;<br />fictitious and would not have to be registered.&#160;<br /></i>&#160;</p>
             <p style="position:absolute;top:845px;left:97px;white-space:nowrap" class="p3ft012">&#160;<br />3.&#160;</p>
-            <p style="position:absolute;top:868px;left:151px;white-space:nowrap" class="p3ft07"><b>Do you currently&#160;hold PA PUC Authority?</b>&#160; &#160;<input type="checkbox" name="name" value="">NO &#160;<b>Previous Authority?</b>&#160;<input type="checkbox" name="name" value="">NO&#160;</p>
+            <p style="position:absolute;top:868px;left:151px;white-space:nowrap" class="p3ft07"><b>Do you currently&#160;hold PA PUC Authority?</b>&#160; &#160;<input type="checkbox" name="current-puc-authority" value="">NO &#160;<b>Previous Authority?</b>&#160;<input type="checkbox" name="previous-puc-authority" value="">NO&#160;</p>
             <p style="position:absolute;top:889px;left:97px;white-space:nowrap" class="p3ft012">&#160;<br />&#160;</p>
-            <p style="position:absolute;top:910px;left:151px;white-space:nowrap" class="p3ft07"><b>If yes, at PUC No. A</b>- <input type="text" name="name" value="">&#160;&#160;</p>
+            <p style="position:absolute;top:910px;left:151px;white-space:nowrap" class="p3ft07"><b>If yes, at PUC No. A</b>- <input type="text" name="puc-number" value="">&#160;&#160;</p>
             <p style="position:absolute;top:929px;left:97px;white-space:nowrap" class="p3ft012">&#160;<br />4.&#160;</p>
-            <p style="position:absolute;top:952px;left:151px;white-space:nowrap" class="p3ft07"><b>Are you a business entity&#160;registered with the PA Department of State?</b>&#160;<input type="checkbox" name="name" value="">NO&#160;</p>
+            <p style="position:absolute;top:952px;left:151px;white-space:nowrap" class="p3ft07"><b>Are you a business entity&#160;registered with the PA Department of State?</b>&#160;<input type="checkbox" name="pa-registered" value="">NO&#160;</p>
             <p style="position:absolute;top:970px;left:97px;white-space:nowrap" class="p3ft06">&#160;</p>
             <p style="position:absolute;top:972px;left:151px;white-space:nowrap" class="p3ft01">If No, you must&#160;first register (see checklist)&#160;</p>
             <p style="position:absolute;top:990px;left:97px;white-space:nowrap" class="p3ft012">&#160;<br />&#160;</p>
-            <p style="position:absolute;top:1011px;left:151px;white-space:nowrap" class="p3ft07"><b>If Yes, provide your PA Corporation Bureau Entity&#160;ID Number</b>&#160;<input type="text" name="name" value=""></p>
+            <p style="position:absolute;top:1011px;left:151px;white-space:nowrap" class="p3ft07"><b>If Yes, provide your PA Corporation Bureau Entity&#160;ID Number</b>&#160;<input type="text" name="entity-number" value="{{ .company.EntityNum }}"></p>
             <p style="position:absolute;top:1029px;left:97px;white-space:nowrap" class="p3ft06">&#160;</p>
             <p style="position:absolute;top:1031px;left:151px;white-space:nowrap" class="p3ft01">(see checklist and indicate type of business entity registered)&#160;</p>
             <p style="position:absolute;top:1048px;left:97px;white-space:nowrap" class="p3ft01">&#160;</p>
@@ -645,11 +646,11 @@
             <p style="position:absolute;top:799px;left:151px;white-space:nowrap" class="p4ft03"><b>Do you hold interstate operating authority?</b>&#160;&#160;&#160;</p>
             <p style="position:absolute;top:819px;left:97px;white-space:nowrap" class="p4ft00">&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;</p>
             <p style="position:absolute;top:833px;left:159px;white-space:nowrap" class="p4ft01">&#160;</p>
-            <p style="position:absolute;top:832px;left:145px;white-space:nowrap" class="p4ft02"><input type="radio" name="name" value="">&#160;&#160;&#160;&#160;&#160;&#160;No&#160;</p>
+            <p style="position:absolute;top:832px;left:145px;white-space:nowrap" class="p4ft02"><input type="radio" name="interstate-operating-authority" value="">&#160;&#160;&#160;&#160;&#160;&#160;No&#160;</p>
             <p style="position:absolute;top:834px;left:281px;white-space:nowrap" class="p4ft02">&#160;</p>
             <p style="position:absolute;top:834px;left:315px;white-space:nowrap" class="p4ft02">&#160;</p>
-            <p style="position:absolute;top:832px;left:300px;white-space:nowrap" class="p4ft02"><input type="radio" name="name" value="">&#160;&#160;&#160;&#160;&#160;&#160;
-                Yes, at No. <input type="text" name="interstate-operating-authority" value="{{ .company.MCNum }}">&#160;</p>
+            <p style="position:absolute;top:832px;left:300px;white-space:nowrap" class="p4ft02"><input type="radio" name="interstate-operating-authority" value="">&#160;&#160;&#160;&#160;&#160;&#160;
+                Yes, at No. <input type="text" name="interstate-operating-authority-number" value="{{ .company.MCNum }}">&#160;</p>
             <p style="position:absolute;top:857px;left:97px;white-space:nowrap" class="p4ft00">&#160;</p>
             <p style="position:absolute;top:871px;left:97px;white-space:nowrap" class="p4ft07">&#160;<br />9.&#160;</p>
             <p style="position:absolute;top:894px;left:151px;white-space:nowrap" class="p4ft03"><b>What type of commodities do you intend to transport?</b>&#160; &#160;</p>
@@ -660,12 +661,12 @@
             <p style="position:absolute;top:1035px;left:104px;white-space:nowrap" class="p4ft09">&#160;<br />&#160;<br />&#160;</p>
             <p style="position:absolute;top:110px;left:151px;white-space:nowrap" class="p4ft01"><input type="text" value="{{ .company.PhysicalAddress.Street }}" style="width:650px" name="physical-address-street"></p>
             <p style="position:absolute;top:161px;left:151px;white-space:nowrap" class="p4ft01"><input type="text" value="{{ .company.PhysicalAddress.City }}, {{ .company.PhysicalAddress.State }} {{ .company.PhysicalAddress.Zip }} " style="width:650px" name="physical-address-city-state-zip"></p>
-            <p style="position:absolute;top:213px;left:151px;white-space:nowrap" class="p4ft01"><input type="text" value="{{ .company.Phone }}" style="width:245px" name="telephone-number"></p>
-            <p style="position:absolute;top:213px;left:510px;white-space:nowrap" class="p4ft01"><input type="text" name="name" value="" style="width:265px"></p>
+            <p style="position:absolute;top:213px;left:151px;white-space:nowrap" class="p4ft01"><input type="text" value="{{ .company.ContactPhone }}" style="width:245px" name="telephone-number"></p>
+            <p style="position:absolute;top:213px;left:510px;white-space:nowrap" class="p4ft01"><input type="text" name="physical-address-county" value="{{ .company.PhysicalAddress.County }}" style="width:265px"></p>
             <p style="position:absolute;top:394px;left:151px;white-space:nowrap" class="p4ft01"><input type="text" name="mailing-address-street" value="{{ .company.MailingAddress.Street }}" style="width:650px"></p>
             <p style="position:absolute;top:443px;left:151px;white-space:nowrap" class="p4ft01"><input type="text" value="{{ .company.MailingAddress.City }}, {{ .company.MailingAddress.State }} {{ .company.MailingAddress.Zip }} " style="width:650px" name="mailing-address-city-state-zip"></p>
-            <p style="position:absolute;top:618px;left:151px;white-space:nowrap" class="p4ft01"><input type="text" name="name" value="" style="width:650px"></p>
-            <p style="position:absolute;top:670px;left:151px;white-space:nowrap" class="p4ft01"><input type="text" name="name" value="" style="width:650px"></p>
+            <p style="position:absolute;top:618px;left:151px;white-space:nowrap" class="p4ft01"><input type="text" name="attorney-name-telephone" value="" style="width:650px"></p>
+            <p style="position:absolute;top:670px;left:151px;white-space:nowrap" class="p4ft01"><input type="text" name="attorney-address" value="" style="width:650px"></p>
         </div>
         <br>
         <div id="page5-div" style="position:relative;width:918px;height:1188px;margin:0 auto;background-color:#ffffff;">
@@ -717,5 +718,8 @@
             <p style="position:absolute;top:1074px;left:97px;white-space:nowrap" class="p5ft02">&#160;</p>
         </div>
         <br>
+        <div style="position:relative;width:918px;margin:0 auto;">
+            {{ template "st-scripts.tmpl" . }}
+</div>
     </body>
 </html>

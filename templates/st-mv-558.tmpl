@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
     <head>
         <title>Page 1</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        {{ template "st-head.tmpl" . }}
         <style type="text/css">
             @media print {
             input,
@@ -157,13 +157,14 @@
 </style>
     </head>
     <body bgcolor="#A0A0A0" vlink="blue" link="blue">
-        {{ $vehicle := index .vehicles 0 }}
+        {{ $vehicle1 := index .vehicles 0 }}
+        {{ $vehicle2 := index .vehicles 1 }}
         <div id="page1-div" style="position:relative;width:918px;height:1188px;margin:0 auto;">
             <img width="918" height="1188" src="/static/img/forms/mv-558001.png" alt="background image" />
-            <p style="position:absolute;top:657px;left:152px;white-space:nowrap" class="p1ft00"><input type="radio" name="reason-lost" value=""></p>
-            <p style="position:absolute;top:657px;left:217px;white-space:nowrap" class="p1ft00"><input type="radio" name="reason-stolen" value=""></p>
-            <p style="position:absolute;top:657px;left:292px;white-space:nowrap" class="p1ft00"><input type="radio" name="reason-defaced" value=""></p>
-            <p style="position:absolute;top:657px;left:369px;white-space:nowrap" class="p1ft00"><input type="radio" name="reeson-never-received" value=""></p>
+            <p style="position:absolute;top:657px;left:152px;white-space:nowrap" class="p1ft00"><input type="radio" name="replacement-reason" value="reason-lost"></p>
+            <p style="position:absolute;top:657px;left:217px;white-space:nowrap" class="p1ft00"><input type="radio" name="replacement-reason" value="reason-stolen"></p>
+            <p style="position:absolute;top:657px;left:292px;white-space:nowrap" class="p1ft00"><input type="radio" name="replacement-reason" value="reason-defaced"></p>
+            <p style="position:absolute;top:657px;left:369px;white-space:nowrap" class="p1ft00"><input type="radio" name="replacement-reason" value="reason-never-received"></p>
             <p style="position:absolute;top:661px;left:80px;white-space:nowrap" class="p1ft01"><b>REASON:</b></p>
             <p style="position:absolute;top:197px;left:44px;white-space:nowrap" class="p1ft02"><b>CHECK&#160;(</b>4<b>)&#160;PROPER&#160;BLOCK</b></p>
             <p style="position:absolute;top:227px;left:76px;white-space:nowrap" class="p1ft020">Application&#160;for&#160;Duplicate&#160;Registration&#160;Card(s).&#160;Complete&#160;Sections&#160;A,&#160;B&#160;<b>and&#160;either&#160;</b>C&#160;or&#160;D.&#160;<br />Replacement&#160;of&#160;registration&#160;plate,&#160;renewal&#160;sticker&#160;or&#160;weight&#160;class&#160;sticker&#160;-&#160;Complete&#160;Sections&#160;A,&#160;B&#160;<b>and&#160;either&#160;</b>C&#160;or&#160;D.&#160;<b>NOTE:&#160;Section&#160;D&#160;must&#160;be&#160;completed</b></p>
@@ -245,7 +246,7 @@
             <p style="position:absolute;top:1132px;left:576px;white-space:nowrap" class="p1ft012">Signature&#160;of&#160;Co-Applicant/Title&#160;of&#160;Authorized&#160;Signer</p>
             <p style="position:absolute;top:660px;left:470px;white-space:nowrap" class="p1ft07">No&#160;fee&#160;is&#160;due&#160;if&#160;product&#160;was&#160;never&#160;received&#160;in&#160;the</p>
             <p style="position:absolute;top:670px;left:470px;white-space:nowrap" class="p1ft07">mail&#160;within&#160;90&#160;days&#160;from&#160;the&#160;original&#160;issuance&#160;date.</p>
-            <p style="position:absolute;top:657px;left:630px;white-space:nowrap" class="p1ft00"><input type="radio" name="reason-other" value=""></p>
+            <p style="position:absolute;top:657px;left:630px;white-space:nowrap" class="p1ft00"><input type="radio" name="replacement-reason" value="reason-other"></p>
             <p style="position:absolute;top:684px;left:167px;white-space:nowrap" class="p1ft014"><i><b>If&#160;the&#160;registration&#160;plate&#160;is&#160;lost&#160;or&#160;stolen,&#160;it&#160;must&#160;be&#160;reported&#160;to&#160;the&#160;State&#160;Police&#160;or&#160;your&#160;local&#160;law&#160;enforcement&#160;office.</b></i></p>
             <p style="position:absolute;top:570px;left:105px;white-space:nowrap" class="p1ft07">If&#160;changing&#160;address,&#160;acceptable&#160;proof&#160;of</p>
             <p style="position:absolute;top:581px;left:105px;white-space:nowrap" class="p1ft07">change&#160;must&#160;be&#160;provided.&#160;Proof&#160;must&#160;be</p>
@@ -270,8 +271,7 @@
             <p style="position:absolute;top:112px;left:45px;white-space:nowrap" class="p1ft08"><b>APPLICATION&#160;FOR&#160;DUPLICATE&#160;OR</b></p>
             <p style="position:absolute;top:134px;left:45px;white-space:nowrap" class="p1ft08"><b>REPLACEMENT&#160;OF&#160;APPORTIONED</b></p>
             <p style="position:absolute;top:157px;left:45px;white-space:nowrap" class="p1ft08"><b>REGISTRATION&#160;CREDENTIALS</b></p>
-            <p style="position:absolute;top:158px;left:620px;white-space:nowrap" class="p1ft09"><b>For&#160;Department&#160;Use&#160;Only</b></p>
-            <p style="position:absolute;top:171px;left:500px;white-space:nowrap" class="p1ft010">Bureau&#160;of&#160;Motor&#160;Vehicles&#160;•&#160;P.O.&#160;Box&#160;68286&#160;•&#160;Harrisburg,&#160;PA&#160;17106-8286</p>
+            <p style="position:absolute;top:158px;left:570px;white-space:nowrap;text-align:center" class="p1ft09"><b>For&#160;Department&#160;Use&#160;Only</b> <br>Bureau&#160;of&#160;Motor&#160;Vehicles&#160;•&#160;P.O.&#160;Box&#160;68286&#160;•&#160;Harrisburg,&#160;PA&#160;17106-8286</p>
             <p style="position:absolute;top:360px;left:75px;white-space:nowrap" class="p1ft00"><input type="checkbox" name="name" value=""></p>
             <p style="position:absolute;top:365px;left:94px;white-space:nowrap" class="p1ft07">If&#160;requesting&#160;replacements</p>
             <p style="position:absolute;top:375px;left:94px;white-space:nowrap" class="p1ft07">for&#160;the&#160;entire&#160;fleet&#160;check</p>
@@ -286,28 +286,28 @@
             <p style="position:absolute;top:459px;left:781px;white-space:nowrap" class="p1ft07">MO:</p>
             <p style="position:absolute;top:459px;left:835px;white-space:nowrap" class="p1ft07">YR:</p>
             <p style="position:absolute;top:338px;left:75px;white-space:nowrap" class="p1ft015"><input type="text" value="27" style="width:118px;" name="arp-account-number"></p>
-            <p style="position:absolute;top:338px;left:205px;white-space:nowrap" class="p1ft015"><input type="text" value="{{ $vehicle.UnitNumber }}" style="width:119px;" name="equipment-number-1"></p>
-            <p style="position:absolute;top:375px;left:205px;white-space:nowrap" class="p1ft015"><input type="text" name="equipment-number-2" style="width:119px;"></p>
+            <p style="position:absolute;top:338px;left:205px;white-space:nowrap" class="p1ft015"><input type="text" value="{{ $vehicle1.UnitNumber }}" style="width:119px;" name="equipment-number-1"></p>
+            <p style="position:absolute;top:375px;left:205px;white-space:nowrap" class="p1ft015"><input type="text" name="equipment-number-2" style="width:119px;" value="{{ $vehicle2.UnitNumber }}"></p>
             <p style="position:absolute;top:411px;left:205px;white-space:nowrap" class="p1ft015"><input type="text" name="equipment-number-3" style="width:119px;"></p>
             <p style="position:absolute;top:450px;left:205px;white-space:nowrap" class="p1ft015"><input type="text" name="equipment-number-4" style="width:119px;"></p>
-            <p style="position:absolute;top:340px;left:336px;white-space:nowrap" class="p1ft017"><input type="text" style="width:115px;" name="title-number-1" value="{{ $vehicle.Title }}"></p>
-            <p style="position:absolute;top:377px;left:336px;white-space:nowrap" class="p1ft017"><input type="text" name="title-number-2" style="width:115px;"></p>
+            <p style="position:absolute;top:340px;left:336px;white-space:nowrap" class="p1ft017"><input type="text" style="width:115px;" name="title-number-1" value="{{ $vehicle1.Title }}"></p>
+            <p style="position:absolute;top:377px;left:336px;white-space:nowrap" class="p1ft017"><input type="text" name="title-number-2" style="width:115px;" value="{{ $vehicle2.Title }}"></p>
             <p style="position:absolute;top:413px;left:336px;white-space:nowrap" class="p1ft017"><input type="text" name="title-number-3" style="width:115px;"></p>
             <p style="position:absolute;top:452px;left:336px;white-space:nowrap" class="p1ft017"><input type="text" name="title-number-4" style="width:115px;"></p>
-            <p style="position:absolute;top:340px;left:462px;white-space:nowrap" class="p1ft017"><input type="text" name="vin-1" style="width:170px;" value="{{ $vehicle.VIN }}"></p>
-            <p style="position:absolute;top:377px;left:462px;white-space:nowrap" class="p1ft017"><input type="text" name="vin-2" style="width:170px;"></p>
+            <p style="position:absolute;top:340px;left:462px;white-space:nowrap" class="p1ft017"><input type="text" name="vin-1" style="width:170px;" value="{{ $vehicle1.VIN }}"></p>
+            <p style="position:absolute;top:377px;left:462px;white-space:nowrap" class="p1ft017"><input type="text" name="vin-2" style="width:170px;" value="{{ $vehicle2.VIN }}"></p>
             <p style="position:absolute;top:413px;left:462px;white-space:nowrap" class="p1ft017"><input type="text" name="vin-3" style="width:170px;"></p>
             <p style="position:absolute;top:452px;left:462px;white-space:nowrap" class="p1ft017"><input type="text" name="vin-4" style="width:170px;"></p>
-            <p style="position:absolute;top:340px;left:644px;white-space:nowrap" class="p1ft017"><input type="text" style="width:128px;" name="registration-plate-number-1" value="{{ $vehicle.PlateNum }}"></p>
-            <p style="position:absolute;top:377px;left:644px;white-space:nowrap" class="p1ft017"><input type="text" name="registration-plate-number-2" style="width:128px;"></p>
+            <p style="position:absolute;top:340px;left:644px;white-space:nowrap" class="p1ft017"><input type="text" style="width:128px;" name="registration-plate-number-1" value="{{ $vehicle1.PlateNum }}"></p>
+            <p style="position:absolute;top:377px;left:644px;white-space:nowrap" class="p1ft017"><input type="text" name="registration-plate-number-2" style="width:128px;" value="{{ $vehicle2.PlateNum }}"></p>
             <p style="position:absolute;top:413px;left:644px;white-space:nowrap" class="p1ft017"><input type="text" name="registration-plate-number-3" style="width:128px;"></p>
             <p style="position:absolute;top:452px;left:644px;white-space:nowrap" class="p1ft017"><input type="text" name="registration-plate-number-4" style="width:128px;"></p>
-            <p style="position:absolute;top:340px;left:796px;white-space:nowrap" class="p1ft017"><input type="text" style="width:35px;" name="expiration-month-1" value="{{ $vehicle.PlateExpireMonth }}"></p>
-            <p style="position:absolute;top:377px;left:796px;white-space:nowrap" class="p1ft017"><input type="text" name="expiration-month-2" style="width:35px;"></p>
+            <p style="position:absolute;top:340px;left:796px;white-space:nowrap" class="p1ft017"><input type="text" style="width:35px;" name="expiration-month-1" value="{{ $vehicle1.PlateExpireMonth }}"></p>
+            <p style="position:absolute;top:377px;left:796px;white-space:nowrap" class="p1ft017"><input type="text" name="expiration-month-2" style="width:35px;" value="{{ $vehicle2.PlateExpireMonth }}"></p>
             <p style="position:absolute;top:413px;left:796px;white-space:nowrap" class="p1ft017"><input type="text" name="expiration-month-3" style="width:35px;"></p>
             <p style="position:absolute;top:452px;left:796px;white-space:nowrap" class="p1ft017"><input type="text" name="expiration-month-4" style="width:35px;"></p>
-            <p style="position:absolute;top:340px;left:850px;white-space:nowrap" class="p1ft017"><input type="text" name="expiration-year-1" style="width:23px;" value="{{ $vehicle.PlateExpireYear }}"></p>
-            <p style="position:absolute;top:377px;left:850px;white-space:nowrap" class="p1ft017"><input type="text" name="expiration-year-2" style="width:23px;"></p>
+            <p style="position:absolute;top:340px;left:850px;white-space:nowrap" class="p1ft017"><input type="text" name="expiration-year-1" style="width:23px;" value="{{ $vehicle1.PlateExpireYear }}"></p>
+            <p style="position:absolute;top:377px;left:850px;white-space:nowrap" class="p1ft017"><input type="text" name="expiration-year-2" style="width:23px;" value="{{ $vehicle2.PlateExpireYear }}"></p>
             <p style="position:absolute;top:413px;left:850px;white-space:nowrap" class="p1ft017"><input type="text" name="expiration-year-3" style="width:23px;"></p>
             <p style="position:absolute;top:452px;left:850px;white-space:nowrap" class="p1ft017"><input type="text" name="expiration-year-4" style="width:23px;"></p>
             <p style="position:absolute;top:487px;left:77px;white-space:nowrap" class="p1ft019"><input type="text" name="owner-last-name" value="{{ .company.Name }}" style="width:235px"></p>
@@ -329,6 +329,7 @@
         </div>
         <br>
         <div id="page2-div" style="position:relative;width:918px;height:1188px;margin:0 auto;background-color:#ffffff;">
+            <!-- <img width="918" height="1188" src="mv-558002.png" alt="background image" /> -->
             <p style="position:absolute;top:24px;left:345px;white-space:nowrap" class="p2ft00"><b>GENERAL&#160;INSTRUCTIONS</b></p>
             <p style="position:absolute;top:58px;left:35px;white-space:nowrap" class="p2ft01">1.&#160;Complete&#160;&#160;applicant&#160;&#160;and&#160;&#160;vehicle&#160;&#160;information&#160;&#160;exactly&#160;&#160;as&#160;&#160;it&#160;&#160;appears&#160;&#160;on&#160;&#160;current&#160;&#160;registration&#160;&#160;card.&#160;&#160;Print&#160;&#160;address</p>
             <p style="position:absolute;top:78px;left:62px;white-space:nowrap" class="p2ft01">change&#160;in&#160;space&#160;provided,&#160;if&#160;applicable.&#160;Individuals&#160;should&#160;list&#160;their&#160;PA&#160;Driver’s&#160;License&#160;(PA&#160;DL)&#160;or&#160;Photo&#160;ID&#160;#&#160;in</p>
@@ -385,5 +386,10 @@
         <div id="page3-div" style="position:relative;width:918px;height:1188px; margin:0 auto;background-color:#ffffff;">
             <p style="position:absolute;top:24px;left:38px;white-space:nowrap" class="p3ft00">In&#160;state:&#160;1-800-932-4600&#160;F&#160;TDD:&#160;1-800-228-0676&#160;F&#160;Out-of-State:&#160;1-717-412-5300&#160;F&#160;TDD&#160;Out-of-State:&#160;1-717-412-5380</p>
         </div>
+
+        <div style="position:relative;width:918px;margin:0 auto;">
+            {{ template "st-scripts.tmpl" . }}
+        </div>
+
     </body>
 </html>

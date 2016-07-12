@@ -2,7 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
     <head>
         <title>Page 1</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+        {{ template "st-head.tmpl" . }}
+
         <style type="text/css">
             @media print {
             input,
@@ -383,7 +385,7 @@
             <p style="position:absolute;top:831px;left:384px;white-space:nowrap" class="p1ft08"><input type="text" name="vehicle-equipment-number" value="{{ $vehicle.VehicleType }}" style="width:96px;"></p>
             <p style="position:absolute;top:831px;left:492px;white-space:nowrap" class="p1ft08"><input type="text" name="vehicle-year-make" value="{{ $vehicle.Year }} {{ $vehicle.Make }}" style="width:95px;"></p>
             <p style="position:absolute;top:831px;left:598px;white-space:nowrap" class="p1ft08"><input type="text" name="vehicle-body-type" value="{{ $vehicle.GetBodyType }}" style="width:97px;"></p>
-            <p style="position:absolute;top:831px;left:706px;white-space:nowrap" class="p1ft08"><input type="text" name="vehicle-axles" value="{{ $vehicle.AxelAmmount }}" style="width:97px;"></p>
+            <p style="position:absolute;top:831px;left:706px;white-space:nowrap" class="p1ft08"><input type="text" name="vehicle-axles" value="{{ $vehicle.AxleAmount }}" style="width:97px;"></p>
             <p style="position:absolute;top:831px;left:815px;white-space:nowrap" class="p1ft08"><input type="text" name="vehicle-fuel" value="{{ $vehicle.FuelType }}" style="width:58px;"></p>
             <p style="position:absolute;top:860px;left:73px;white-space:nowrap" class="p1ft09"><input type="text" name="vehicle-unladen-weight" value="{{ $vehicle.UnladenWeight }}" style="width:83px;"></p>
             <p style="position:absolute;top:860px;left:168px;white-space:nowrap" class="p1ft09"><input type="text" value="{{ $vehicle.GVW }}" style="width:130px;" name="vehicle-request-gvw"></p>
@@ -431,5 +433,9 @@
             <p style="position:absolute;top:1117px;left:300px;white-space:nowrap" class="p2ft02"><b>Visit us at www.dmv.state.pa.us or call us at:</b></p>
             <p style="position:absolute;top:1136px;left:56px;white-space:nowrap" class="p2ft01">In state: 1-800-932-4600&#160;u&#160;TDD: &#160;1-800-228-0676&#160;u&#160;Out-of-State: 1-717-412-5300&#160;u&#160;TDD Out-of-State: &#160;1-717-412-5380</p>
         </div>
+        <div style="position:relative;width:918px;margin:0 auto;">
+            {{ template "st-scripts.tmpl" . }}
+        </div>
+
     </body>
 </html>
