@@ -12,7 +12,7 @@
             <li>
                 <a href="/cns/driver"><i class="ion-man text-center"></i><span class="nav-label">Driver</span></a>
             </li>
-            {{ if eq .session.ROLE "ADMIN" }}
+            {{ if eq .session.ROLE "ADMIN" "DEVELOPER" }}
                 <li>
                     <a href="/cns/employee"><i class="ion-person text-center"></i><span class="nav-label">Employee</span></a>
                 </li>
