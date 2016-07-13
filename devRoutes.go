@@ -6,10 +6,6 @@ import (
 	"github.com/cagnosolutions/web"
 )
 
-func init() {
-	mx.AddSecureRoutes(DEVELOPER, DevComments)
-}
-
 var DevComments = web.Route{"GET", "/dev/comment", func(w http.ResponseWriter, r *http.Request) {
 	var comments []Comment
 	db.All("comment", &comments)

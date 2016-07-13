@@ -10,10 +10,6 @@ import (
 	"github.com/cagnosolutions/web"
 )
 
-func init() {
-	mx.AddRoutes(files, filesApi, uploadApi)
-}
-
 type Node struct {
 	Id       string `json:"id,omitempty"`
 	Text     string `json:"text,omitempty"`

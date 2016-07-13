@@ -16,10 +16,6 @@ const (
 	VperC = 5
 )
 
-func init() {
-	mx.AddRoutes(makeUsers, upload, buttons, uploader, notify, alert, form)
-}
-
 func defaultUsers() {
 
 	developer := Employee{
@@ -249,4 +245,8 @@ var alert = web.Route{"GET", "/alert", func(w http.ResponseWriter, r *http.Reque
 
 var form = web.Route{"GET", "/form", func(w http.ResponseWriter, r *http.Request) {
 	tc.Render(w, r, "form-advanced.tmpl", nil)
+}}
+
+var httpError = web.Route{"GET", "/http/error", func(w http.ResponseWriter, r *http.Request) {
+	tc.Render(w, r, "error.tmpl", nil)
 }}

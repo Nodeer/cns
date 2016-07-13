@@ -15,9 +15,8 @@ import (
 )
 
 // global vars
-var mx *web.Mux = web.NewMux()
 var tc *web.TmplCache
-
+var mx *web.Mux
 var db *adb.DB = adb.NewDB()
 
 // initialize routes
@@ -32,8 +31,29 @@ func init() {
 	db.AddStore("note")
 	db.AddStore("comment")
 
+	web.DEFAULT_ERR_ROUTE = web.Route{"GET", "/error/:code", func(w http.ResponseWriter, r *http.Request) {
+		code, err := strconv.Atoi(r.FormValue(":code"))
+		if err != nil {
+			code = 500
+		}
+		var page = ""
+		switch web.GetRole(r) {
+		case "DEVELOPER", "ADMIN":
+			page = HTTP_ERROR_ADMIN
+		case "EMPLOYEE":
+			page = HTTP_ERROR_EMPLOYEE
+		default:
+			page = HTTP_ERROR_DEFAULT
+		}
+		w.Header().Set("Content-Type", "text/html; utf-8")
+		fmt.Fprintf(w, page, code, http.StatusText(int(code)), code)
+		return
+	}}
+
+	mx = web.NewMux()
+
 	// unsecure routes
-	mx.AddRoutes(login, loginPost, logout, GetComment, PostComent)
+	mx.AddRoutes(login, loginPost, logout)
 
 	// main page
 	mx.AddSecureRoutes(EMPLOYEE, index)
@@ -58,6 +78,11 @@ func init() {
 	// update session
 	mx.AddSecureRoutes(ALL, updateSession)
 
+	// development routes
+	mx.AddSecureRoutes(DEVELOPER, DevComments)
+	mx.AddRoutes(makeUsers, GetComment, PostComent)
+	mx.AddRoutes(files, filesApi, uploadApi, httpError)
+
 	web.Funcs["lower"] = strings.ToLower
 	web.Funcs["size"] = PrettySize
 	web.Funcs["formatDate"] = FormatDate
@@ -65,6 +90,7 @@ func init() {
 	web.Funcs["title"] = strings.Title
 	tc = web.NewTmplCache()
 	defaultUsers()
+
 }
 
 // main http listener
