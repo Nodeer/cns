@@ -30,7 +30,7 @@
                             Comments
                         </p>
 
-                        <table id="comments" class="table table-bordered table-hover" style="background-color:white;">
+                        <table id="comments" class="table-responsive table table-bordered table-hover" width="100%" style="width: 100%;background-color:white;" width="100%">
                             <thead>
                                 <tr id="search">
                                     <th></th>
@@ -87,7 +87,7 @@
 
             var table = $('#comments').DataTable({
                 "lengthMenu":[10,15,20],
-                "dom": 'lrtip',
+                //"dom": 'lrtip',
                 "columnDefs": [
                     { "name": "url","targets": 1 },
                     { "name": "page","targets": 2 },

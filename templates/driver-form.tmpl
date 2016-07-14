@@ -69,7 +69,7 @@
                                 		</div>
                                         <div class="col-lg-8">
                                             <div class="table-responsive">
-                                                <table id="formsTable" class="table table-bordered table-hover">
+                                                <table id="formsTable" width="100%" style="width: 100%" class="table table-bordered table-hover">
                                                     <thead>
                                                         <tr id="search">
                                                             <th>dqf</th>
@@ -122,7 +122,7 @@
 
             var table = $('#formsTable').DataTable({
                 "lengthMenu":[5,10,15,20],
-                "dom": 'lrtip',
+                //"dom": 'lrtip',
                 "columnDefs": [
                     { "orderable": false, "targets": [1,2] },
                     { "name": "dqf",      "targets": 0 }

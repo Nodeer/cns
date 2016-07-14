@@ -45,7 +45,7 @@
                                         <span class="pull-right">
                                             <a href="/cns/driver/new?cid={{ .company.Id }}">Add <i class="fa fa-plus"></i></a>
                                         </span>
-                                        <table id="driversTable" class="table table-bordered table-hover" style="background-color:white;">
+                                        <table id="driversTable" class="table table-bordered table-hover" width="100%" style="width: 100%;background-color:white;">
                                             <thead>
                                                 <tr id="search">
                                                     <th></th>
@@ -97,7 +97,7 @@
 
             var table = $('#driversTable').DataTable({
                 "lengthMenu":[5,10,15,20],
-                "dom": 'lrtip',
+                //"dom": 'lrtip',
                 "columnDefs": [
                     { "orderable": false, "targets": [3] },
                     { "name": "email",    "targets": 2 },

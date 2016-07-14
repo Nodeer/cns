@@ -17,3 +17,21 @@
 		});
 	</script>
 {{ end }}
+<script type="text/javascript">
+	$('#collapse').click(function() {
+		$.ajax({
+			url: "/collapse",
+			type: "GET",
+			success:function(resp) {
+				if (resp.error) {
+					console.log('error');
+					return
+				}
+				console.log('success');
+			},
+			error: function(e, e2) {
+				console.log(e2);
+			}
+		})
+	});
+</script>

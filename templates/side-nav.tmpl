@@ -1,11 +1,20 @@
-<aside class="left-panel">
+<aside class="left-panel {{ if .session.collapse }}collapsed{{ end }}">
     <div class="logo">
         <a class="logo-expanded">
             <span class="nav-label">CNS Internal</span>
+            <!-- <button type="button" class="navbar-toggle" style="margin-top: 0;">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button> -->
         </a>
     </div>
     <nav class="navigation">
         <ul class="list-unstyled">
+            <li>
+                <a id="collapse" class="navbar-toggle"><i class="fa fa-bars text-center"></i><span class="nav-label">Collapse</span></a>
+            </li>
             <li>
                 <a href="/cns/company"><i class="fa fa-building-o text-center"></i><span class="nav-label">Customer</span></a>
             </li>

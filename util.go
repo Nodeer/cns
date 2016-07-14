@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // setup quick notes
@@ -170,4 +171,13 @@ func ToJson(v interface{}) string {
 		return ""
 	}
 	return string(b)
+}
+
+func IdTime(id string) string {
+	idT, err := strconv.Atoi(id)
+	if err != nil || idT == 0 {
+		return ""
+	}
+	t := time.Unix(0, int64(idT))
+	return t.Format("01/02/2006 03:04 PM")
 }

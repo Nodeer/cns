@@ -153,7 +153,14 @@
                                                                             <td>
                                                                                 {{ $note.Body }}
                                                                             </td>
-                                                                            <td>{{ $note.StartTimePretty }}</td>
+                                                                            <td>
+                                                                                Recored Time:<br>
+                                                                                {{ $note.StartTimePretty }}
+                                                                            </td>
+                                                                            <td>
+                                                                                Saved Time:<br>
+                                                                                {{ idTime $note.Id }}
+                                                                            </td>
                                                                         </tr>
                                                                     {{ end }}
                                                                 </tbody>
@@ -522,12 +529,13 @@
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label>Communication</label>
-                                        <select id="communication" class="form-control input-sm" name="communication">
+                                        <select id="communication" class="form-control input-sm">
                                             <option value="called">Called</option>
                                             <option value="emailed">Emailed</option>
                                             <option value="walkIn">Walked In</option>
                                             <option value="other">Other</option>
                                         </select>
+                                        <input id="communication" type="hidden" name="communication" value="called">
                                     </div>
                                     <div class="form-group">
                                         <label>Representative</label>
@@ -546,13 +554,14 @@
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label class="">Pupose</label>
-                                        <select id="purpose" class="form-control input-sm" name="purpose">
+                                        <select id="purpose" class="form-control input-sm">
                                             <option value="question">Question</option>
                                             <option value="service">Service</option>
                                             <option value="sales">Sales</option>
                                             <option value="consult">Consult</option>
                                             <option value="other">Other</option>
                                         </select>
+                                        <input id="purpose" type="hidden" name="purpose" value="question">
                                     </div>
                                     <div class="form-group">
                                         <label>Call Back Phone Number</label>
@@ -568,6 +577,7 @@
                                                 <option value="{{ $employee.Id }}" {{ if eq $userId $employee.Id }}selected{{ end }}>{{ $employee.FirstName }} {{ $employee.LastName }}</option>
                                             {{ end }}
                                         </select>
+                                        <input id="employeeId" type="hidden" name="employeeId" value="{{ .userId }}">
                                     </div>
                                     <div class="form-group">
                                         <label>Email Another Employee</label><br>
@@ -631,9 +641,6 @@
             </div>
         </div>
 
-
-
-
         <div id="session-warning-modal" class="modal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -651,15 +658,11 @@
             </div>
         </div>
 
-
-
         <!-- Main Content Ends -->
 
         {{ template "scripts.tmpl" . }}
 
         <script src="/static/js/jquery.scrollTo.min.js"></script>
-
-        <!-- <script src="/static/toggles/toggles.min.js"></script> -->
         <script src="/static/date-time-picker/moment-with-locales.js" charset="utf-8"></script>
         <script type="text/javascript" src="/static/date-time-picker/bootstrap-datetimepicker.js"></script>
         <script src="/static/timepicker/bootstrap-datepicker.js"></script>
@@ -722,8 +725,6 @@
                     $('#carrierTypeOther').addClass('hide');
                     $('#carrierTypeOther').prop('required', false);
                 }
-
-
             });
 
             if (newComp) {
@@ -744,7 +745,13 @@
 
             $('#noteModal').on('hidden.bs.modal', function (e) {
                 $('form#noteForm')[0].reset();
-                $('form#noteForm input, select').removeAttr('readonly');
+                $('form#noteForm input').removeAttr('readonly');
+                $('form#noteForm select').removeAttr('disabled');
+                $('form#noteForm div#pre-body').html('');
+
+                $('form#noteForm input#communication').val('called');
+                $('form#noteForm input#purpose').val('question');
+                $('form#noteForm input#employeeId').val('{{ .userId }}');
             })
 
             $(document).on('click', 'tr.clickable', function() {
@@ -757,9 +764,9 @@
                     return
                 }
                 $('form#noteForm input#dateTime').val(note.startTimePretty);
-                $('form#noteForm select#communication').val(note.communication);
-                $('form#noteForm select#purpose').val(note.purpose);
-                $('form#noteForm select#employeeId').val(note.employeeId);
+                $('form#noteForm input#communication').val(note.communication);
+                $('form#noteForm input#purpose').val(note.purpose);
+                $('form#noteForm input#employeeId').val(note.employeeId);
                 $('form#noteForm input#representative').val(note.representative);
                 $('form#noteForm input#callBack').val(note.callBack);
                 $('form#noteForm div#pre-body').html('Previous Note:<br><span id="pre-body">' + note.body + '</span><br><br>');
@@ -771,7 +778,8 @@
                 if (note.billable) {
                     $('form#noteForm input#billableTrue')[0].checked = true;
                 }
-                $('form#noteForm input, select').attr('readonly', 'readonly');
+                $('form#noteForm input').attr('readonly', 'readonly');
+                $('form#noteForm select').attr('disabled', 'disabled');
                 $('#noteModal').modal('show');
             });
 
@@ -786,6 +794,11 @@
             $('#addNote').click(function() {
                 $('form#noteForm input#dateTime').val(moment().format('MM/DD/YYYY hh:mm A'));
                 $('#noteModal').modal('show');
+            });
+
+            $('form#noteForm select').change(function() {
+                var s = $(this);
+                $('form#noteForm input#' + s.attr('id')).val(s.val());
             });
 
             $('form#noteForm').submit(function(e) {

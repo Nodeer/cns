@@ -15,7 +15,6 @@ import (
 )
 
 var index = web.Route{"GET", "/", func(w http.ResponseWriter, r *http.Request) {
-	//tc.Render(w, r, "index.tmpl", web.Model{})
 	http.Redirect(w, r, "/cns/company", 303)
 }}
 
@@ -23,6 +22,7 @@ var index = web.Route{"GET", "/", func(w http.ResponseWriter, r *http.Request) {
 
 var allEmployee = web.Route{"GET", "/cns/employee", func(w http.ResponseWriter, r *http.Request) {
 	var employees []Employee
+	// get all "employees" except the default logins
 	db.TestQuery("employee", &employees, adb.Gt("id", `"1"`))
 	tc.Render(w, r, "employee-all.tmpl", web.Model{
 		"employees": employees,
@@ -32,12 +32,9 @@ var allEmployee = web.Route{"GET", "/cns/employee", func(w http.ResponseWriter, 
 var viewEmployee = web.Route{"GET", "/cns/employee/:id", func(w http.ResponseWriter, r *http.Request) {
 	var employee Employee
 	employeeId := r.FormValue(":id")
-	if employeeId != "add" {
-		ok := db.Get("employee", r.FormValue(":id"), &employee)
-		if !ok {
-			web.SetErrorRedirect(w, r, "/employee", "Error finding employee")
-			return
-		}
+	if employeeId != "new" && !db.Get("employee", employeeId, &employee) {
+		web.SetErrorRedirect(w, r, "/employee", "Error finding employee")
+		return
 	}
 	tc.Render(w, r, "employee.tmpl", web.Model{
 		"employee": employee,
@@ -77,14 +74,14 @@ var companyAll = web.Route{"GET", "/cns/company", func(w http.ResponseWriter, r 
 var companyView = web.Route{"GET", "/cns/company/:id", func(w http.ResponseWriter, r *http.Request) {
 	var company Company
 	compId := r.FormValue(":id")
-	if !db.Get("company", compId, &company) && compId != "new" {
+	if compId != "new" && !db.Get("company", compId, &company) {
 		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
 		return
 	}
-	var notes NoteRevSort
+	var notes NoteSort
 	var employees []Employee
 	db.TestQuery("note", &notes, adb.Eq("companyId", `"`+company.Id+`"`))
-	sort.Stable(notes)
+	sort.Stable(sort.Reverse(notes))
 	db.All("employee", &employees)
 	tc.Render(w, r, "company.tmpl", web.Model{
 		"company":       company,
@@ -112,8 +109,7 @@ var companyVehicle = web.Route{"GET", "/cns/company/:id/vehicle", func(w http.Re
 	var company Company
 	var vehicles []Vehicle
 	compId := r.FormValue(":id")
-	ok := db.Get("company", compId, &company)
-	if !ok {
+	if !db.Get("company", compId, &company) {
 		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
 		return
 	}
@@ -129,8 +125,7 @@ var companyDriver = web.Route{"GET", "/cns/company/:id/driver", func(w http.Resp
 	var company Company
 	var drivers []Driver
 	compId := r.FormValue(":id")
-	ok := db.Get("company", compId, &company)
-	if !ok {
+	if !db.Get("company", compId, &company) {
 		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
 		return
 	}
@@ -219,7 +214,7 @@ var companyVehicleView = web.Route{"GET", "/cns/company/:compId/vehicle/:vId", f
 	}
 	vehicleId := r.FormValue(":vId")
 	var vehicle Vehicle
-	if !db.Get("vehicle", vehicleId, &vehicle) && vehicleId != "new" {
+	if vehicleId != "new" && !db.Get("vehicle", vehicleId, &vehicle) {
 		web.SetErrorRedirect(w, r, "/cns/company/"+compId+"/vehicle", "Error finding vehicle")
 		return
 	}
@@ -297,10 +292,7 @@ var companyFormDel = web.Route{"POST", "/cns/company/:companyId/form/:formId", f
 
 var allDriver = web.Route{"GET", "/cns/driver", func(w http.ResponseWriter, r *http.Request) {
 	var drivers []Driver
-	ok := db.TestQuery("driver", &drivers, adb.Eq("role", "DRIVER"))
-	if !ok {
-		fmt.Println("error")
-	}
+	db.All("driver", &drivers)
 	tc.Render(w, r, "driver-all.tmpl", web.Model{
 		"drivers": drivers,
 	})
@@ -309,7 +301,7 @@ var allDriver = web.Route{"GET", "/cns/driver", func(w http.ResponseWriter, r *h
 var viewDriver = web.Route{"GET", "/cns/driver/:id", func(w http.ResponseWriter, r *http.Request) {
 	var driver Driver
 	driverId := r.FormValue(":id")
-	if !db.Get("driver", driverId, &driver) && driverId != "new" {
+	if driverId != "new" && !db.Get("driver", driverId, &driver) {
 		web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
 		return
 	}
@@ -318,10 +310,8 @@ var viewDriver = web.Route{"GET", "/cns/driver/:id", func(w http.ResponseWriter,
 	if driverId == "new" && r.FormValue("cid") == "" {
 		web.SetErrorRedirect(w, r, "/cns/company", "Error adding new driver. Please try again")
 		return
-	} else {
-		db.Get("company", driver.CompanyId, &company)
-
 	}
+	db.Get("company", driver.CompanyId, &company)
 
 	tc.Render(w, r, "driver.tmpl", web.Model{
 		"driver":    driver,
@@ -334,8 +324,7 @@ var driverForms = web.Route{"GET", "/cns/driver/:id/form", func(w http.ResponseW
 	var driver Driver
 	driverId := r.FormValue(":id")
 	var docs []Document
-	ok := db.Get("driver", driverId, &driver)
-	if !ok || driver.Role != "DRIVER" {
+	if !db.Get("driver", driverId, &driver) {
 		web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
 		return
 	}

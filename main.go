@@ -76,7 +76,7 @@ func init() {
 	mx.AddSecureRoutes(ALL, viewDocument, saveDocument, completeDocument, documentDel)
 
 	// update session
-	mx.AddSecureRoutes(ALL, updateSession)
+	mx.AddSecureRoutes(ALL, updateSession, collapse)
 
 	// development routes
 	mx.AddSecureRoutes(DEVELOPER, DevComments)
@@ -88,6 +88,7 @@ func init() {
 	web.Funcs["formatDate"] = FormatDate
 	web.Funcs["toJson"] = ToJson
 	web.Funcs["title"] = strings.Title
+	web.Funcs["idTime"] = IdTime
 	tc = web.NewTmplCache()
 	defaultUsers()
 
@@ -118,6 +119,7 @@ var loginPost = web.Route{"POST", "/login", func(w http.ResponseWriter, r *http.
 	sess := web.Login(w, r, employee.Role)
 	sess["id"] = employee.Id
 	sess["email"] = employee.Email
+	sess["collapse"] = false
 	web.PutMultiSess(w, r, sess)
 	redirect := "/cns/company"
 	if employee.Home != "" {
@@ -128,6 +130,16 @@ var loginPost = web.Route{"POST", "/login", func(w http.ResponseWriter, r *http.
 }}
 
 var updateSession = web.Route{"POST", "/updateSession", func(w http.ResponseWriter, r *http.Request) {
+	return
+}}
+
+var collapse = web.Route{"GET", "/collapse", func(w http.ResponseWriter, r *http.Request) {
+	if web.GetSess(r, "collapse").(bool) {
+		web.PutSess(w, r, "collapse", false)
+	} else {
+		web.PutSess(w, r, "collapse", true)
+	}
+	ajaxResponse(w, `{"error":false}`)
 	return
 }}
 

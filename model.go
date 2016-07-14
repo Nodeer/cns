@@ -312,17 +312,17 @@ type Note struct {
 	Body            string `json:"body,omitempty"`
 }
 
-type NoteRevSort []Note
+type NoteSort []Note
 
-func (n NoteRevSort) Len() int {
+func (n NoteSort) Len() int {
 	return len(n)
 }
 
-func (n NoteRevSort) Less(i, j int) bool {
-	return n[i].StartTime > n[j].StartTime
+func (n NoteSort) Less(i, j int) bool {
+	return n[i].StartTime < n[j].StartTime
 }
 
-func (n NoteRevSort) Swap(i, j int) {
+func (n NoteSort) Swap(i, j int) {
 	n[i], n[j] = n[j], n[i]
 }
 

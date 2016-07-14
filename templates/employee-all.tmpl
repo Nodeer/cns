@@ -31,11 +31,11 @@
                         <p class="lead">
                             Employees
                             <span class="pull-right">
-                                <a href="/cns/employee/add">Add <i class="fa fa-plus"></i></a>
+                                <a href="/cns/employee/new">Add <i class="fa fa-plus"></i></a>
                             </span>
                         </p>
 
-                        <table id="employees" class="table table-bordered table-hover" style="background-color:white;">
+                        <table id="employees" class="table table-bordered table-hover" width="100%" style="width: 100%;background-color:white;">
                             <thead>
                                 <tr id="search">
                                     <th></th>
@@ -81,7 +81,7 @@
         <script type="text/javascript">
             var table = $('#employees').DataTable({
                 "lengthMenu":[10,15,20],
-                "dom": 'lrtip',
+                //"dom": 'lrtip',
                 "columnDefs": [
                     { "orderable": false, "targets": [3] },
                     { "name": "name",     "targets": 1 },

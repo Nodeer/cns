@@ -53,50 +53,35 @@
                                                             Add
                                                             <i class="fa fa-plus"></i>
                                                         </button>
-                            							<!-- <button id="addDoc" data-added="0" data-docId="{{ index $form 0 }}" class="btn-default btn btn-xs pull-right check">
-                            								<i class="fa fa-check"></i>
-                            							</button> -->
                             						</p>
                             					{{ end }}
-                                                <!-- <p>
-                            						<form id="documentForm" class="text-center" method="post" action="/cns/company/{{ .company.Id }}/form">
-                            							<input type="hidden"  id="docIds" name="docIds">
-                                                        <div class="form-group">
-                                                            <button id="done" class="btn btn-md btn-primary btn-block" type="submit" disabled="disabled">
-                                                                Please Select Forms
-                                                            </button>
-                                                        </div>
-                            						</form>
-                                                </p> -->
                             				</div>
                                 		</div>
                                         <div class="col-lg-9">
-                                            <div class="table-responsive">
-                                                <table id="formsTable" class="table table-bordered table-hover">
-                                                    <thead>
-                                                        <tr id="search">
-                                                            <th>form</th>
-                                                            <th></th>
-                                                            <th></th>
+                                            <table id="formsTable" width="100%" style="width: 100%;" class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr id="search">
+                                                        <th>form</th>
+                                                        <th></th>
+                                                        <th></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Form</th>
+                                                        <th>Complete</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {{ $company := .company }}
+                                                    {{ range $doc := .docs }}
+                                                        <tr class="clickable" data-url="/document/{{ $doc.Id }}">
+                                                            <td>{{ $doc.Name }}</td>
+                                                            <td>{{ $doc.Complete }}</td>
+                                                            <td class="text-center"><a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ $company.Id }}/{{ $doc.Id }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
                                                         </tr>
-                                                        <tr>
-                                                            <th>Form</th>
-                                                            <th>Complete</th>
-                                                            <th></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {{ $company := .company }}
-                                                        {{ range $doc := .docs }}
-                                                            <tr class="clickable" data-url="/document/{{ $doc.Id }}">
-                                                                <td>{{ $doc.Name }}</td>
-                                                                <td>{{ $doc.Complete }}</td>
-                                                                <td class="text-center"><a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ $company.Id }}/{{ $doc.Id }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
-                                                            </tr>
-                                                        {{ end }}
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                                    {{ end }}
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -149,7 +134,7 @@
 
             var table = $('#formsTable').DataTable({
                 "lengthMenu":[5,10,15,20],
-                "dom": 'lrtip',
+                //"dom": 'lrtip',
                 "columnDefs": [
                     { "orderable": false, "targets": [1,2] },
                     { "name": "form",   "targets": 0 }

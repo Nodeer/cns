@@ -48,7 +48,7 @@
                                                 <span class="pull-right">
                                                     <a href="/cns/company/{{ .company.Id }}/vehicle/new">Add <i class="fa fa-plus"></i></a>
                                                 </span>
-                                                <table id="vehiclesTable" class="table table-bordered table-hover" style="background-color:white;">
+                                                <table id="vehiclesTable" class="table table-bordered table-hover" width="100%" style="width: 100%;background-color:white;">
                                                     <thead>
                                                         <tr id="search">
                                                             <th></th>
@@ -176,7 +176,7 @@
 
             var table = $('#vehiclesTable').DataTable({
                 "lengthMenu":[5,10,15,20],
-                "dom": 'lrtip',
+                //"dom": 'lrtip',
                 "columnDefs": [
                     { "orderable": false, "targets": [3,4] },
                     { "name": "type",     "targets": 1 },

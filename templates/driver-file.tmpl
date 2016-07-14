@@ -44,7 +44,7 @@
                                     <div class="profile-desk">
                                         <div class="col-lg-6">
                                             <div class="table-responsive">
-                                                <table id="filesTable" class="table table-bordered table-hover">
+                                                <table id="filesTable" width="100%" style="width: 100%;"class="table table-bordered table-hover">
                                                     <thead>
                                                         <tr id="search" class="search">
                                                             <th>name</th>
@@ -60,7 +60,7 @@
                                                     <tbody>
                                                         {{ $driver := .driver }}
                                                         {{ range $file := .files }}
-                                                            <tr class="clickable" data-url="/driver/file/{{ $driver.Id }}/{{ $file.name }}" data-target="_blank">
+                                                            <tr class="clickable" data-url="/driver/file/{{ $driver.Id }}/{{ $file.name }}">
                                                                 <td>{{ $file.name }}</td>
                                                                 <td>{{ size $file.size }}</td>
                                                                 <td class="text-center"><a data-message="Are you sure you would like to delete this file?" data-color="red" data-url="/driver/file/{{ $driver.Id}}/{{ $file.name }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
@@ -106,7 +106,7 @@
         <script>
             var table = $('#filesTable').DataTable({
                 "lengthMenu":[5,10,15,20],
-                "dom": 'lrtip',
+                //"dom": 'lrtip',
                 "columnDefs": [
                     { "orderable": false, "targets": [2] },
                     { "name": "name",     "targets": 0 },
