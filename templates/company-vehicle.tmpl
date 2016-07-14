@@ -51,14 +51,12 @@
                                                 <table id="vehiclesTable" class="table table-bordered table-hover" width="100%" style="width: 100%;background-color:white;">
                                                     <thead>
                                                         <tr id="search">
-                                                            <th></th>
                                                             <th>type</th>
                                                             <th>make</th>
                                                             <th>vin</th>
                                                             <th>title</th>
                                                         </tr>
                                                         <tr>
-                                                            <th>Id</th>
                                                             <th>Type</th>
                                                             <th>Make</th>
                                                             <th>VIN</th>
@@ -69,7 +67,6 @@
                                                         {{ $company := .company }}
                                                         {{ range $vehicle := .vehicles }}
                                                             <tr class="clickable" data-url="/cns/company/{{ $company.Id }}/vehicle/{{ $vehicle.Id }}">
-                                                                <td>{{ $vehicle.Id }}</td>
                                                                 <td>{{ $vehicle.VehicleType }}</td>
                                                                 <td>{{ $vehicle.Make }}</td>
                                                                 <td>{{ $vehicle.VIN }}</td>
@@ -178,11 +175,11 @@
                 "lengthMenu":[5,10,15,20],
                 //"dom": 'lrtip',
                 "columnDefs": [
-                    { "orderable": false, "targets": [3,4] },
-                    { "name": "type",     "targets": 1 },
-                    { "name": "make",     "targets": 2 },
-                    { "name": "vin",      "targets": 3 },
-                    { "name": "title",    "targets": 4 }
+                    { "orderable": false, "targets": [2,3] },
+                    { "name": "type",     "targets": 0 },
+                    { "name": "make",     "targets": 1 },
+                    { "name": "vin",      "targets": 2 },
+                    { "name": "title",    "targets": 3 }
                 ]
             });
 

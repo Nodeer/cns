@@ -39,13 +39,11 @@
                         <table id="drivers" class="table table-bordered table-hover" width="100%" style="width: 100%;background-color:white;">
                             <thead>
                                 <tr id="search">
-                                    <th></th>
                                     <th>name</th>
                                     <th>email</th>
                                     <th>phone</th>
                                 </tr>
                                 <tr>
-                                    <th>Id</th>
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Phone</th>
@@ -54,7 +52,6 @@
                             <tbody>
                                 {{ range $driver := .drivers }}
                                     <tr id="{{ $driver.Id }}" class="clickable" data-url="/cns/driver/{{ $driver.Id }}">
-                                        <td>{{ $driver.Id }}</td>
                                         <td>{{ $driver.FirstName }} {{ $driver.LastName }}</td>
                                         <td>{{ $driver.Email }}</td>
                                         <td>{{ $driver.Phone }}</td>
@@ -84,10 +81,10 @@
                 "lengthMenu":[10,15,20],
                 //"dom": 'lrtip',
                 "columnDefs": [
-                    { "orderable": false, "targets": [3] },
-                    { "name": "email",    "targets": 2 },
-                    { "name": "name",     "targets": 1 },
-                    { "name": "phone",    "targets": 3 }
+                    { "orderable": false, "targets": [2] },
+                    { "name": "email",    "targets": 1 },
+                    { "name": "name",     "targets": 0 },
+                    { "name": "phone",    "targets": 2 }
                 ]
             });
 

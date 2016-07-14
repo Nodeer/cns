@@ -90,6 +90,7 @@ func init() {
 	web.Funcs["title"] = strings.Title
 	web.Funcs["idTime"] = IdTime
 	tc = web.NewTmplCache()
+
 	defaultUsers()
 
 }
