@@ -307,16 +307,25 @@ var viewDriver = web.Route{"GET", "/cns/driver/:id", func(w http.ResponseWriter,
 	}
 	companyId := r.FormValue("cid")
 	var company Company
-	if driverId == "new" && r.FormValue("cid") == "" {
-		web.SetErrorRedirect(w, r, "/cns/company", "Error adding new driver. Please try again")
-		return
+	var companies []Company
+	var alert string
+	// if driverId == "new" && r.FormValue("cid") == "" {
+	// 	//web.SetErrorRedirect(w, r, "/cns/company", "Error adding new driver. Please try again")
+	// 	//return
+	// 	alert = "You are adding a driver without a customer.<br> If you continue this driver will not be associated with any customer"
+	// }
+	if driver.CompanyId == "" {
+		db.All("company", &companies)
+	} else {
+		db.Get("company", driver.CompanyId, &company)
 	}
-	db.Get("company", driver.CompanyId, &company)
 
 	tc.Render(w, r, "driver.tmpl", web.Model{
-		"driver":    driver,
-		"companyId": companyId,
-		"company":   company,
+		"driver":       driver,
+		"companyId":    companyId,
+		"company":      company,
+		"alertWarning": alert,
+		"companies":    companies,
 	})
 }}
 
