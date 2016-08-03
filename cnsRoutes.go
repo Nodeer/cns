@@ -184,6 +184,7 @@ var companySave = web.Route{"POST", "/cns/company", func(w http.ResponseWriter, 
 	}
 	FormToStruct(&company, r.Form, "")
 	var companies []Company
+
 	db.TestQuery("company", &companies, adb.Eq("email", company.Email), adb.Ne("id", `"`+company.Id+`"`))
 	if len(companies) > 0 {
 		web.SetErrorRedirect(w, r, "/cns/company/"+company.Id, "Error saving company. Email is already registered")
