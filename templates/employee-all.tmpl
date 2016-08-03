@@ -38,13 +38,13 @@
                         <table id="employees" class="table table-bordered table-hover" width="100%" style="width: 100%;background-color:white;">
                             <thead>
                                 <tr id="search">
-                                    <th></th>
+                                    <!-- <th></th> -->
                                     <th>name</th>
                                     <th>email</th>
                                     <th>phone</th>
                                 </tr>
                                 <tr>
-                                    <th>Id</th>
+                                    <!-- <th>Id</th> -->
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Phone</th>
@@ -53,7 +53,7 @@
                             <tbody>
                                 {{ range $employee := .employees }}
                                     <tr id="{{ $employee.Id }}" class="clickable" data-url="/cns/employee/{{ $employee.Id }}">
-                                        <td>{{ $employee.Id }}</td>
+                                        <!-- <td>{{ $employee.Id }}</td> -->
                                         <td>{{ $employee.FirstName }} {{ $employee.LastName }}</td>
                                         <td>{{ $employee.Email }}</td>
                                         <td>{{ $employee.Phone }}</td>
@@ -83,10 +83,10 @@
                 "lengthMenu":[10,15,20],
                 //"dom": 'lrtip',
                 "columnDefs": [
-                    { "orderable": false, "targets": [3] },
-                    { "name": "name",     "targets": 1 },
-                    { "name": "email",    "targets": 2 },
-                    { "name": "phone",    "targets": 3 }
+                    { "orderable": false, "targets": [2] },
+                    { "name": "name",     "targets": 0 },
+                    { "name": "email",    "targets": 1 },
+                    { "name": "phone",    "targets": 2 }
                 ]
             });
         </script>

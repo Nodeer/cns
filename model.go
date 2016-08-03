@@ -22,6 +22,9 @@ type Address struct {
 }
 
 func (a Address) AddrHTML() string {
+	if a.Street == "" && a.City == "" && a.State == "" && a.Zip == "" && a.County == "" {
+		return ""
+	}
 	address := a.Street + "<br>" + a.City + ", "
 	if a.County != "" {
 		address += a.County + ", "
