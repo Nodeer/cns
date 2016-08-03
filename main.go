@@ -10,6 +10,9 @@ import (
 	"strings"
 	"time"
 
+	 "encoding/json"
+	 "errors"
+
 	"github.com/cagnosolutions/adb"
 	"github.com/cagnosolutions/web"
 )
@@ -18,6 +21,23 @@ import (
 var tc *web.TmplCache
 var mx *web.Mux
 var db *adb.DB = adb.NewDB()
+
+var data = []byte(`[{"id":"1469475270888181640","email":"john@cnsprotects.com","password":"Caidjildihmi4!","active":true,"role":"ADMIN","firstName":"John","lastName":"Irwin","phone":"717-468-5284","street":"129 Briar Hill Rd","city":"Lititz","state":"PA","zip":"17543"},{"id":"1469475421303393264","email":"adam@cnsprotects.com","password":"adam1","active":true,"role":"EMPLOYEE","firstName":"Adam","lastName":"Galante"},{"id":"1469475582767347399","email":"geoff@cnsprotects.com","password":"LaSala1","active":true,"role":"EMPLOYEE","firstName":"Geoff","lastName":"LaSala"},{"id":"1469475684023743858","email":"melissa@cnsprotects.com","password":"mjw2mji","active":true,"role":"ADMIN","firstName":"Melissa","lastName":"Irwin"},{"id":"1469475756863774584","email":"ryan@cnsprotects.com","password":"Password1","active":true,"role":"EMPLOYEE","firstName":"Ryan","lastName":"Word"},{"id":"1469475835126641086","email":"gloria@cnsprotects.com","password":"Password12","active":true,"role":"EMPLOYEE","firstName":"Gloria","lastName":"Allen"},{"id":"1469475913768366301","email":"shirley@cnsprotects.com","password":"Shirley5","active":true,"role":"EMPLOYEE","firstName":"Shirley","lastName":"Burkholder"}]`)
+
+// *** ADD EMPLOYEES
+func addEmployees() {
+	var employees []Employee
+	if err := json.Unmarshal(data, &employees); err != nil {
+		panic(err)
+	}
+	if len(employees) < 1 {
+		panic(errors.New("0 employees!"))
+	}
+    for _, e := range employees {
+		db.Set("employee", e.Id, e)
+	    fmt.Printf("added employee -> %s\n", e)
+    }
+}
 
 // initialize routes
 func init() {
@@ -30,6 +50,10 @@ func init() {
 	db.AddStore("event")
 	db.AddStore("note")
 	db.AddStore("comment")
+
+
+	// *** ADD EMPLOYEES
+	addEmployees()
 
 	web.DEFAULT_ERR_ROUTE = web.Route{"GET", "/error/:code", func(w http.ResponseWriter, r *http.Request) {
 		code, err := strconv.Atoi(r.FormValue(":code"))
