@@ -121,7 +121,9 @@ func init() {
 
 // main http listener
 func main() {
-	fmt.Println("DID YOU REGISTER ANY NEW ROUTES?")
+	
+    fmt.Println("Test")
+    fmt.Println("DID YOU REGISTER ANY NEW ROUTES?")
 	log.Fatal(http.ListenAndServe(":8080", mx))
 }
 
