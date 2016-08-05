@@ -179,10 +179,28 @@ var companySave = web.Route{"POST", "/cns/company", func(w http.ResponseWriter, 
 	compId := r.FormValue("id")
 	var company Company
 	db.Get("company", compId, &company)
+	if errors, ok := FormToStruct(&company, r.Form, "main"); !ok {
+		web.SetFormErrors(w, errors)
+		if r.FormValue("from") == "vehicle" {
+			web.SetErrorRedirect(w, r, "/cns/company/"+company.Id+"/vehicle", "Error updating insurance information")
+			return
+		}
+		if r.FormValue("from") == "service" {
+			web.SetErrorRedirect(w, r, "/cns/company/"+company.Id+"/service", "Error updating service information")
+			return
+		}
+		id := company.Id
+		if company.Id == "" {
+			id = "new"
+		}
+		web.SetErrorRedirect(w, r, "/cns/company/"+id, "Error saving company")
+		return
+	}
+
 	if compId == "" && company.Id == "" {
 		company.Id = strconv.Itoa(int(time.Now().UnixNano()))
 	}
-	FormToStruct(&company, r.Form, "")
+
 	var companies []Company
 
 	db.TestQuery("company", &companies, adb.Eq("email", company.Email), adb.Ne("id", `"`+company.Id+`"`))

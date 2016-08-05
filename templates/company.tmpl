@@ -239,15 +239,24 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td><b>DOT #</b></td>
-                                                                <td><input type="text" class="form-control" name="dOTNum" value="{{ .company.DOTNum }}" placeholder="DOT#"></td>
+                                                                <td>
+                                                                    <span class="text-danger">{{ .formErrors.dOTNum }}</span>
+                                                                    <input type="text" class="form-control" name="dOTNum" value="{{ .company.DOTNum }}" placeholder="DOT#">
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>Name</b></td>
-                                                                <td><input type="text" class="form-control" name="name" value="{{ .company.Name }}" placeholder="Name"></td>
+                                                                <td>
+                                                                    <span class="text-danger">{{ .formErrors.name }}</span>
+                                                                    <input type="text" class="form-control" name="name" value="{{ .company.Name }}" placeholder="Name">
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>DBA</b></td>
-                                                                <td><input type="text" class="form-control" name="dBA" value="{{ .company.DBA }}" placeholder="DBA"></td>
+                                                                <td>
+                                                                    <span class="text-danger">{{ .formErrors.dBA }}</span>
+                                                                    <input type="text" class="form-control" name="dBA" value="{{ .company.DBA }}" placeholder="DBA">
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>Primary Contact</b></td>
@@ -256,15 +265,15 @@
                                                                     <input type="text" class="form-control" name="contactTitle" value="{{ .company.ContactTitle }}" placeholder="Title"><br>
                                                                     <input type="text" class="form-control" name="contactPhone" value="{{ .company.ContactPhone }}" placeholder="Phone">
                                                                     <br><br>
-                                                                    <input type="text" class="form-control" name="contactAddress.Street" value="{{ .company.ContactAddress.Street }}" placeholder="Street"><br>
-                                                                    <input type="text" class="form-control" name="contactAddress.City" value="{{ .company.ContactAddress.City }}" placeholder="City"><br>
-                                                                    <input type="text" class="form-control" name="contactAddress.County" value="{{ .company.ContactAddress.County }}" placeholder="County"><br>
+                                                                    <input type="text" class="form-control" name="contactAddress.street" value="{{ .company.ContactAddress.Street }}" placeholder="Street"><br>
+                                                                    <input type="text" class="form-control" name="contactAddress.city" value="{{ .company.ContactAddress.City }}" placeholder="City"><br>
+                                                                    <input type="text" class="form-control" name="contactAddress.county" value="{{ .company.ContactAddress.County }}" placeholder="County"><br>
                                                                     <div class="row">
                                                                         <div class="col-lg-6">
-                                                                            <input type="text" class="form-control" name="contactAddress.State" value="{{ .company.ContactAddress.State }}" placeholder="State">
+                                                                            <input type="text" class="form-control" name="contactAddress.state" value="{{ .company.ContactAddress.State }}" placeholder="State">
                                                                         </div>
                                                                         <div class="col-lg-6">
-                                                                            <input type="text" class="form-control" name="contactAddress.Zip" value="{{ .company.ContactAddress.Zip }}" placeholder="Zip">
+                                                                            <input type="text" class="form-control" name="contactAddress.zip" value="{{ .company.ContactAddress.Zip }}" placeholder="Zip">
                                                                         </div>
                                                                     </div>
                                                                 </td>
@@ -280,15 +289,15 @@
                                                             <tr>
                                                                 <td><b>Physical Address</b></td>
                                                                 <td>
-                                                                    <input type="text" class="form-control" name="physicalAddress.Street" value="{{ .company.PhysicalAddress.Street }}" placeholder="Street"><br>
-                                                                    <input type="text" class="form-control" name="physicalAddress.City" value="{{ .company.PhysicalAddress.City }}" placeholder="City"><br>
-                                                                    <input type="text" class="form-control" name="physicalAddress.County" value="{{ .company.PhysicalAddress.County }}" placeholder="County"><br>
+                                                                    <input type="text" class="form-control" name="physicalAddress.street" value="{{ .company.PhysicalAddress.Street }}" placeholder="Street"><br>
+                                                                    <input type="text" class="form-control" name="physicalAddress.city" value="{{ .company.PhysicalAddress.City }}" placeholder="City"><br>
+                                                                    <input type="text" class="form-control" name="physicalAddress.county" value="{{ .company.PhysicalAddress.County }}" placeholder="County"><br>
                                                                     <div class="row">
                                                                         <div class="col-lg-6">
-                                                                            <input type="text" class="form-control" name="physicalAddress.State" value="{{ .company.PhysicalAddress.State }}" placeholder="State">
+                                                                            <input type="text" class="form-control" name="physicalAddress.state" value="{{ .company.PhysicalAddress.State }}" placeholder="State">
                                                                         </div>
                                                                         <div class="col-lg-6">
-                                                                            <input type="text" class="form-control" name="physicalAddress.Zip" value="{{ .company.PhysicalAddress.Zip }}" placeholder="Zip">
+                                                                            <input type="text" class="form-control" name="physicalAddress.zip" value="{{ .company.PhysicalAddress.Zip }}" placeholder="Zip">
                                                                         </div>
                                                                     </div>
                                                                 </td>
@@ -317,15 +326,15 @@
                                                                     </div>
                                                                     <span id="mailingAddress" {{ if .company.SameAddress }}class="hide"{{ end }}>
                                                                         <br>
-                                                                        <input type="text" class="form-control" name="mailingAddress.Street" value="{{ .company.MailingAddress.Street }}" placeholder="Street"><br>
-                                                                        <input type="text" class="form-control" name="mailingAddress.City" value="{{ .company.MailingAddress.City }}" placeholder="City"><br>
-                                                                        <input type="text" class="form-control" name="physicalAddress.County" value="{{ .company.PhysicalAddress.County }}" placeholder="County"><br>
+                                                                        <input type="text" class="form-control" name="mailingAddress.street" value="{{ .company.MailingAddress.Street }}" placeholder="Street"><br>
+                                                                        <input type="text" class="form-control" name="mailingAddress.city" value="{{ .company.MailingAddress.City }}" placeholder="City"><br>
+                                                                        <input type="text" class="form-control" name="mailingAddress.county" value="{{ .company.MailingAddress.County }}" placeholder="County"><br>
                                                                         <div class="row">
                                                                             <div class="col-lg-6">
-                                                                                <input type="text" class="form-control" name="mailingAddress.State" value="{{ .company.MailingAddress.State }}" placeholder="State">
+                                                                                <input type="text" class="form-control" name="mailingAddress.state" value="{{ .company.MailingAddress.State }}" placeholder="State">
                                                                             </div>
                                                                             <div class="col-lg-6">
-                                                                                <input type="text" class="form-control" name="mailingAddress.Zip" value="{{ .company.MailingAddress.Zip }}" placeholder="Zip">
+                                                                                <input type="text" class="form-control" name="mailingAddress.zip" value="{{ .company.MailingAddress.Zip }}" placeholder="Zip">
                                                                             </div>
                                                                         </div>
                                                                     </span>
@@ -441,16 +450,16 @@
                                                                 <tr>
                                                                     <td><b>Credit Card</b></td>
                                                                     <td>
-                                                                        <input type="text" class="form-control" name="creditCard.Number" value="{{ .company.CreditCard.Number }}" placeholder="Number"><br>
+                                                                        <input type="text" class="form-control" name="creditCard.number" value="{{ .company.CreditCard.Number }}" placeholder="Number"><br>
                                                                         <div class="row">
                                                                             <div class="col-lg-6">
                                                                                 <div class="input-group">
-                                                                                    <input type="text" class="form-control datepicker" name="creditCard.ExpirationDate" value="{{ .company.CreditCard.ExpirationDate }}" placeholder="Expiration Date">
+                                                                                    <input type="text" class="form-control datepicker" name="creditCard.expirationDate" value="{{ .company.CreditCard.ExpirationDate }}" placeholder="Expiration Date">
                                                                                     <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-lg-6">
-                                                                                <input type="text" class="form-control" name="creditCard.SecurityCode" value="{{ .company.CreditCard.SecurityCode }}" placeholder="Security Code">
+                                                                                <input type="text" class="form-control" name="creditCard.securityCode" value="{{ .company.CreditCard.SecurityCode }}" placeholder="Security Code">
                                                                             </div>
                                                                         </div>
                                                                     </td>
@@ -671,6 +680,8 @@
 
         <script type="text/javascript">
 
+            var formErrors = {{ if .formErrors }}true{{ else }}false{{ end }}
+
             jQuery('.datepicker').datepicker();
 
             var newComp = {{ if .company.Id }}false{{ else }}true{{ end }};
@@ -727,7 +738,7 @@
                 }
             });
 
-            if (newComp) {
+            if (newComp || formErrors) {
                 $('div#view').addClass('hide');
                 $('div#edit').removeClass('hide');
             }

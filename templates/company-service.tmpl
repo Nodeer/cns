@@ -48,14 +48,14 @@
                                                     <label>Apportion</label><br>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="apportionTrue">
-                                                            <input type="radio" id="apportionTrue" name="service.Apportion" value="true" {{ if .company.Service.Apportion }}checked{{ end }}>
+                                                            <input type="radio" id="apportionTrue" name="service.apportion" value="true" {{ if .company.Service.Apportion }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="apportionFalse">
-                                                            <input type="radio" id="apportionFalse" name="service.Apportion" value="false" {{ if not .company.Service.Apportion }}checked{{ end }}>
+                                                            <input type="radio" id="apportionFalse" name="service.apportion" value="false" {{ if not .company.Service.Apportion }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -63,13 +63,13 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control datepicker" name="service.ApportionDateOne" value="{{ .company.Service.ApportionDateOne }}" placeholder="Apportion Date 1">
+                                                        <input type="text" class="form-control datepicker" name="service.apportionDateOne" value="{{ .company.Service.ApportionDateOne }}" placeholder="Apportion Date 1">
                                                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control datepicker" name="service.ApportionDateTwo" value="{{ .company.Service.ApportionDateTwo }}" placeholder="Apportion Date 2">
+                                                        <input type="text" class="form-control datepicker" name="service.apportionDateTwo" value="{{ .company.Service.ApportionDateTwo }}" placeholder="Apportion Date 2">
                                                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                     </div>
                                                 </div>
@@ -78,14 +78,14 @@
                                                     <label>Fuel Tax Program</label><br>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="fuelTaxTrue">
-                                                            <input type="radio" id="fuelTaxTrue" name="service.FuelTaxProgram" value="true" {{ if .company.Service.FuelTaxProgram }}checked{{ end }}>
+                                                            <input type="radio" id="fuelTaxTrue" name="service.fuelTaxProgram" value="true" {{ if .company.Service.FuelTaxProgram }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="fuelTaxFalse">
-                                                            <input type="radio" id="fuelTaxFalse" name="service.FuelTaxProgram" value="false" {{ if not .company.Service.FuelTaxProgram }}checked{{ end }}>
+                                                            <input type="radio" id="fuelTaxFalse" name="service.fuelTaxProgram" value="false" {{ if not .company.Service.FuelTaxProgram }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -94,14 +94,14 @@
                                                     <label class="radio-label">NY</label>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="fuelTaxNYTrue">
-                                                            <input type="radio" id="fuelTaxNYTrue" name="service.FuelTaxNY" value="true" {{ if .company.Service.FuelTaxNY }}checked{{ end }}>
+                                                            <input type="radio" id="fuelTaxNYTrue" name="service.fuelTaxNY" value="true" {{ if .company.Service.FuelTaxNY }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="fuelTaxNYFalse">
-                                                            <input type="radio" id="fuelTaxNYFalse" name="service.FuelTaxNY" value="false" {{ if not .company.Service.FuelTaxNY }}checked{{ end }}>
+                                                            <input type="radio" id="fuelTaxNYFalse" name="service.fuelTaxNY" value="false" {{ if not .company.Service.FuelTaxNY }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -110,14 +110,14 @@
                                                     <label class="radio-label">KY</label>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="fuelTaxKYTrue">
-                                                            <input type="radio" id="fuelTaxKYTrue" name="service.FuelTaxKY" value="true" {{ if .company.Service.FuelTaxKY }}checked{{ end }}>
+                                                            <input type="radio" id="fuelTaxKYTrue" name="service.fuelTaxKY" value="true" {{ if .company.Service.FuelTaxKY }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="fuelTaxKYFalse">
-                                                            <input type="radio" id="fuelTaxKYFalse" name="service.FuelTaxKY" value="false" {{ if not .company.Service.FuelTaxKY }}checked{{ end }}>
+                                                            <input type="radio" id="fuelTaxKYFalse" name="service.fuelTaxKY" value="false" {{ if not .company.Service.FuelTaxKY }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -126,14 +126,14 @@
                                                     <label class="radio-label">NM</label>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="fuelTaxNMTrue">
-                                                            <input type="radio" id="fuelTaxNMTrue" name="service.FuelTaxNM" value="true" {{ if .company.Service.FuelTaxNM }}checked{{ end }}>
+                                                            <input type="radio" id="fuelTaxNMTrue" name="service.fuelTaxNM" value="true" {{ if .company.Service.FuelTaxNM }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="fuelTaxNMFalse">
-                                                            <input type="radio" id="fuelTaxNMFalse" name="service.FuelTaxNM" value="false" {{ if not .company.Service.FuelTaxNM }}checked{{ end }}>
+                                                            <input type="radio" id="fuelTaxNMFalse" name="service.fuelTaxNM" value="false" {{ if not .company.Service.FuelTaxNM }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -144,14 +144,14 @@
                                                     <label>Drug Consortium</label><br>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="drugConsortiumTrue">
-                                                            <input type="radio" id="drugConsortiumTrue" name="service.DrugConsortium" value="true" {{ if .company.Service.DrugConsortium }}checked{{ end }}>
+                                                            <input type="radio" id="drugConsortiumTrue" name="service.drugConsortium" value="true" {{ if .company.Service.DrugConsortium }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="drugConsortiumFalse">
-                                                            <input type="radio" id="drugConsortiumFalse" name="service.DrugConsortium" value="false" {{ if not .company.Service.DrugConsortium }}checked{{ end }}>
+                                                            <input type="radio" id="drugConsortiumFalse" name="service.drugConsortium" value="false" {{ if not .company.Service.DrugConsortium }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -159,7 +159,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control datepicker" name="service.DrugConsortiumDate" value="{{ .company.Service.DrugConsortiumDate }}" placeholder="Drug Consortium Date">
+                                                        <input type="text" class="form-control datepicker" name="service.drugConsortiumDate" value="{{ .company.Service.DrugConsortiumDate }}" placeholder="Drug Consortium Date">
                                                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                     </div>
                                                 </div>
@@ -170,14 +170,14 @@
                                                     <label>Driver File Management</label><br>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="driverFileManagementTrue">
-                                                            <input type="radio" id="driverFileManagementTrue" name="service.DriverFileManagement" value="true" {{ if .company.Service.DriverFileManagement }}checked{{ end }}>
+                                                            <input type="radio" id="driverFileManagementTrue" name="service.driverFileManagement" value="true" {{ if .company.Service.DriverFileManagement }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="driverFileManagementFalse">
-                                                            <input type="radio" id="driverFileManagementFalse" name="service.DriverFileManagement" value="false" {{ if not .company.Service.DriverFileManagement }}checked{{ end }}>
+                                                            <input type="radio" id="driverFileManagementFalse" name="service.driverFileManagement" value="false" {{ if not .company.Service.DriverFileManagement }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -185,7 +185,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control datepicker" name="service.DriverFileManagementDate" value="{{ .company.Service.DriverFileManagementDate }}" placeholder="Driver File Management Date">
+                                                        <input type="text" class="form-control datepicker" name="service.driverFileManagementDate" value="{{ .company.Service.DriverFileManagementDate }}" placeholder="Driver File Management Date">
                                                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                     </div>
                                                 </div>
@@ -194,14 +194,14 @@
                                                     <label>DOT Update</label><br>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="dotUpdateTrue">
-                                                            <input type="radio" id="dotUpdateTrue" name="service.DOTUpdate" value="true" {{ if .company.Service.DOTUpdate }}checked{{ end }}>
+                                                            <input type="radio" id="dotUpdateTrue" name="service.dOTUpdate" value="true" {{ if .company.Service.DOTUpdate }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="dotUpdateFalse">
-                                                            <input type="radio" id="dotUpdateFalse" name="service.DOTUpdate" value="false" {{ if not .company.Service.DOTUpdate }}checked{{ end }}>
+                                                            <input type="radio" id="dotUpdateFalse" name="service.dOTUpdate" value="false" {{ if not .company.Service.DOTUpdate }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -209,7 +209,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control datepicker" name="service.DOTUpdateDate" value="{{ .company.Service.DOTUpdateDate }}" placeholder="DOT Update Date">
+                                                        <input type="text" class="form-control datepicker" name="service.dOTUpdateDate" value="{{ .company.Service.DOTUpdateDate }}" placeholder="DOT Update Date">
                                                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                     </div>
                                                 </div>
@@ -218,14 +218,14 @@
                                                     <label>2290</label><br>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="2290True">
-                                                            <input type="radio" id="2290True" name="service.TwentyTwoNinety" value="true" {{ if .company.Service.TwentyTwoNinety }}checked{{ end }}>
+                                                            <input type="radio" id="2290True" name="service.twentyTwoNinety" value="true" {{ if .company.Service.TwentyTwoNinety }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="2290False">
-                                                            <input type="radio" id="2290False" name="service.TwentyTwoNinety" value="false" {{ if not .company.Service.TwentyTwoNinety }}checked{{ end }}>
+                                                            <input type="radio" id="2290False" name="service.twentyTwoNinety" value="false" {{ if not .company.Service.TwentyTwoNinety }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -239,14 +239,14 @@
                                                     <label>UCR</label><br>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="UCRTrue">
-                                                            <input type="radio" id="UCRTrue" name="service.UCR" value="true" {{ if .company.Service.UCR }}checked{{ end }}>
+                                                            <input type="radio" id="UCRTrue" name="service.uCR" value="true" {{ if .company.Service.UCR }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="UCRFalse">
-                                                            <input type="radio" id="UCRFalse" name="service.UCR" value="false" {{ if not .company.Service.UCR }}checked{{ end }}>
+                                                            <input type="radio" id="UCRFalse" name="service.uCR" value="false" {{ if not .company.Service.UCR }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -257,14 +257,14 @@
                                                     <label>Log Auditing</label><br>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="logAuditingTrue">
-                                                            <input type="radio" id="logAuditingTrue" name="service.LogAuditing" value="true" {{ if .company.Service.LogAuditing }}checked{{ end }}>
+                                                            <input type="radio" id="logAuditingTrue" name="service.logAuditing" value="true" {{ if .company.Service.LogAuditing }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="logAuditingFalse">
-                                                            <input type="radio" id="logAuditingFalse" name="service.LogAuditing" value="false" {{ if not .company.Service.LogAuditing }}checked{{ end }}>
+                                                            <input type="radio" id="logAuditingFalse" name="service.logAuditing" value="false" {{ if not .company.Service.LogAuditing }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -275,14 +275,14 @@
                                                     <label>CSA Service</label><br>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="cSAServiceTrue">
-                                                            <input type="radio" id="cSAServiceTrue" name="service.CSAService" value="true" {{ if .company.Service.CSAService }}checked{{ end }}>
+                                                            <input type="radio" id="cSAServiceTrue" name="service.cSAService" value="true" {{ if .company.Service.CSAService }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="cSAServiceFalse">
-                                                            <input type="radio" id="cSAServiceFalse" name="service.CSAService" value="false" {{ if not .company.Service.CSAService }}checked{{ end }}>
+                                                            <input type="radio" id="cSAServiceFalse" name="service.cSAService" value="false" {{ if not .company.Service.CSAService }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -290,7 +290,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control datepicker" name="service.CSAServiceDate" value="{{ .company.Service.CSAServiceDate }}" placeholder="CSA Service Date">
+                                                        <input type="text" class="form-control datepicker" name="service.cSAServiceDate" value="{{ .company.Service.CSAServiceDate }}" placeholder="CSA Service Date">
                                                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                     </div>
                                                 </div>
@@ -299,14 +299,14 @@
                                                     <label>IFTA Renewal</label><br>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="iftaRenewalTrue">
-                                                            <input type="radio" id="iftaRenewalTrue" name="service.IFTARenewal" value="true" {{ if .company.Service.IFTARenewal }}checked{{ end }}>
+                                                            <input type="radio" id="iftaRenewalTrue" name="service.iFTARenewal" value="true" {{ if .company.Service.IFTARenewal }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="iftaRenewalFalse">
-                                                            <input type="radio" id="iftaRenewalFalse" name="service.IFTARenewal" value="false" {{ if not .company.Service.IFTARenewal }}checked{{ end }}>
+                                                            <input type="radio" id="iftaRenewalFalse" name="service.iFTARenewal" value="false" {{ if not .company.Service.IFTARenewal }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -321,14 +321,14 @@
                                                     <label>NY</label><br>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="nyTrue">
-                                                            <input type="radio" id="nyTrue" name="service.NY" value="true" {{ if .company.Service.NY }}checked{{ end }}>
+                                                            <input type="radio" id="nyTrue" name="service.nY" value="true" {{ if .company.Service.NY }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="nyFalse">
-                                                            <input type="radio" id="nyFalse" name="service.NY" value="false" {{ if not .company.Service.NY }}checked{{ end }}>
+                                                            <input type="radio" id="nyFalse" name="service.nY" value="false" {{ if not .company.Service.NY }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -336,7 +336,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control datepicker" name="service.NYDate" value="{{ .company.Service.NYDate }}" placeholder="NY Date">
+                                                        <input type="text" class="form-control datepicker" name="service.nYDate" value="{{ .company.Service.NYDate }}" placeholder="NY Date">
                                                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                     </div>
                                                 </div>
@@ -345,14 +345,14 @@
                                                     <label>GPS</label><br>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="gpsTrue">
-                                                            <input type="radio" id="gpsTrue" name="service.GPS" value="true" {{ if .company.Service.GPS }}checked{{ end }}>
+                                                            <input type="radio" id="gpsTrue" name="service.gPS" value="true" {{ if .company.Service.GPS }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="gpsFalse">
-                                                            <input type="radio" id="gpsFalse" name="service.GPS" value="false" {{ if not .company.Service.GPS }}checked{{ end }}>
+                                                            <input type="radio" id="gpsFalse" name="service.gPS" value="false" {{ if not .company.Service.GPS }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -360,7 +360,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control datepicker" name="service.GPSDate" value="{{ .company.Service.GPSDate }}" placeholder="GPS Date">
+                                                        <input type="text" class="form-control datepicker" name="service.gPSDate" value="{{ .company.Service.GPSDate }}" placeholder="GPS Date">
                                                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                     </div>
                                                 </div>
@@ -369,14 +369,14 @@
                                                     <label>Training</label><br>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="trainingTrue">
-                                                            <input type="radio" id="trainingTrue" name="service.Training" value="true"{{ if .company.Service.Training }}checked{{ end }}>
+                                                            <input type="radio" id="trainingTrue" name="service.training" value="true"{{ if .company.Service.Training }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="radio-inline">
                                                         <label class="cr-styled" for="trainingFalse">
-                                                            <input type="radio" id="trainingFalse" name="service.Training" value="false"{{ if not .company.Service.Training }}checked{{ end }}>
+                                                            <input type="radio" id="trainingFalse" name="service.training" value="false"{{ if not .company.Service.Training }}checked{{ end }}>
                                                             <i class="fa"></i>
                                                             No
                                                         </label>
@@ -384,7 +384,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control datepicker" name="service.TrainingDate" value="{{ .company.Service.TrainingDate }}" placeholder="Training Date">
+                                                        <input type="text" class="form-control datepicker" name="service.trainingDate" value="{{ .company.Service.TrainingDate }}" placeholder="Training Date">
                                                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                     </div>
                                                 </div>
