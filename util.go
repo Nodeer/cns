@@ -259,3 +259,7 @@ func IdTime(id string) string {
 	t := time.Unix(0, int64(idT))
 	return t.Format("01/02/2006 03:04 PM")
 }
+
+func add(i, j int) int {
+	return i + j
+}

@@ -9,6 +9,6 @@
     {{ end }}
     var url = '/document';
     var id = '{{ .document.Id }}';
-    var data = '{{ .document.Data }}';
+    var data = {{ if .document.Data }}{{ .document.Data }}{{ else }}{}{{ end }}
 </script>
 <script src="/static/js/document.js"></script>

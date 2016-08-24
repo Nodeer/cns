@@ -34,9 +34,11 @@ func (a Address) AddrHTML() string {
 }
 
 type CreditCard struct {
-	Number         string `json:"number,omitempty"`
-	ExpirationDate string `json:"expirationDate,omitempty"`
-	SecurityCode   string `json:"securityCode,omitempty"`
+	Number          string `json:"number,omitempty"`
+	ExpirationDate  string `json:"expirationDate,omitempty"`
+	ExpirationMonth int    `json:"expirationMonth,omitempty"`
+	ExpirationYear  int    `json:"expirationYear,omitempty"`
+	SecurityCode    string `json:"securityCode,omitempty"`
 }
 
 type Employee struct {
@@ -250,7 +252,7 @@ type Vehicle struct {
 	PurchasePrice    float32  `json:"purchasePrice,omitempty"`
 	PurchaseDate     string   `json:"purchaseDate,omitempty"`
 	CurrentValue     float32  `json:"currentValue,omitempty"`
-	AxleAmount       int      `json:"axleAmount,omitempty"`
+	AxleAmount       string   `json:"axleAmount,omitempty"`
 	FuelType         string   `json:"fuelType,omitempty"`
 	Active           bool     `json:"active"`
 	Owner            string   `json:"owner,omitempty"`
@@ -386,7 +388,7 @@ var CompanyForms = [][]string{
 	[]string{"MV-550", "2"},
 	[]string{"MV-550A", "1"},
 	//[]string{"MV-551", "2"},
-	[]string{"MV-552A", "2"},
+	[]string{"MV-552A", "ALL"},
 	[]string{"MV-558", "2"},
 	[]string{"MV-41", "1"},
 	[]string{"TMT-39", ""},

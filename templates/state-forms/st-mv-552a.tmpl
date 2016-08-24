@@ -134,19 +134,84 @@
     </head>
     <body bgcolor="#A0A0A0" vlink="blue" link="blue">
         <div id="page1-div" style="position:relative;width:1188px;margin:0 auto;" class="no-print">
-            <label for="vehicle1">Vehicle 1</label>
+            <!-- <label for="vehicle1">Vehicle 1</label>
             <select id="vehicle1" class="vehicleSelect" data-vehicle="0">
-                <option value=""></option>
+                <option value="">None</option>
                 <option value="add">Addition</option>
                 <option value="del">Deletion</option>
             </select>
             <label for="vehicle2">Vehicle 2</label>
             <select id="vehicle2" class="vehicleSelect" data-vehicle="1">
-                <option value=""></option>
+                <option value="">None</option>
                 <option value="add">Addition</option>
                 <option value="del">Deletion</option>
             </select>
+            <br><br> -->
+            <br>
+            <!-- {{ range $i, $vehicle := .vehicles }}
+                <label for="vehicle{{ $i }}">Vehicle vin {{ $vehicle.VIN }}</label>
+                <select id="vehicle{{ $i }}" class="vehicleSelect" data-vehicle="{{ $i }}">
+                    <option value="">None</option>
+                    <option value="add">Addition</option>
+                    <option value="del">Deletion</option>
+                </select>
+            {{ end }} -->
+            <label for="addition1">Vehicle Addition 1</label>
+            <select id="addition1" class="addSelect" data-vehicle="1">
+                <option value="">None</option>
+                {{ range $i, $vehicle := .vehicles }}
+                    <option value="{{ $i }}">{{ $vehicle.VIN }}</option>
+                {{ end }}
+            </select>
+
+            <label for="addition2">&nbsp;&nbsp;Vehicle Addition 2</label>
+            <select id="addition2" class="addSelect" data-vehicle="2">
+                <option value="">None</option>
+                {{ range $i, $vehicle := .vehicles }}
+                    <option value="{{ $i }}">{{ $vehicle.VIN }}</option>
+                {{ end }}
+            </select>
+
+            <label for="addition3">&nbsp;&nbsp;Vehicle Addition 3</label>
+            <select id="addition3" class="addSelect" data-vehicle="3">
+                <option value="">None</option>
+                {{ range $i, $vehicle := .vehicles }}
+                    <option value="{{ $i }}">{{ $vehicle.VIN }}</option>
+                {{ end }}
+            </select>
+
+            <label for="addition1">Vehicle Deletion 1</label>
+            <select id="deletion1" class="delSelect" data-vehicle="1">
+                <option value="">None</option>
+                {{ range $i, $vehicle := .vehicles }}
+                    <option value="{{ $i }}">{{ $vehicle.VIN }}</option>
+                {{ end }}
+            </select>
+
+            <label for="addition2">&nbsp;&nbsp;Vehicle Deletion 2</label>
+            <select id="deletion2" class="delSelect" data-vehicle="2">
+                <option value="">None</option>
+                {{ range $i, $vehicle := .vehicles }}
+                    <option value="{{ $i }}">{{ $vehicle.VIN }}</option>
+                {{ end }}
+            </select>
+
+            <label for="addition3">&nbsp;&nbsp;Vehicle Deletion 3</label>
+            <select id="deletion3" class="delSelect" data-vehicle="3">
+                <option value="">None</option>
+                {{ range $i, $vehicle := .vehicles }}
+                    <option value="{{ $i }}">{{ $vehicle.VIN }}</option>
+                {{ end }}
+            </select>
+
         </div>
+        <div id="maxMsg" style="text-align:center; color:red;" class="hide">
+            <br>
+            <span id="maxMsg">
+                Maximum number of addition met
+            </span>
+        </div>
+
         <br>
         <div id="page1-div" style="position:relative;width:1188px;height:918px;margin:0 auto;">
             <img width="1188" height="918" src="/static/img/forms/mv-552a001.png" alt="background image" />
@@ -238,6 +303,7 @@
             <p style="position:absolute;top:823px;left:67px;white-space:nowrap" class="p1ft00">My&#160;signature&#160;attests&#160;to&#160;the&#160;fact&#160;that&#160;this&#160;vehicle&#160;is&#160;a&#160;motor&#160;carrier&#160;vehicle&#160;and&#160;it&#160;has&#160;a&#160;current&#160;valid&#160;safety&#160;inspection.&#160;It&#160;also&#160;attests&#160;to&#160;my&#160;knowledge</p>
             <p style="position:absolute;top:835px;left:67px;white-space:nowrap" class="p1ft00">of&#160;all&#160;applicable&#160;State&#160;and&#160;Federal&#160;Motor&#160;Carrier&#160;safety&#160;laws&#160;and&#160;regulations.</p>
             {{ $vehicle1 := index .vehicles 0 }}
+            {{ $vehicle1 }}
             <p style="position:absolute;top:256px;left:61px;white-space:nowrap" class="p1ft010"><input type="text" name="weight-pa" value="{{ $vehicle1.HigherWeight }}" style="text-align:center;width:77px"></p>
             <p style="position:absolute;top:287px;left:61px;white-space:nowrap" class="p1ft010"><input type="text" name="weight-il" value="{{ $vehicle1.HigherWeight }}" style="text-align:center;width:78px"></p>
             <p style="position:absolute;top:317px;left:61px;white-space:nowrap" class="p1ft010"><input type="text" name="weight-nc" value="{{ $vehicle1.HigherWeight }}" style="text-align:center;width:78px"></p>
@@ -365,23 +431,23 @@
             <p style="position:absolute;top:453px;left:832px;white-space:nowrap" class="p1ft00">YES</p>
             <p style="position:absolute;top:416px;left:789px;white-space:nowrap" class="p1ft00">Will&#160;the&#160;designated&#160;carrier&#160;responsible</p>
             <p style="position:absolute;top:426px;left:796px;white-space:nowrap" class="p1ft00">for&#160;safety&#160;change&#160;during&#160;the&#160;year?</p>
-            <p style="position:absolute;top:449px;left:810px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-addition-safety-change-1" value="true"></p>
-            <p style="position:absolute;top:560px;left:810px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-addition-safety-change-2" value="true"></p>
-            <p style="position:absolute;top:670px;left:810px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-addition-safety-change-3" value="true"></p>
-            <p style="position:absolute;top:449px;left:880px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-addition-safety-change-1" value="false"></p>
-            <p style="position:absolute;top:560px;left:880px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-addition-safety-change-2" value="false"></p>
-            <p style="position:absolute;top:670px;left:880px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-addition-safety-change-3" value="false"></p>
+            <p style="position:absolute;top:449px;left:810px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-additions-safety-change-1" value="true"></p>
+            <p style="position:absolute;top:560px;left:810px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-additions-safety-change-2" value="true"></p>
+            <p style="position:absolute;top:670px;left:810px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-additions-safety-change-3" value="true"></p>
+            <p style="position:absolute;top:449px;left:880px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-additions-safety-change-1" value="false"></p>
+            <p style="position:absolute;top:560px;left:880px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-additions-safety-change-2" value="false"></p>
+            <p style="position:absolute;top:670px;left:880px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-additions-safety-change-3" value="false"></p>
             <p style="position:absolute;top:453px;left:903px;white-space:nowrap" class="p1ft00">NO</p>
-            <p style="position:absolute;top:449px;left:660px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-addition-ut-spec-1" value="true"></p>
-            <p style="position:absolute;top:560px;left:660px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-addition-ut-spec-2" value="true"></p>
-            <p style="position:absolute;top:670px;left:660px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-addition-ut-spec-3" value="true"></p>
-            <p style="position:absolute;top:449px;left:700px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-addition-ut-spec-1" value="false"></p>
-            <p style="position:absolute;top:560px;left:700px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-addition-ut-spec-2" value="false"></p>
-            <p style="position:absolute;top:670px;left:700px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-addition-ut-spec-3" value="false"></p>
+            <p style="position:absolute;top:449px;left:660px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-additions-ut-spec-1" value="true"></p>
+            <p style="position:absolute;top:560px;left:660px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-additions-ut-spec-2" value="true"></p>
+            <p style="position:absolute;top:670px;left:660px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-additions-ut-spec-3" value="true"></p>
+            <p style="position:absolute;top:449px;left:700px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-additions-ut-spec-1" value="false"></p>
+            <p style="position:absolute;top:560px;left:700px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-additions-ut-spec-2" value="false"></p>
+            <p style="position:absolute;top:670px;left:700px;white-space:nowrap" class="p1ft01"><input type="radio" name="vehicle-additions-ut-spec-3" value="false"></p>
             <p style="position:absolute;top:453px;left:761px;white-space:nowrap" class="p1ft00">YES</p>
-            <p style="position:absolute;top:449px;left:740px;white-space:nowrap" class="p1ft01"><input type="checkbox" name="vehicle-addition-co-miles-1" value=""></p>
-            <p style="position:absolute;top:560px;left:740px;white-space:nowrap" class="p1ft01"><input type="checkbox" name="vehicle-addition-co-miles-2" value=""></p>
-            <p style="position:absolute;top:670px;left:740px;white-space:nowrap" class="p1ft01"><input type="checkbox" name="vehicle-addition-co-miles-3" value=""></p>
+            <p style="position:absolute;top:449px;left:740px;white-space:nowrap" class="p1ft01"><input type="checkbox" name="vehicle-additions-co-miles-1" value=""></p>
+            <p style="position:absolute;top:560px;left:740px;white-space:nowrap" class="p1ft01"><input type="checkbox" name="vehicle-additions-co-miles-2" value=""></p>
+            <p style="position:absolute;top:670px;left:740px;white-space:nowrap" class="p1ft01"><input type="checkbox" name="vehicle-additions-co-miles-3" value=""></p>
             <p style="position:absolute;top:530px;left:682px;white-space:nowrap" class="p1ft00">UT&#160;Spec</p>
             <p style="position:absolute;top:563px;left:681px;white-space:nowrap" class="p1ft00">YES</p>
             <p style="position:absolute;top:563px;left:719px;white-space:nowrap" class="p1ft00">NO</p>
@@ -466,23 +532,23 @@
             <p style="position:absolute;top:205px;left:176px;white-space:nowrap" class="p1ft015">adam@cnsprotects.com</p>
 
             <div id="addition-1">
-                <p style="position:absolute;top:450px;left:63px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-title-1"  style="width:85px;"></p>
-                <p style="position:absolute;top:450px;left:160px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-vin-1"  style="width:150px;"></p>
-                <p style="position:absolute;top:450px;left:320px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-equipment-number-1"  style="width:50px;"></p>
-                <p style="position:absolute;top:450px;left:378px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-year-1"  style="width:26px;"></p>
-                <p style="position:absolute;top:450px;left:413px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-make-1"  style="width:45px;"></p>
-                <p style="position:absolute;top:450px;left:522px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-axles-1"  style="width:36px;"></p>
-                <p style="position:absolute;top:450px;left:568px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-seats-1" style="width:36px;"></p>
-                <p style="position:absolute;top:450px;left:615px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-fuel-1"  style="width:38px;"></p>
-                <p style="position:absolute;top:450px;left:468px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-body-type-1" style="width:45px;"></p>
-                <p style="position:absolute;top:505px;left:63px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-unladen-weight-1"  style="width:93px;"></p>
-                <p style="position:absolute;top:505px;left:168px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-gvw-1"  style="width:93px;"></p>
-                <p style="position:absolute;top:505px;left:270px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-gcw-1"  style="width:113px;"></p>
-                <p style="position:absolute;top:505px;left:395px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-purchase-price-1"  style="width:93px;"></p>
-                <p style="position:absolute;top:505px;left:498px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-purchase-date-1"  style="width:72px;"></p>
-                <p style="position:absolute;top:505px;left:583px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-factory-price-1"  style="width:92px;"></p>
-                <p style="position:absolute;top:505px;left:686px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-us-dot-number-1"  style="width:123px;"></p>
-                <p style="position:absolute;top:505px;left:820px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-ein-1"  style="width:122px;"></p>
+                <p style="position:absolute;top:450px;left:63px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-title-1"  style="width:85px;"></p>
+                <p style="position:absolute;top:450px;left:160px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-vin-1"  style="width:150px;"></p>
+                <p style="position:absolute;top:450px;left:320px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-equipment-number-1"  style="width:50px;"></p>
+                <p style="position:absolute;top:450px;left:378px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-year-1"  style="width:26px;"></p>
+                <p style="position:absolute;top:450px;left:413px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-make-1"  style="width:45px;"></p>
+                <p style="position:absolute;top:450px;left:522px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-axles-1"  style="width:36px;"></p>
+                <p style="position:absolute;top:450px;left:568px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-seats-1" style="width:36px;"></p>
+                <p style="position:absolute;top:450px;left:615px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-fuel-1"  style="width:38px;"></p>
+                <p style="position:absolute;top:450px;left:468px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-body-type-1" style="width:45px;"></p>
+                <p style="position:absolute;top:505px;left:63px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-unladen-weight-1"  style="width:93px;"></p>
+                <p style="position:absolute;top:505px;left:168px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-gvw-1"  style="width:93px;"></p>
+                <p style="position:absolute;top:505px;left:270px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-gcw-1"  style="width:113px;"></p>
+                <p style="position:absolute;top:505px;left:395px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-purchase-price-1"  style="width:93px;"></p>
+                <p style="position:absolute;top:505px;left:498px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-purchase-date-1"  style="width:72px;"></p>
+                <p style="position:absolute;top:505px;left:583px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-factory-price-1"  style="width:92px;"></p>
+                <p style="position:absolute;top:505px;left:686px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-us-dot-number-1"  style="width:123px;"></p>
+                <p style="position:absolute;top:505px;left:820px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-ein-1"  style="width:122px;"></p>
 
             </div>
 
@@ -493,23 +559,23 @@
             </div>
 
             <div id="addition-2">
-                <p style="position:absolute;top:560px;left:63px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-title-2"  style="width:85px;"></p>
-                <p style="position:absolute;top:560px;left:160px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-vin-2"  style="width:150px;"></p>
-                <p style="position:absolute;top:560px;left:320px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-equipment-number-2"  style="width:50px;"></p>
-                <p style="position:absolute;top:560px;left:378px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-year-2"  style="width:26px;"></p>
-                <p style="position:absolute;top:560px;left:413px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-make-2"  style="width:45px;"></p>
-                <p style="position:absolute;top:560px;left:468px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-body-type-2" style="width:45px;"></p>
-                <p style="position:absolute;top:560px;left:522px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-axles-2"  style="width:36px;"></p>
-                <p style="position:absolute;top:560px;left:568px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-seats-2" style="width:36px;"></p>
-                <p style="position:absolute;top:615px;left:63px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-unladen-weight-2"  style="width:93px;"></p>
-                <p style="position:absolute;top:615px;left:168px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-gvw-2"  style="width:93px;"></p>
-                <p style="position:absolute;top:615px;left:270px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-gcw-2"  style="width:113px;"></p>
-                <p style="position:absolute;top:560px;left:615px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-fuel-2"  style="width:38px;"></p>
-                <p style="position:absolute;top:615px;left:395px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-purchase-price-2"  style="width:93px;"></p>
-                <p style="position:absolute;top:615px;left:498px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-purchase-date-2"  style="width:72px;"></p>
-                <p style="position:absolute;top:615px;left:583px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-factory-price-2"  style="width:92px;"></p>
-                <p style="position:absolute;top:615px;left:686px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-us-dot-number-2"  style="width:123px;"></p>
-                <p style="position:absolute;top:615px;left:820px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-ein-2"  style="width:122px;"></p>
+                <p style="position:absolute;top:560px;left:63px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-title-2"  style="width:85px;"></p>
+                <p style="position:absolute;top:560px;left:160px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-vin-2"  style="width:150px;"></p>
+                <p style="position:absolute;top:560px;left:320px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-equipment-number-2"  style="width:50px;"></p>
+                <p style="position:absolute;top:560px;left:378px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-year-2"  style="width:26px;"></p>
+                <p style="position:absolute;top:560px;left:413px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-make-2"  style="width:45px;"></p>
+                <p style="position:absolute;top:560px;left:468px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-body-type-2" style="width:45px;"></p>
+                <p style="position:absolute;top:560px;left:522px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-axles-2"  style="width:36px;"></p>
+                <p style="position:absolute;top:560px;left:568px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-seats-2" style="width:36px;"></p>
+                <p style="position:absolute;top:615px;left:63px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-unladen-weight-2"  style="width:93px;"></p>
+                <p style="position:absolute;top:615px;left:168px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-gvw-2"  style="width:93px;"></p>
+                <p style="position:absolute;top:615px;left:270px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-gcw-2"  style="width:113px;"></p>
+                <p style="position:absolute;top:560px;left:615px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-fuel-2"  style="width:38px;"></p>
+                <p style="position:absolute;top:615px;left:395px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-purchase-price-2"  style="width:93px;"></p>
+                <p style="position:absolute;top:615px;left:498px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-purchase-date-2"  style="width:72px;"></p>
+                <p style="position:absolute;top:615px;left:583px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-factory-price-2"  style="width:92px;"></p>
+                <p style="position:absolute;top:615px;left:686px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-us-dot-number-2"  style="width:123px;"></p>
+                <p style="position:absolute;top:615px;left:820px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-ein-2"  style="width:122px;"></p>
             </div>
 
             <div id="deletion-2">
@@ -519,25 +585,25 @@
             </div>
 
             <div id="addition-3">
-                <p style="position:absolute;top:670px;left:63px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-title-3"  style="width:85px;"></p>
-                <p style="position:absolute;top:670px;left:160px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-vin-3"  style="width:150px;"></p>
-                <p style="position:absolute;top:670px;left:320px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-equipment-number-3"  style="width:50px;"></p>
-                <p style="position:absolute;top:670px;left:378px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-year-3"  style="width:26px;"></p>
-                <p style="position:absolute;top:670px;left:413px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-make-3"  style="width:45px;"></p>
-                <p style="position:absolute;top:670px;left:468px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-body-type-3" style="width:45px;"></p>
-                <p style="position:absolute;top:670px;left:522px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-axles-3"  style="width:36px;"></p>
-                <p style="position:absolute;top:670px;left:568px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-seats-3" style="width:36px;"></p>
-                <p style="position:absolute;top:670px;left:615px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-fuel-3"  style="width:38px;"></p>
-                <p style="position:absolute;top:724px;left:63px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-unladen-weight-3"  style="width:93px;"></p>
-                <p style="position:absolute;top:724px;left:168px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-gvw-3"  style="width:93px;"></p>
-                <p style="position:absolute;top:724px;left:270px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-gcw-3"  style="width:113px;"></p>
-                <p style="position:absolute;top:724px;left:395px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-purchase-price-3"  style="width:93px;"></p>
+                <p style="position:absolute;top:670px;left:63px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-title-3"  style="width:85px;"></p>
+                <p style="position:absolute;top:670px;left:160px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-vin-3"  style="width:150px;"></p>
+                <p style="position:absolute;top:670px;left:320px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-equipment-number-3"  style="width:50px;"></p>
+                <p style="position:absolute;top:670px;left:378px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-year-3"  style="width:26px;"></p>
+                <p style="position:absolute;top:670px;left:413px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-make-3"  style="width:45px;"></p>
+                <p style="position:absolute;top:670px;left:468px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-body-type-3" style="width:45px;"></p>
+                <p style="position:absolute;top:670px;left:522px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-axles-3"  style="width:36px;"></p>
+                <p style="position:absolute;top:670px;left:568px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-seats-3" style="width:36px;"></p>
+                <p style="position:absolute;top:670px;left:615px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-fuel-3"  style="width:38px;"></p>
+                <p style="position:absolute;top:724px;left:63px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-unladen-weight-3"  style="width:93px;"></p>
+                <p style="position:absolute;top:724px;left:168px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-gvw-3"  style="width:93px;"></p>
+                <p style="position:absolute;top:724px;left:270px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-gcw-3"  style="width:113px;"></p>
+                <p style="position:absolute;top:724px;left:395px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-purchase-price-3"  style="width:93px;"></p>
                 <p style="position:absolute;top:853px;left:356px;white-space:nowrap" class="p1ft019"><input type="text" name="signature-title" style="width:230px;"></p>
                 <p style="position:absolute;top:853px;left:628px;white-space:nowrap" class="p1ft019"><input type="text" name="signature-date" style="width:62px;"></p>
-                <p style="position:absolute;top:724px;left:498px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-purchase-date-3"  style="width:72px;"></p>
-                <p style="position:absolute;top:724px;left:583px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-addition-factory-price-3"  style="width:92px;"></p>
-                <p style="position:absolute;top:724px;left:686px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-us-dot-number-3"  style="width:123px;"></p>
-                <p style="position:absolute;top:724px;left:820px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-addition-ein-3"  style="width:122px;"></p>
+                <p style="position:absolute;top:724px;left:498px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-purchase-date-3"  style="width:72px;"></p>
+                <p style="position:absolute;top:724px;left:583px;white-space:nowrap" class="p1ft019"><input type="text" name="vehicle-additions-factory-price-3"  style="width:92px;"></p>
+                <p style="position:absolute;top:724px;left:686px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-us-dot-number-3"  style="width:123px;"></p>
+                <p style="position:absolute;top:724px;left:820px;white-space:nowrap" class="p1ft017"><input type="text" name="vehicle-additions-ein-3"  style="width:122px;"></p>
             </div>
 
             <div id="deletion-3">
@@ -595,79 +661,128 @@
         </div>
         <script type="text/javascript">
 
-            var vehicles = [
-                {
-                    location: "",
-                    data: {{ index .vehicles 0 | toJson}}
-                },
-                {
-                    location: "",
-                    data: {{ index .vehicles 1 | toJson}}
-                }
-            ];
+            var vehicles = {{ if .vehicles }}{{ toJson .vehicles }}{{ else }}[]{{ end }};
+            var previous;
+
             $(document).ready(function() {
 
-                $('select.vehicleSelect').change(function() {
-                    var vIdx =+ $(this).attr('data-vehicle');
+                $('select.addSelect').change(function() {
+                    var num = $(this).attr('data-vehicle');
+                    clearInputs('addition-' + num);
+                    if (this.value === '') {
+                        return
+                    }
+                    var vIdx =+ this.value;
                     var vehicle = vehicles[vIdx];
-                    if (vehicle.location !== '') {
-                        clearInputs(vehicle.location);
-                        moveVehicle(vehicle.location);
-                    }
-
-                    if ($(this).val() === 'add') {
-                        addVehicle(vehicle);
-                        return;
-                    }
-                    if ($(this).val() === 'del') {
-                        delVehicle(vehicle);
-                        return;
-                    }
-                    vehicle.location = '';
+                    addVehicle(vehicle, num);
                 });
+
+                $('select.delSelect').change(function() {
+                    var num = $(this).attr('data-vehicle');
+                    clearInputs('deletion-' + num);
+                    if (this.value === '') {
+                        return
+                    }
+                    var vIdx =+ this.value;
+                    var vehicle = vehicles[vIdx];
+                    delVehicle(vehicle, num);
+                });
+
+
+                // $('select.vehicleSelect').on('focus', function() {
+                //     previous = this.value;
+                // }).change(function() {
+                //     $('div#maxMsg').addClass('hide');
+                //     var vIdx =+ $(this).attr('data-vehicle');
+                //     var vehicle = vehicles[vIdx];
+                //     var oldLocation = (vehicle.location === undefined) ? '' : vehicle.location;
+                //     var success = false;
+                //     switch ($(this).val()) {
+                //         case 'add':
+                //             success = addVehicle(vehicle);
+                //             break;
+                //         case 'del':
+                //             success = delVehicle(vehicle);
+                //             break;
+                //         default:
+                //             vehicle.location = '';
+                //             success = true;
+                //             break;
+                //     }
+                //     if (success && oldLocation !== '') {
+                //         clearInputs(oldLocation);
+                //         moveVehicle(oldLocation);
+                //         return
+                //     }
+                //     if (!success) {
+                //         if (oldLocation.indexOf('addition') !== -1) {
+                //             this.value = 'add'
+                //             return
+                //         }
+                //         if (oldLocation.indexOf('deletion') !== -1) {
+                //             this.value = 'del'
+                //             return
+                //         }
+                //         this.value = '';
+                //     }
+                // });
+                //
+                setSelects();
             });
 
-            function addVehicle(vehicle) {
-                var num = '1';
-                if ($('input[name="vehicle-addition-equipment-number-1"]').val() !== '') {
-                    num = '2';
-                }
+            // function getPlacement(action) {
+            //     var num = 1;
+            //     var val = $('input[name="vehicle-' + action + '-equipment-number-1"]').val();
+            //     while (val !== '' && val !== undefined) {
+            //         num++;
+            //         val = $('input[name="vehicle-' + action + '-equipment-number-' + num + '"]').val();
+            //     }
+            //     return num
+            // }
 
-                clearInputs('addition-' + num);
+            function addVehicle(vehicle, num) {
+                // var num = getPlacement('additions');
+                // if (num > 3) {
+                //     setMaxMsg("Maximum number of additions reached.");
+                //     return false;
+                // }
 
-                $('input[name="vehicle-addition-title-' + num + '"]').val(vehicle.data.title);
-                $('input[name="vehicle-addition-vin-' + num + '"]').val(vehicle.data.vin);
-                $('input[name="vehicle-addition-equipment-number-' + num + '"]').val(vehicle.data.unitNumber);
-                $('input[name="vehicle-addition-year-' + num + '"]').val(vehicle.data.year);
-                $('input[name="vehicle-addition-make-' + num + '"]').val(vehicle.data.make);
-                $('input[name="vehicle-addition-axles-' + num + '"]').val(vehicle.data.axleAmount);
-                $('input[name="vehicle-addition-seats-' + num + '"]').val(vehicle.data.seats);
-                $('input[name="vehicle-addition-unladen-weight-' + num + '"]').val(vehicle.data.unladenWeight);
-                $('input[name="vehicle-addition-gvw-' + num + '"]').val(vehicle.data.gvw);
-                $('input[name="vehicle-addition-gcw-' + num + '"]').val(vehicle.data.gcr);
-                $('input[name="vehicle-addition-fuel-' + num + '"]').val(vehicle.data.fuelType);
-                $('input[name="vehicle-addition-purchase-price-' + num + '"]').val(vehicle.data.purchasePrice);
-                $('input[name="vehicle-addition-purchase-date-' + num + '"]').val(vehicle.data.purchaseDate);
+                $('input[name="vehicle-additions-title-' + num + '"]').val(vehicle.title);
+                $('input[name="vehicle-additions-vin-' + num + '"]').val(vehicle.vin);
+                $('input[name="vehicle-additions-equipment-number-' + num + '"]').val(vehicle.unitNumber);
+                $('input[name="vehicle-additions-year-' + num + '"]').val(vehicle.year);
+                $('input[name="vehicle-additions-make-' + num + '"]').val(vehicle.make);
+                $('input[name="vehicle-additions-axles-' + num + '"]').val(vehicle.axleAmount);
+                $('input[name="vehicle-additions-seats-' + num + '"]').val(vehicle.seats);
+                $('input[name="vehicle-additions-unladen-weight-' + num + '"]').val(vehicle.unladenWeight);
+                $('input[name="vehicle-additions-gvw-' + num + '"]').val(vehicle.gvw);
+                $('input[name="vehicle-additions-gcw-' + num + '"]').val(vehicle.gcr);
+                $('input[name="vehicle-additions-fuel-' + num + '"]').val(vehicle.fuelType);
+                $('input[name="vehicle-additions-purchase-price-' + num + '"]').val(vehicle.purchasePrice);
+                $('input[name="vehicle-additions-purchase-date-' + num + '"]').val(vehicle.purchaseDate);
 
-                $('input[name="vehicle-addition-us-dot-number-' + num + '"]').val('{{ .company.DOTNum }}');
-                $('input[name="vehicle-addition-ein-' + num + '"]').val('{{ .company.EINNum }}');
+                $('input[name="vehicle-additions-us-dot-number-' + num + '"]').val('{{ .company.DOTNum }}');
+                $('input[name="vehicle-additions-ein-' + num + '"]').val('{{ .company.EINNum }}');
 
                 vehicle.location = 'addition-' + num;
-
+                return true;
             }
 
-            function delVehicle(vehicle) {
-                var num = '1';
-                if ($('input[name="vehicle-deletions-equipment-number-1"]').val() !== '') {
-                    num = '2';
-                }
-                clearInputs('deletion-' + num);
+            function delVehicle(vehicle, num) {
+                //
+                // var num = getPlacement('deletions');
+                // if (num > 3) {
+                //     setMaxMsg("Maximum number of deletions reached.");
+                //     return false;
+                // }
+                // clearInputs('deletion-' + num);
 
-                $('input[name="vehicle-deletions-plate-number-' + num + '"]').val(vehicle.data.plateNum);
-                $('input[name="vehicle-deletions-vin-' + num + '"]').val(vehicle.data.vin);
-                $('input[name="vehicle-deletions-equipment-number-' + num + '"]').val(vehicle.data.unitNumber);
+                $('input[name="vehicle-deletions-plate-number-' + num + '"]').val(vehicle.plateNum);
+                $('input[name="vehicle-deletions-vin-' + num + '"]').val(vehicle.vin);
+                $('input[name="vehicle-deletions-equipment-number-' + num + '"]').val(vehicle.unitNumber);
 
                 vehicle.location = 'deletion-' + num;
+                return true;
             }
 
             function clearInputs(id) {
@@ -677,21 +792,58 @@
                 }
             }
 
-            function moveVehicle(loc) {
-                var ll = loc.split('-');
-                var num =+ ll[ll.length - 1];
-                var type = ll[0];
-                for (var i = num; i < 3; i++) {
-                    var id = type + '-' + i
-                    var inputs = $('div#' + id + ' input');
-                    for (var j = 0; j < inputs.length; j++) {
-                        var input = $(inputs[j])
-                        var name = input.attr('name').replace(i, i+1);
-                        input.val($('input[name="' + name + '"]').val());
+            // function moveVehicle(loc) {
+            //     var ll = loc.split('-');
+            //     var num =+ ll[ll.length - 1];
+            //     var type = ll[0];
+            //     for (var i = num; i < 3; i++) {
+            //         var id = type + '-' + i
+            //         var inputs = $('div#' + id + ' input');
+            //         for (var j = 0; j < inputs.length; j++) {
+            //             var input = $(inputs[j])
+            //             var name = input.attr('name').replace(i, i+1);
+            //             input.val($('input[name="' + name + '"]').val());
+            //         }
+            //         for (var k = 0; k < vehicles.length; k++) {
+            //             if (vehicles[k].location === id) {
+            //                 vehicles[k].location = type + '-' + (i - 1);
+            //             }
+            //         }
+            //     }
+            //     var id = type + '-3'
+            //     var inputs = $('div#' + id + ' input');
+            //     for (var j = 0; j < inputs.length; j++) {
+            //         var input = $(inputs[j])
+            //         input.val('');
+            //     }
+            // }
+            //
+            // function setMaxMsg(msg) {
+            //     $('span#maxMsg').text(msg);
+            //     $('div#maxMsg').removeClass('hide');
+            // }
+            //
+            function setSelects() {
+                var additions = $('input[name="vehicle-additions-equipment-number-1"], input[name="vehicle-additions-equipment-number-2"], input[name="vehicle-additions-equipment-number-3"]');
+                for (var i = 0; i < additions.length; i++) {
+                    var val = additions[i].value;
+                    if (val !== '' && val != undefined) {
+                        for (var j = 0; j < vehicles.length; j++) {
+                            if (val === vehicles[j].unitNumber) {
+                                $('select#addition' + (i + 1)).val(j);
+                            }
+                        }
                     }
-                    for (var k = 0; k < vehicles.length; k++) {
-                        if (vehicles[k].location === id) {
-                            vehicles[k].location = type + '-' + (i - 1);
+                }
+
+                var deletions = $('input[name="vehicle-deletions-equipment-number-1"], input[name="vehicle-deletions-equipment-number-2"], input[name="vehicle-deletions-equipment-number-3"]');
+                for (var i = 0; i < deletions.length; i++) {
+                    var val = deletions[i].value;
+                    if (val !== '' && val != undefined) {
+                        for (var j = 0; j < vehicles.length; j++) {
+                            if (val === vehicles[j].unitNumber) {
+                                $('select#deletion' + (i + 1)).val(j);
+                            }
                         }
                     }
                 }

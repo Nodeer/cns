@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	 "encoding/json"
-	 "errors"
+	"encoding/json"
+	"errors"
 
 	"github.com/cagnosolutions/adb"
 	"github.com/cagnosolutions/web"
@@ -33,15 +33,14 @@ func addEmployees() {
 	if len(employees) < 1 {
 		panic(errors.New("0 employees!"))
 	}
-    for _, e := range employees {
+	for _, e := range employees {
 		db.Set("employee", e.Id, e)
-	    fmt.Printf("added employee -> %s\n", e)
-    }
+		fmt.Printf("added employee -> %v\n", e)
+	}
 }
 
 // initialize routes
 func init() {
-
 	db.AddStore("employee")
 	db.AddStore("company")
 	db.AddStore("driver")
@@ -51,9 +50,10 @@ func init() {
 	db.AddStore("note")
 	db.AddStore("comment")
 
-
 	// *** ADD EMPLOYEES
-	addEmployees()
+	//addEmployees()
+	//converVehicles()
+	//convertCCExpire()
 
 	web.DEFAULT_ERR_ROUTE = web.Route{"GET", "/error/:code", func(w http.ResponseWriter, r *http.Request) {
 		code, err := strconv.Atoi(r.FormValue(":code"))
@@ -104,7 +104,7 @@ func init() {
 
 	// development routes
 	mx.AddSecureRoutes(DEVELOPER, DevComments)
-	mx.AddRoutes(makeUsers, GetComment, PostComent)
+	mx.AddRoutes(makeUsers, GetComment, PostComent, testDB)
 	mx.AddRoutes(files, filesApi, uploadApi, httpError)
 
 	web.Funcs["lower"] = strings.ToLower
@@ -113,6 +113,7 @@ func init() {
 	web.Funcs["toJson"] = ToJson
 	web.Funcs["title"] = strings.Title
 	web.Funcs["idTime"] = IdTime
+	web.Funcs["add"] = add
 	tc = web.NewTmplCache()
 
 	defaultUsers()
@@ -121,11 +122,16 @@ func init() {
 
 // main http listener
 func main() {
-	
-    fmt.Println("Test")
-    fmt.Println("DID YOU REGISTER ANY NEW ROUTES?")
+	fmt.Println("DID YOU REGISTER ANY NEW ROUTES?")
 	log.Fatal(http.ListenAndServe(":8080", mx))
 }
+
+var testDB = web.Route{"GET", "/test/db", func(w http.ResponseWriter, r *http.Request) {
+	testEmployees()
+	testCompanies()
+	testDrivers()
+	web.SetMsgRedirect(w, r, "/", "Please check terminal for results")
+}}
 
 var logout = web.Route{"GET", "/logout", func(w http.ResponseWriter, r *http.Request) {
 	web.Logout(w)

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/cagnosolutions/web"
@@ -15,6 +16,75 @@ const (
 	DperC = 10
 	VperC = 5
 )
+
+func testDrivers() {
+	var drivers []Driver
+	fmt.Println("Getting all drivers...")
+	db.All("driver", &drivers)
+	fmt.Println("Compiling list of driver ids...")
+	var ids []string
+	for _, driver := range drivers {
+		ids = append(ids, driver.Id)
+	}
+	fmt.Println("Waiting 2 seconds...")
+	time.Sleep(2 * time.Second)
+	fmt.Println("Getting all drivers individually by id...")
+	i := 0
+	for _, id := range ids {
+		var driver Driver
+		if !db.Get("driver", id, &driver) {
+			fmt.Printf("Failed to get driver with id %s\n", id)
+			i++
+		}
+	}
+	fmt.Printf("\nFailed to get %d drivers\n\n", i)
+}
+
+func testEmployees() {
+	var employees []Employee
+	fmt.Println("Getting all employees...")
+	db.All("employee", &employees)
+	fmt.Println("Compiling list of employee ids...")
+	var ids []string
+	for _, employee := range employees {
+		ids = append(ids, employee.Id)
+	}
+	fmt.Println("Waiting 2 seconds...")
+	time.Sleep(2 * time.Second)
+	fmt.Println("Getting all employees individually by id...")
+	i := 0
+	for _, id := range ids {
+		var employee Employee
+		if !db.Get("employee", id, &employee) {
+			fmt.Printf("Failed to get employee with id %s\n", id)
+			i++
+		}
+	}
+	fmt.Printf("\nFailed to get %d employees\n\n", i)
+}
+
+func testCompanies() {
+	var companies []Company
+	fmt.Println("Getting all companies...")
+	db.All("company", &companies)
+	fmt.Println("Compiling list of company ids...")
+	var ids []string
+	for _, company := range companies {
+		ids = append(ids, company.Id)
+	}
+	fmt.Println("Waiting 2 seconds...")
+	time.Sleep(2 * time.Second)
+	fmt.Println("Getting all companies individually by id...")
+	i := 0
+	for _, id := range ids {
+		var company Company
+		if !db.Get("company", id, &company) {
+			fmt.Printf("Failed to get company with id %s\n", id)
+			i++
+		}
+	}
+	fmt.Printf("\nFailed to get %d companies\n\n", i)
+}
 
 func defaultUsers() {
 
@@ -207,15 +277,116 @@ func MakeVehicles(compIds [COMP]string) {
 			PlateExpire:   fmt.Sprintf("03/1%d/%d", 1992+compIdx, i),
 		}
 		if i%3 == 0 {
-			vehicle.AxleAmount = 2
+			vehicle.AxleAmount = "2"
 		} else if i%2 == 0 {
-			vehicle.AxleAmount = 3
+			vehicle.AxleAmount = "3"
 		} else {
-			vehicle.AxleAmount = 4
+			vehicle.AxleAmount = "4"
 		}
 
 		db.Add("vehicle", id, vehicle)
 	}
+}
+
+func converVehicles() {
+	var vehicle2s []Vehicle2
+	db.All("vehicle", &vehicle2s)
+	for _, vehicle2 := range vehicle2s {
+		vehicle := Vehicle{
+			Id:               vehicle2.Id,
+			CompanyId:        vehicle2.CompanyId,
+			VehicleType:      vehicle2.VehicleType,
+			UnitNumber:       vehicle2.UnitNumber,
+			Make:             vehicle2.Make,
+			VIN:              vehicle2.VIN,
+			Title:            vehicle2.Title,
+			GVW:              vehicle2.GVW,
+			GCR:              vehicle2.GCR,
+			UnladenWeight:    vehicle2.UnladenWeight,
+			PurchasePrice:    vehicle2.PurchasePrice,
+			PurchaseDate:     vehicle2.PurchaseDate,
+			CurrentValue:     vehicle2.CurrentValue,
+			AxleAmount:       strconv.Itoa(vehicle2.AxleAmount),
+			FuelType:         vehicle2.FuelType,
+			Active:           vehicle2.Active,
+			Owner:            vehicle2.Owner,
+			Year:             vehicle2.Year,
+			PlateNum:         vehicle2.PlateNum,
+			PlateExpire:      vehicle2.PlateExpire,
+			PlateExpireMonth: vehicle2.PlateExpireMonth,
+			PlateExpireYear:  vehicle2.PlateExpireYear,
+			BodyType:         vehicle2.BodyType,
+			BodyTypeOther:    vehicle2.BodyTypeOther,
+		}
+		db.Set("vehicle", vehicle.Id, vehicle)
+	}
+	var vehicles []Vehicle
+	db.All("vehicle", &vehicles)
+	fmt.Printf("old vehicles: %d, converted vehicles %d\n", len(vehicle2s), len(vehicle2s))
+}
+
+type Vehicle2 struct {
+	Id               string   `json:"id"`
+	CompanyId        string   `json:"companyId,omitempty"`
+	VehicleType      string   `json:"vehicleType,omitempty"`
+	UnitNumber       string   `json:"unitNumber,omitempty"`
+	Make             string   `json:"make,omitempty"`
+	VIN              string   `json:"vin,omitempty"`
+	Title            string   `json:"title,omitempty"`
+	GVW              int      `json:"gvw,omitempty"`
+	GCR              int      `json:"gcr,omitempty"`
+	UnladenWeight    int      `json:"unladenWeight,omitempty"`
+	PurchasePrice    float32  `json:"purchasePrice,omitempty"`
+	PurchaseDate     string   `json:"purchaseDate,omitempty"`
+	CurrentValue     float32  `json:"currentValue,omitempty"`
+	AxleAmount       int      `json:"axleAmount,omitempty"`
+	FuelType         string   `json:"fuelType,omitempty"`
+	Active           bool     `json:"active"`
+	Owner            string   `json:"owner,omitempty"`
+	Year             string   `json:"year,omitempty"`
+	PlateNum         string   `json:"plateNum,omitempty"`
+	PlateExpire      string   `json:"plateExpire,omitempty"`
+	PlateExpireMonth string   `json:"plateExpireMonth,omitempty"`
+	PlateExpireYear  string   `json:"plateExpireYear,omitempty"`
+	BodyType         BodyType `json:"bodyType,omitempty"`
+	BodyTypeOther    string   `json:"bodyTypeOther,omitempty"`
+}
+
+func convertCCExpire() {
+	var companies []Company
+	db.All("company", &companies)
+	for _, company := range companies {
+		if company.CreditCard.ExpirationDate == "" {
+			continue
+		}
+		ss := strings.Split(company.CreditCard.ExpirationDate, "/")
+		if len(ss) != 3 {
+			continue
+		}
+		if ss[1] == "" {
+			continue
+		}
+		m, err := strconv.Atoi(ss[1])
+		if err != nil {
+			continue
+		}
+		if ss[2] == "" {
+			continue
+		}
+		y, err := strconv.Atoi(ss[2])
+		if err != nil {
+			continue
+		}
+		if m < 1 || m > 12 || y < 0 {
+			continue
+		}
+		company.CreditCard.ExpirationMonth = m
+		company.CreditCard.ExpirationYear = y
+		db.Set("company", company.Id, company)
+	}
+	var companies2 []Company
+	db.All("company", &companies2)
+	fmt.Printf("Old companies: %d, modified companies: %d\n", len(companies), len(companies2))
 }
 
 var upload = web.Route{"GET", "/upload", func(w http.ResponseWriter, r *http.Request) {

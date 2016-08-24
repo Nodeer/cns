@@ -41,19 +41,21 @@ InputTools.prototype = {
         var invalid = false;
         for (var i = 0; i < inputs.length; i++) {
             var elem = inputs[i];
-            if (!validate || this.requiredInputIsValid(elem)) {
-                var out;
-                if (elem.id === 'multi') {
-                    out = this.parseMulti(elem);
-                    i = i + this.getParent(elem).querySelectorAll(this.inputTypes.join(', ')).length - 1;
+            if (elem.name !== '') {
+                if (!validate || this.requiredInputIsValid(elem)) {
+                    var out;
+                    if (elem.id === 'multi') {
+                        out = this.parseMulti(elem);
+                        i = i + this.getParent(elem).querySelectorAll(this.inputTypes.join(', ')).length - 1;
+                    } else {
+                        out = this.parseInput(elem);
+                    }
+                    if (out !== null && out !== {} && out !== []) {
+                        data.push(out);
+                    }
                 } else {
-                    out = this.parseInput(elem);
+                    invalid = true;
                 }
-                if (out !== null && out !== {} && out !== []) {
-                    data.push(out);
-                }
-            } else {
-                invalid = true;
             }
         }
         if (invalid) {
@@ -185,10 +187,12 @@ InputTools.prototype = {
         this.removeInvalid();
         for (var i = 0; i < data.length; i++) {
             var key = this.getKeys(data[i])[0];
-            if (Array.isArray(data[i][key])) {
-                this.fillMulti(data[i][key], key);
-            } else {
-                this.fillInput(data[i][key], key);
+            if (key !== '') {
+                if (Array.isArray(data[i][key])) {
+                    this.fillMulti(data[i][key], key);
+                } else {
+                    this.fillInput(data[i][key], key);
+                }
             }
         }
     },

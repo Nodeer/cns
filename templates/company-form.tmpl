@@ -64,11 +64,17 @@
                                                         <th>form</th>
                                                         <th></th>
                                                         <th></th>
+                                                        <th>
+
+                                                        </th>
                                                     </tr>
                                                     <tr>
                                                         <th>Form</th>
                                                         <th>Complete</th>
                                                         <th></th>
+                                                        <th>
+
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -77,6 +83,9 @@
                                                         <tr class="clickable" data-url="/document/{{ $doc.Id }}">
                                                             <td>{{ $doc.Name }}</td>
                                                             <td>{{ $doc.Complete }}</td>
+                                                            <td>
+                                                                {{ $doc.VehicleIds }}
+                                                            </td>
                                                             <td class="text-center"><a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ $company.Id }}/{{ $doc.Id }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
                                                         </tr>
                                                     {{ end }}
@@ -132,6 +141,11 @@
 
         <script type="text/javascript">
 
+            var vIds = [];
+            {{ range $vehicle := .vehicles }}
+                vIds.push('{{$vehicle.Id}}');
+            {{ end }}
+
             var table = $('#formsTable').DataTable({
                 "lengthMenu":[5,10,15,20],
                 //"dom": 'lrtip',
@@ -143,7 +157,17 @@
 
             $('button.add').click(function() {
                 $('#stateFormModalTitle').text('Add ' + $(this).attr('data-name'));
+                $('#stateFormName').val($(this).attr('data-name'));
+                if ($(this).attr('data-vehicles') === 'ALL') {
+                    $('#stateFormVehicleIds').val(vIds);
+                    $('form#stateFormModalForm').submit();
+                    return;
+                }
                 var vehicles =+ $(this).attr('data-vehicles');
+                if (vehicles < 1) {
+                    $('form#stateFormModalForm').submit();
+                    return
+                }
                 for (var i = 0; i < vehicles; i++) {
                     var v = $('<label class="control-label col-lg-4">Vehicle ' + (i + 1) + '</label>'+
                         '<div class="form-group col-lg-8">'+
@@ -155,11 +179,6 @@
                         '</div>');
                     $('#stateFormModalForm').append(v);
                 }
-                $('#stateFormName').val($(this).attr('data-name'));
-                if (vehicles < 1) {
-                    $('form#stateFormModalForm').submit();
-                    return
-                }
                 $('#stateFormModal').modal();
             });
 
@@ -170,13 +189,16 @@
 
             $('#stateFormButton').click(function(e) {
                 e.preventDefault();
+
                 var selects = $('.vehicleIds');
-                var vehicleIds = [];
-                for (var i = 0; i < selects.length; i++) {
-                    var vid = selects[i].value;
-                    vehicleIds.push(vid);
+                if (selects.length > 0) {
+                    var vehicleIds = [];
+                    for (var i = 0; i < selects.length; i++) {
+                        var vid = selects[i].value;
+                        vehicleIds.push(vid);
+                    }
+                    $('#stateFormVehicleIds').val(vehicleIds);
                 }
-                $('#stateFormVehicleIds').val(vehicleIds);
                 $('form#stateFormModalForm').submit();
             });
 

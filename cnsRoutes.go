@@ -202,7 +202,6 @@ var companySave = web.Route{"POST", "/cns/company", func(w http.ResponseWriter, 
 	}
 
 	var companies []Company
-
 	db.TestQuery("company", &companies, adb.Eq("email", company.Email), adb.Ne("id", `"`+company.Id+`"`))
 	if len(companies) > 0 {
 		web.SetErrorRedirect(w, r, "/cns/company/"+company.Id, "Error saving company. Email is already registered")
@@ -210,6 +209,9 @@ var companySave = web.Route{"POST", "/cns/company", func(w http.ResponseWriter, 
 	}
 	if company.SameAddress {
 		company.MailingAddress = company.PhysicalAddress
+	}
+	if company.CreditCard.ExpirationMonth > 0 && company.CreditCard.ExpirationYear > 0 {
+		company.CreditCard.ExpirationDate = strconv.Itoa(company.CreditCard.ExpirationMonth) + "/" + strconv.Itoa(company.CreditCard.ExpirationYear)
 	}
 	db.Set("company", company.Id, company)
 	if r.FormValue("from") == "vehicle" {

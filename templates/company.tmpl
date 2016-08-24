@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
     <head>
 
@@ -66,19 +67,19 @@
                                                             <td><b>Primary Contact</b></td>
                                                             <td>
                                                                 {{ .company.ContactName }}<br>
-                                                                {{ .company.ContactTitle }}<br>
+                                                                <!-- {{ .company.ContactTitle }}<br> -->
                                                                 {{ .company.ContactPhone }}
-                                                                {{ if .company.ContactAddress.Street }}
+                                                                <!-- {{ if .company.ContactAddress.Street }}
                                                                     <br><br>
                                                                     {{ .company.ContactAddress.AddrHTML }}
-                                                                {{ end }}
+                                                                {{ end }} -->
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td><b>Secondary Contact</b></td>
                                                             <td>
                                                                 {{ .company.SecondName }}<br>
-                                                                {{ .company.SecondTitle }}<br>
+                                                                <!-- {{ .company.SecondTitle }}<br> -->
                                                                 {{ .company.SecondPhone }}
                                                             </td>
                                                         </tr>
@@ -115,8 +116,11 @@
                                                                 <b>EIN #</b> &nbsp;&nbsp;{{ .company.EINNum }}
                                                             </td>
                                                             <td>
-                                                                <b>ARP Account #</b> &nbsp;&nbsp;{{ .company.ARPAccountNum }}
+
                                                             </td>
+                                                            <!-- <td>
+                                                                <b>ARP Account #</b> &nbsp;&nbsp;{{ .company.ARPAccountNum }}
+                                                            </td> -->
                                                         </tr>
                                                         <tr>
                                                             <td>
@@ -126,10 +130,10 @@
                                                                 <b>Carrier Type</b> &nbsp;&nbsp;{{ .company.GetCarrierType }}
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        <!-- <tr>
                                                             <td><b>NY OSCAR Username</b></td>
                                                             <td>{{ .company.NYOscarUsername }}</td>
-                                                        </tr>
+                                                        </tr> -->
                                                         <tr>
                                                             <td><b>NY OSCAR Password</b></td>
                                                             <td>{{ .company.NYOscarPassword }}</td>
@@ -174,9 +178,8 @@
                                                                 <td><b>Credit Card</b></td>
                                                                 <td>
                                                                     {{ if.company.CreditCard.Number }}
-                                                                        {{ .company.CreditCard.Number }}<br>
+                                                                        {{ .company.CreditCard.Number }} &nbsp;Security Code: {{ .company.CreditCard.SecurityCode }}<br>
                                                                         Exp. {{ .company.CreditCard.ExpirationDate}}<br>
-                                                                        Security Code: {{ .company.CreditCard.SecurityCode }}
                                                                     {{ end }}
                                                                 </td>
                                                             </tr>
@@ -382,10 +385,10 @@
                                                                     <b>EIN #</b>
                                                                     <input type="text" class="form-control" name="eINNum" value="{{ .company.EINNum }}" placeholder="EIN#">
                                                                 </td>
-                                                                <td>
+                                                                <!-- <td>
                                                                     <b>ARP Account #</b>
                                                                     <input type="text" class="form-control" name="aRPAccountNum" value="{{ .company.ARPAccountNum }}" placeholder="ARP Account #">
-                                                                </td>
+                                                                </td> -->
                                                             </tr>
                                                             <tr>
                                                                 <td>
@@ -406,10 +409,10 @@
                                                                     <input id="carrierTypeOther" class="form-control {{ if not $isCarrierOther }}hide{{ end }}" type="text" name="carrierTypeOther" value="{{ .company.CarrierTypeOther }}" placeholder="Carrier Type">
                                                                 </td>
                                                             </tr>
-                                                            <tr>
+                                                            <!-- <tr>
                                                                 <td><b>NY OSCAR Username</b></td>
                                                                 <td><input type="text" class="form-control" name="nYOscarUsername" value="{{ .company.NYOscarUsername }}" placeholder="NY OSCAR Username"></td>
-                                                            </tr>
+                                                            </tr> -->
                                                             <tr>
                                                                 <td><b>NY OSCAR Password</b></td>
                                                                 <td><input type="text" class="form-control" name="nYOscarPassword" value="{{ .company.NYOscarPassword }}" placeholder="NY OSCAR Password"></td>
@@ -450,16 +453,29 @@
                                                                 <tr>
                                                                     <td><b>Credit Card</b></td>
                                                                     <td>
-                                                                        <input type="text" class="form-control" name="creditCard.number" value="{{ .company.CreditCard.Number }}" placeholder="Number"><br>
                                                                         <div class="row">
-                                                                            <div class="col-lg-6">
+                                                                            <div class="col-lg-8">
+                                                                                <input type="text" class="form-control" name="creditCard.number" value="{{ .company.CreditCard.Number }}" placeholder="Number"><br>
+                                                                            </div>
+                                                                            <div class="col-lg-4">
+                                                                                <input type="text" class="form-control" name="creditCard.securityCode" value="{{ .company.CreditCard.SecurityCode }}" placeholder="Code">
+                                                                            </div>
+                                                                        </div>
+                                                                            <!-- <div class="col-lg-6">
                                                                                 <div class="input-group">
-                                                                                    <input type="text" class="form-control datepicker" name="creditCard.expirationDate" value="{{ .company.CreditCard.ExpirationDate }}" placeholder="Expiration Date">
+                                                                                    <input type="text" id="ccDate" class="form-control datepicker" name="creditCard.expirationDate" value="{{ .company.CreditCard.ExpirationDate }}" placeholder="Expiration Date">
+                                                                                    <input type="date" class="form-control" name="name" value="">
                                                                                     <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                                                 </div>
+                                                                            </div> -->
+                                                                        <div class="row">
+                                                                            <label class="col-lg-2 control-label">Month</label>
+                                                                            <div class="col-lg-4">
+                                                                                <input class="form-control" type="number" name="creditCard.expirationMonth" min="1" max="12" value="{{ .company.CreditCard.ExpirationMonth }}" placeholder="Exp Month">
                                                                             </div>
-                                                                            <div class="col-lg-6">
-                                                                                <input type="text" class="form-control" name="creditCard.securityCode" value="{{ .company.CreditCard.SecurityCode }}" placeholder="Security Code">
+                                                                            <label class="col-lg-2 control-label">Year</label>
+                                                                            <div class="col-lg-4">
+                                                                                <input class="form-control" type="number" name="creditCard.expirationYear" min="2016" max="9999" value="{{ .company.CreditCard.ExpirationYear }}" placeholder="Exp Year">
                                                                             </div>
                                                                         </div>
                                                                     </td>
@@ -579,16 +595,6 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group">
-                                        <label>Employee</label>
-                                        <select id="employeeId" class="form-control input-sm" name="employeeId">
-                                            {{ $userId := .userId }}
-                                            {{ range $employee := .employees}}
-                                                <option value="{{ $employee.Id }}" {{ if eq $userId $employee.Id }}selected{{ end }}>{{ $employee.FirstName }} {{ $employee.LastName }}</option>
-                                            {{ end }}
-                                        </select>
-                                        <input id="employeeId" type="hidden" name="employeeId" value="{{ .userId }}">
-                                    </div>
-                                    <div class="form-group">
                                         <label>Email Another Employee</label><br>
                                         <div style="height:34px;">
                                             <div class="radio-inline">
@@ -625,6 +631,18 @@
                                                 </label>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="form-group">
+                                        {{ if eq .session.ROLE "ADMIN" "DEVELOPER" }}
+                                        <label>Employee</label>
+                                        <select id="employeeId" class="form-control input-sm" name="employeeId">
+                                            {{ $userId := .userId }}
+                                            {{ range $employee := .employees}}
+                                                <option value="{{ $employee.Id }}" {{ if eq $userId $employee.Id }}selected{{ end }}>{{ $employee.FirstName }} {{ $employee.LastName }}</option>
+                                            {{ end }}
+                                        </select>
+                                        {{ end }}
+                                        <input id="employeeId" type="hidden" name="employeeId" value="{{ .userId }}">
                                     </div>
                                 </div>
                             </div>
