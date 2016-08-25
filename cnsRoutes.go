@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -58,6 +59,22 @@ var saveEmployee = web.Route{"POST", "/cns/employee", func(w http.ResponseWriter
 	}
 	db.Set("employee", employee.Id, employee)
 	web.SetSuccessRedirect(w, r, "/cns/employee/"+employee.Id, "Successfully saved employee")
+	return
+}}
+
+var delEmployee = web.Route{"POST", "/cns/employee/:id", func(w http.ResponseWriter, r *http.Request) {
+	empId := r.FormValue(":id")
+	db.Del("employee", empId)
+	web.SetSuccessRedirect(w, r, "/cns/employee", "Successfully deleted employee")
+	return
+}}
+
+var saveHomePage = web.Route{"POST", "/cns/employee/:id/homepage", func(w http.ResponseWriter, r *http.Request) {
+	var employee Employee
+	db.Get("employee", r.FormValue(":id"), &employee)
+	employee.Home = r.FormValue("url")
+	db.Set("employee", employee.Id, employee)
+	ajaxResponse(w, `{"error":false}`)
 	return
 }}
 
@@ -402,4 +419,22 @@ var saveDriver = web.Route{"POST", "/cns/driver", func(w http.ResponseWriter, r 
 	db.Set("driver", driver.Id, driver)
 	web.SetSuccessRedirect(w, r, "/cns/driver/"+driver.Id, "Successfully saved driver")
 	return
+}}
+
+var delDriver = web.Route{"POST", "/cns/driver/:id", func(w http.ResponseWriter, r *http.Request) {
+	driverId := r.FormValue(":id")
+	var documents []Document
+	db.TestQuery("document", &documents, adb.Eq("DriverId", `"`+driverId+`"`))
+
+	for _, doc := range documents {
+		db.Del("document", doc.Id)
+	}
+
+	os.RemoveAll("upload/driver/" + driverId + "/")
+
+	db.Del("driver", driverId)
+
+	web.SetSuccessRedirect(w, r, "/cns/company/"+r.FormValue("companyId")+"/driver", "Successfully deleted driver and all of the associated forms and files")
+	return
+
 }}

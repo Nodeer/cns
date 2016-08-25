@@ -36,7 +36,10 @@
                                             <div class="col-lg-6">
                                                 <h1 class="clearfix">
                                                     {{ .employee.FirstName}} {{ .employee.LastName }}
-                                                    <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
+                                                    <span class="pull-right">
+                                                        <button class="btn btn-primary btn-xs" id="editButton">Edit</button>
+                                                        <button data-message="Are you sure you would like to delete this employee? This CANNOT be undone" data-color="red" data-url="/cns/employee/{{ .employee.Id}}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</button>
+                                                    </span>
                                                 </h1>
 
                                                 <table class="table table-condensed">
@@ -185,7 +188,7 @@
         <script src="/static/js/jquery.scrollTo.min.js"></script>
 
         {{ template "session.tmpl" . }}
-
+        <script src="/static/js/confirm.js" charset="utf-8"></script>
         <script type="text/javascript">
             var newEmployee = {{ if .employee.Id }}false{{ else }}true{{ end }};
 
@@ -222,6 +225,10 @@
                     $('input#password').attr('name', '');
                 }
             });
+
+            confirm.yes = function(btn) {
+                $('<form method="post" action="' + btn.attr('data-url') + '"></form>').submit();
+            }
         </script>
 
 

@@ -44,7 +44,6 @@
             var caps = false;
             $('#password').keypress(function(e) {
                 var s = String.fromCharCode( e.which );
-                console.log(s.toLocaleLowerCase() == ' ');
                 if ( (s.toUpperCase() === s && s.toLowerCase() !== s && !e.shiftKey) || (s.toLowerCase() === s && s.toUpperCase() !== s && e.shiftKey) ) {
                     $('#capsWarn').removeClass('hide');
                     caps = true;

@@ -42,7 +42,11 @@
                                         <div id="view">
                                             <h1 class="clearfix">
                                                 {{ if  .company.Id }}Works For: <a href="/cns/company/{{ .company.Id }}" style="color:blue;">{{ .company.Name }}</a>{{ end }}
-                                                <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
+                                                <span class="pull-right">
+                                                    <button class="btn btn-primary btn-xs" id="editButton">Edit</button>
+                                                    <button class="btn btn-warning btn-xs" id="editButton">Transfer</button>
+                                                    <button data-message="Are you sure you would like to delete this driver? This will also delete all forms and files associated with this driver. This CANNOT be undone" data-color="red" data-url="/cns/driver/{{ .driver.Id}}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</button>
+                                                </span>
                                             </h1>
                                             <div class="row">
                                                 <div class="col-lg-6">
@@ -355,6 +359,10 @@
                     $.Notification.autoHideNotify('error', 'top right', 'Please save driver first');
                 }
             });
+
+            confirm.yes = function(btn) {
+                $('<form method="post" action="' + btn.attr('data-url') + '"><input name="companyId" value="{{ .company.Id }}"></form>').submit();
+            }
         </script>
 
     </body>
