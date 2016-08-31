@@ -14,6 +14,7 @@ import (
 	"errors"
 
 	"github.com/cagnosolutions/adb"
+	"github.com/cagnosolutions/mg"
 	"github.com/cagnosolutions/web"
 )
 
@@ -21,6 +22,9 @@ import (
 var tc *web.TmplCache
 var mx *web.Mux
 var db *adb.DB = adb.NewDB()
+
+var MG_DOMAIN = "api.mailgun.net/v3/sandbox73d66ccb60f948708fcaf2e2d1b3cd4c.mailgun.org"
+var MG_KEY = "key-173701b40541299bd3b7d40c3ac6fd43"
 
 var data = []byte(`[{"id":"1469475270888181640","email":"john@cnsprotects.com","password":"Caidjildihmi4!","active":true,"role":"ADMIN","firstName":"John","lastName":"Irwin","phone":"717-468-5284","street":"129 Briar Hill Rd","city":"Lititz","state":"PA","zip":"17543"},{"id":"1469475421303393264","email":"adam@cnsprotects.com","password":"adam1","active":true,"role":"EMPLOYEE","firstName":"Adam","lastName":"Galante"},{"id":"1469475582767347399","email":"geoff@cnsprotects.com","password":"LaSala1","active":true,"role":"EMPLOYEE","firstName":"Geoff","lastName":"LaSala"},{"id":"1469475684023743858","email":"melissa@cnsprotects.com","password":"mjw2mji","active":true,"role":"ADMIN","firstName":"Melissa","lastName":"Irwin"},{"id":"1469475756863774584","email":"ryan@cnsprotects.com","password":"Password1","active":true,"role":"EMPLOYEE","firstName":"Ryan","lastName":"Word"},{"id":"1469475835126641086","email":"gloria@cnsprotects.com","password":"Password12","active":true,"role":"EMPLOYEE","firstName":"Gloria","lastName":"Allen"},{"id":"1469475913768366301","email":"shirley@cnsprotects.com","password":"Shirley5","active":true,"role":"EMPLOYEE","firstName":"Shirley","lastName":"Burkholder"}]`)
 
@@ -84,7 +88,7 @@ func init() {
 	// main page
 	mx.AddSecureRoutes(EMPLOYEE, index)
 
-	mx.AddSecureRoutes(ADMIN, emailTemplates, emailTemplatesView, emailTemplateSave)
+	mx.AddSecureRoutes(ADMIN, emailTemplates, emailTemplatesView, emailTemplateSave, emailTemplates, emailTest, emailTestSend)
 
 	// employee management routes
 	mx.AddSecureRoutes(ADMIN, allEmployee, viewEmployee, saveEmployee, delEmployee)
@@ -124,6 +128,8 @@ func init() {
 	tc = web.NewTmplCache()
 
 	defaultUsers()
+
+	mg.SetCredentials(MG_DOMAIN, MG_KEY)
 
 }
 

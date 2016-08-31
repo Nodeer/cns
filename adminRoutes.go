@@ -1,11 +1,14 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/cagnosolutions/adb"
+	"github.com/cagnosolutions/mg"
 	"github.com/cagnosolutions/web"
 )
 
@@ -111,4 +114,31 @@ var emailTemplateSave = web.Route{"POST", "/admin/template", func(w http.Respons
 	web.SetSuccessRedirect(w, r, "/admin/template/"+emailTemplate.Id, "Successfully saved email template")
 	return
 
+}}
+
+var emailTest = web.Route{"GET", "/admin/email/test", func(w http.ResponseWriter, r *http.Request) {
+	var emailTemplates []EmailTemplate
+	db.All("emailTemplate", &emailTemplates)
+	tc.Render(w, r, "email-test.tmpl", web.Model{
+		"emailTemplates": emailTemplates,
+	})
+}}
+
+var emailTestSend = web.Route{"POST", "/admin/email/test", func(w http.ResponseWriter, r *http.Request) {
+	var emailTemplate EmailTemplate
+	if !db.Get("emailTemplate", r.FormValue("template"), &emailTemplate) {
+		web.SetErrorRedirect(w, r, "/admin/email/test", "Error sending email")
+		return
+	}
+	var email mg.Email
+	FormToStruct(&email, r.Form, "")
+	email.HTML = emailTemplate.Body
+	s, err := mg.SendEmail(email)
+	if err != nil {
+		log.Printf("adminRoutes.go >> mg.SendEmail() >> %v\n\n", err)
+		web.SetErrorRedirect(w, r, "/admin/email/test", "Error sending email")
+		return
+	}
+	fmt.Println(s)
+	web.SetSuccessRedirect(w, r, "/admin/email/test", "Successfully sent email")
 }}
