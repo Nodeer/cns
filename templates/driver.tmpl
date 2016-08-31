@@ -6,10 +6,7 @@
 
         <!-- sweet alerts -->
         <link href="/static/sweet-alert/sweet-alert.min.css" rel="stylesheet">
-        <link href="/static/dropzone/dropzone.css" rel="stylesheet" type="text/css" />
-        <!-- DataTables -->
-        <link href="/static/datatables/data-tables-bootstrap.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
+        <link href="/static/timepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
 
         <title>Driver</title>
 
@@ -30,211 +27,277 @@
 
                         <p class="lead">
                             Driver: {{ if .driver.Id }}{{ .driver.FirstName }} {{ .driver.LastName}}{{ else }}NEW{{ end }}
-                            <a href="/" target="_blank">LINK</a>
                         </p>
 
                         <div class="panel panel-default p-0">
                             <div class="panel-body p-0">
                                 <ul class="nav nav-tabs profile-tabs">
-                                    <li class="active"><a id="infoTab" class="view" data-toggle="tab" href="#infoPane">Information</a></li>
-                                    <li><a id="docsTab" class="view" data-table="docsTable" data-toggle="tab" href="#docsPane">Forms</a></li>
-                                    <li><a id="filesTab" class="view" data-table="filesTable" data-toggle="tab" href="#filesPane">Uploaded Files</a></li>
-                                    <li><a id="settingsTab" class="view" data-toggle="tab" href="#settingsPane">Settings</a></li>
+                                    <li class="active"><a class="tab" href="">Information</a></li>
+                                    <li><a class="tab" href="/cns/driver/{{ .driver.Id }}/form">Forms</a></li>
+                                    <li><a class="tab" href="/cns/driver/{{ .driver.Id }}/file">Files</a></li>
                                 </ul>
 
-                                <div class="tab-content m-0">
-
-                                    <div id="infoPane" class="tab-pane active">
-                                        <div class="profile-desk">
-                                            <h1>{{ .driver.FirstName }} {{ .driver.LastName}}</h1>
-
-                                            <table class="table table-condensed">
-                                                <tbody>
-                                                    <tr>
-                                                        <td><b>Email</b></td>
-                                                        <td>{{ .driver.Email }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Phone</b></td>
-                                                        <td>{{ .driver.Phone }}</td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td><b>Address</b></td>
-                                                        <td>{{ .driver.AddrHTML }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Date of Birth</b></td>
-                                                        <td>{{ .driver.FormatDOB }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Age</b></td>
-                                                        <td>{{ .driver.GetAge }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                                    <div id="docsPane" class="tab-pane">
-                                        <div class="row m-t-10">
-                                            <div class="col-lg-4">
-                                				<h2>Add Documents</h2>
-                                				<div id="docs" class="list-group">
-                                					{{ range $dqf := .dqfs }}
-                                                        <p>
-                                                            DQF{{ index $dqf 0 }} - {{ index $dqf 1 }}
-                                							<button id="addDoc" data-added="0" data-docId="{{ index $dqf 0 }}" class="btn-default btn btn-xs pull-right check">
-                                								<i class="fa fa-check"></i>
-                                							</button>
-                                						</p>
-                                					{{ end }}
-                                                    <p>
-                                						<form id="documentForm" class="text-center" role="form">
-                                							<input type="hidden"  id="docIds" name="docIds">
-                                                            <input type="hidden" name="id" value="{{ .driver.Id }}">
-                                							<button id="done" class="btn btn-md btn-primary btn-block" type="submit" disabled="disabled">
-                                								Please Select Documents
-                                							</button>
-                                						</form>
-                                                    </p>
-                                				</div>
-                                    		</div>
-                                            <div class="col-lg-8">
-                                                <div class="table-responsive">
-                                                    <table id="docsTable" class="table table-bordered table-hover">
-                                                        <thead>
-                                                            <tr id="search">
-                                                                <th>dqf</th>
-                                                                <th></th>
-                                                                <th></th>
+                                <div class="tabPane clearfix">
+                                    <div class="profile-desk">
+                                        <div id="view">
+                                            <h1 class="clearfix">
+                                                {{ if  .company.Id }}Works For: <a href="/cns/company/{{ .company.Id }}" style="color:blue;">{{ .company.Name }}</a>{{ end }}
+                                                <span class="pull-right">
+                                                    <button class="btn btn-primary btn-xs" id="editButton">Edit</button>
+                                                    <button class="btn btn-warning btn-xs" data-toggle="modal" data-target="#transferModal">Transfer</button>
+                                                    <button data-message="Are you sure you would like to delete this driver? This will also delete all forms and files associated with this driver. This CANNOT be undone" data-color="red" data-url="/cns/driver/{{ .driver.Id}}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</button>
+                                                </span>
+                                            </h1>
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <table class="table table-condensed">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><b>First Name</b></td>
+                                                                <td>{{ .driver.FirstName }}</td>
                                                             </tr>
                                                             <tr>
-                                                                <th>DQF</th>
-                                                                <th>Complete</th>
-                                                                <th></th>
+                                                                <td><b>LastName</b></td>
+                                                                <td>{{ .driver.LastName }}</td>
                                                             </tr>
-                                                        </thead>
+                                                            <tr>
+                                                                <td><b>Email</b></td>
+                                                                <td>{{ .driver.Email }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Phone</b></td>
+                                                                <td>{{ .driver.Phone }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Address</b></td>
+                                                                <td>{{ .driver.AddrHTML }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Date of Birth</b></td>
+                                                                <td>{{ .driver.DOB }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Age</b></td>
+                                                                <td>{{ .driver.GetAge }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Emergency Contact</b></td>
+                                                                <td>
+                                                                    {{ .driver.EmergencyContactName }}<br>
+                                                                    {{ .driver.EmergencyContactPhone }}
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <table class="table table-condensed">
                                                         <tbody>
-                                                            {{ $driver := .driver }}
-                                                            {{ range $doc := .docs }}
-                                                                <tr class="clickable" data-url="/document/{{ $doc.Id }}" data-target="_blank">
-                                                                    <td>{{ $doc.DocumentId }}</td>
-                                                                    <td>{{ $doc.Complete }}</td>
-                                                                    <td class="text-center"><a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ $driver.Id }}/{{ $doc.Id }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
-                                                                </tr>
-                                                            {{ end }}
+                                                            <tr>
+                                                                <td><b>License Number</b></td>
+                                                                <td>{{ .driver.LicenseNum }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>License State</b></td>
+                                                                <td>{{ .driver.LicenseState }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>License Expiration</b></td>
+                                                                <td>{{ .driver.LicenseExpire }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Medical Card Expiration</b></td>
+                                                                <td>{{ .driver.MedCardExpiry }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>MVR Expiration</b></td>
+                                                                <td>{{ .driver.MVRExpiry }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Review Expiration</b></td>
+                                                                <td>{{ .driver.ReviewExpiry }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>180 Expiration</b></td>
+                                                                <td>{{ .driver.OneEightyExpiry }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Hire Date</b></td>
+                                                                <td>{{ .driver.HireDate }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Termination Date</b></td>
+                                                                <td>{{ .driver.TermDate }}</td>
+                                                            </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <!-- profile -->
-                                    <div id="filesPane" class="tab-pane">
-                                        <div class="row m-t-10">
-                                            <div class="col-lg-6">
-                                                <div class="table-responsive">
-                                                    <table id="filesTable" class="table table-bordered table-hover">
-                                                        <thead>
-                                                            <tr id="search" class="search">
-                                                                <th>name</th>
-                                                                <th>size</th>
-                                                                <th></th>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>Name</th>
-                                                                <th>Size</th>
-                                                                <th></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {{ $driver := .driver }}
-                                                            {{ range $file := .files }}
-                                                                <tr class="clickable" data-url="/driver/file/{{ $driver.Id }}/{{ $file.name }}" data-target="_blank">
-                                                                    <td>{{ $file.name }}</td>
-                                                                    <td>{{ size $file.size }}</td>
-                                                                    <td class="text-center"><a data-message="Are you sure you would like to delete this file?" data-color="red" data-url="/driver/file/{{ $driver.Id}}/{{ $file.name }}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a></td>
-                                                                </tr>
+                                        <div id="edit" class="hide">
+                                            <h1 class="clearfix">
+                                                {{ if not .company.Id }}
+                                                    <div class="col-lg-2">
+                                                        Works For:
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <select class="form-control" name="companyId">
+                                                            <option value="">None</option>
+                                                            {{ range $company := .companies}}
+                                                                <option value="{{ $company.Id }}">{{ $company.Name }}</option>
                                                             {{ end }}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <form action="/driver/upload" method="post" class="dropzone" id="dropzone">
-                                                    <div class="fallback">
-                                                        <input name="file" type="file" multiple />
+                                                        </select>
                                                     </div>
-                                                    <input type="hidden" name="id" value="{{ .driver.Id }}">
-                                                </form>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- settings -->
-                                    <div id="settingsPane" class="tab-pane">
-                                        <div class="user-profile-content">
-                                            <form id="set" role="form" action="/cns/driver" method="post">
-                                                <div class="row">
+                                                {{ end }}
+                                                <button class="btn btn-danger btn-xs pull-right" id="cancelButton">Cancel</button>
+                                            </h1>
+                                            <div class="row">
+                                                <form id="edit" action="/cns/driver" method="post">
                                                     <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            <label>First Name</label>
-                                                            <input type="text" value="{{ .driver.FirstName }}" name="firstName" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Last Name</label>
-                                                            <input type="text" value="{{ .driver.LastName }}" name="lastName" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Email</label>
-                                                            <input type="email" value="{{ .driver.Email }}" name="auth.Email" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Date of Birth</label>
-                                                            <input type="date" value="{{ .driver.DOB }}" name="dOB" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>License Number</label>
-                                                            <input type="text" value="{{ .driver.LicenseNum }}" name="LicenseNum" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>License State</label>
-                                                            <input type="text" value="{{ .driver.LicenseState }}" name="licenseState" class="form-control">
-                                                        </div>
+                                                        <table class="table table-condensed">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><b>First Name</b></td>
+                                                                    <td><input type="text" class="form-control" name="firstName" value="{{ .driver.FirstName }}" placeholder="First Name"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>LastName</b></td>
+                                                                    <td><input type="text" class="form-control" name="lastName" value="{{ .driver.LastName }}" placeholder="Last Name"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Email</b></td>
+                                                                    <td><input type="text" class="form-control" name="auth.email" value="{{ .driver.Email }}" placeholder="Email"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Phone</b></td>
+                                                                    <td><input type="text" class="form-control" name="phone" value="{{ .driver.Phone }}" placeholder="Phone"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Address</b></td>
+                                                                    <td>
+                                                                        <input type="text" class="form-control" name="address.street" value="{{ .driver.Street }}" placeholder="Street"><br>
+                                                                        <input type="text" class="form-control" name="address.city" value="{{ .driver.City }}" placeholder="City"><br>
+                                                                        <div class="row">
+                                                                            <div class="col-lg-6">
+                                                                                <input type="text" class="form-control" name="address.state" value="{{ .driver.State }}" placeholder="State">
+                                                                            </div>
+                                                                            <div class="col-lg-6">
+                                                                                <input type="text" class="form-control" name="address.zip" value="{{ .driver.Zip }}" placeholder="Zip">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Date of Birth</b></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="dOB" value="{{ .driver.DOB }}" placeholder="Date of Birth">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Emergency Contact</b></td>
+                                                                    <td>
+                                                                        <input type="text" class="form-control" name="emergencyContactName" value="{{ .driver.EmergencyContactName }}" placeholder="Name"><br>
+                                                                        <input type="text" class="form-control" name="emergencyContactPhone" value="{{ .driver.EmergencyContactPhone }}" placeholder="Phone">
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                     <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            <label>Street</label>
-                                                            <input type="text" value="{{ .driver.Street }}" name="address.Street" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>City</label>
-                                                            <input type="text" value="{{ .driver.City }}" name="address.City" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>State</label>
-                                                            <input type="text" value="{{ .driver.State }}" name="address.State" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Zip</label>
-                                                            <input type="text" value="{{ .driver.Zip }}" name="address.Zip" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Phone</label>
-                                                            <input type="text" value="{{ .driver.Phone }}" name="phone" class="form-control">
-                                                        </div>
+                                                        <table class="table table-condensed">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><b>License Number</b></td>
+                                                                    <td><input type="text" class="form-control" name="licenseNum" value="{{ .driver.LicenseNum }}" placeholder="License Number"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>License State</b></td>
+                                                                    <td><input type="text" class="form-control" name="licenseState" value="{{ .driver.LicenseState }}" placeholder="License State"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>License Expiration</b></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="licenseExpire" value="{{ .driver.LicenseExpire }}" placeholder="License Expiration">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Medical Card Expiration</b></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="medCardExpiry" value="{{ .driver.MedCardExpiry }}" placeholder="Medical Card Expiration">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>MVR Expiration</b></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="mVRExpiry" value="{{ .driver.MVRExpiry }}" placeholder="MVR Expiration">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Review Expiration</b></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="reviewExpiry" value="{{ .driver.ReviewExpiry }}" placeholder="Review Expiration">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>180 Expiration</b></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="oneEightyExpiry" value="{{ .driver.OneEightyExpiry }}" placeholder="180 Expiration">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Hire Date</b></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="hireDate" value="{{ .driver.HireDate }}" placeholder="Hire Date">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Termination Date</b></td>
+                                                                    <td>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control datepicker" name="termDate" value="{{ .driver.TermDate }}" placeholder="Termination Date">
+                                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2">
+                                                                        <button class="btn btn-success btn-block">Save</button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    {{ if .driver.Id }}
                                                         <input type="hidden" name="id" value="{{ .driver.Id }}">
-                                                    </div>
-                                                </div>
-                                                <button class="btn btn-primary" type="submit">Save</button>
-                                            </form>
-                                            <br>
+                                                    {{ else }}
+                                                        <input type="hidden" name="companyId" value="{{ .companyId }}">
+                                                    {{ end }}
+                                                </form>
+                                            </div>
                                         </div>
-                                    </div>
-
+                                    </dvi>
                                 </div>
                             </div>
                         </div>
@@ -244,6 +307,29 @@
 
             {{ template "footer.tmpl" . }}
 
+            <div class="modal fade" id="transferModal" tabindex="-1" role="dialog" >
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="transferModalLabel">Transfer Driver</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="" action="/cns/driver/{{ .driver.Id }}/transfer" method="post">
+                                <div class="form-group">
+                                    <select class="form-control" name="companyId">
+                                        {{ range $company := .companies }}
+                                            <option value="{{ $company.Id }}">{{ $company.Name }}</option>
+                                        {{ end }}
+                                    </select>
+                                </div>
+                                <button class="btn btn-block btn-primary">Transfer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </section>
 
         {{ template "scripts.tmpl" . }}
@@ -252,250 +338,54 @@
         <script src="/static/dropzone/dropzone.min.js"></script>
         <script src="/static/datatables/jquery.dataTables.min.js"></script>
         <script src="/static/datatables/dataTables.bootstrap.js"></script>
+        <script src="/static/timepicker/bootstrap-datepicker.js"></script>
         <script src="/static/js/confirm.js" charset="utf-8"></script>
         <script src="/static/datatables/custom.js" charset="utf-8"></script>
 
-        {{ if not .driver.Id}}
-            <script type="text/javascript">
-                $('a#settingsTab').tab('show');
-            </script>
-        {{ end }}
+        {{ template "session.tmpl" . }}
 
-        <script>
+        <script type="text/javascript">
 
-            var selectedTable = '';
-            var table = {};
-            var tableState = {
-                'docsTable': {
-                    'table':{},
-                    'search':''
-                },
-                'filesTable': {
-                    'table':{},
-                    'search':''
-                }
-            }
+            var companyId = '{{ .company.Id }}'
 
-            $('a.view').click(function() {
-                newTable = $(this).attr('data-table');
-                if (newTable !== selectedTable && newTable !== undefined) {
-                    if (selectedTable !== '') {
-                        tableState[selectedTable]['search'] = $('input#filter').val();
-                    }
-                    $('input#filter').val(tableState[newTable]['search']);
-                    table = tableState[newTable]['table'];
-                    selectedTable = newTable;
-                }
+            jQuery('.datepicker').datepicker();
+
+            var newDriver = {{ if .driver.Id }}false{{ else }}true{{ end }};
+
+            $('button#editButton').click(function() {
+                $('div#view').addClass('hide');
+                $('div#edit').removeClass('hide');
             });
 
-            tableState['docsTable']['table'] = $('#docsTable').DataTable({
-                "lengthMenu":[5,10,15,20],
-                "dom": 'lrtip',
-                "columnDefs": [
-                    { "orderable": false, "targets": [1,2] },
-                    { "name": "dqf",   "targets": 0 }
-                ]
+            $('button#cancelButton').click(function() {
+                if (newDriver) {
+                    if (companyId === '') {
+                        window.location.href = '/cns/driver';
+                        return;
+                    }
+                    window.location.href = '/cns/company/' + companyId + '/driver';
+                    return;
+                }
+                $('div#edit').addClass('hide');
+                $('div#view').removeClass('hide');
+                $('form#edit')[0].reset();
             });
 
-            tableState['filesTable']['table'] = $('#filesTable').DataTable({
-                "lengthMenu":[5,10,15,20],
-                "dom": 'lrtip',
-                "columnDefs": [
-                    { "orderable": false, "targets": [2] },
-                    { "name": "name",   "targets": 0 },
-                    { "name": "size",  "targets": 1 },
-                ]
-            });
+            if (newDriver) {
+                $('div#view').addClass('hide');
+                $('div#edit').removeClass('hide');
+            }
 
-            function renderTable(data) {
-                table.data = [];
-                table.rows('*').remove().draw();
-                for (var i = 0; i < data.length; i++) {
-                    if (selectedTable === 'docsTable') {
-                        renderDocRow(data[i]);
-                    } else if (selectedTable === 'filesTable') {
-                        renderFileRow(data[i]);
-                    }
+            $('a.tab').click(function(e) {
+                if (newDriver) {
+                    e.preventDefault()
+                    $.Notification.autoHideNotify('error', 'top right', 'Please save driver first');
                 }
-            }
-
-            function renderDocRow(doc) {
-                var rowNode = table.row.add([
-                    doc.documentId,
-                    doc.complete,
-                    '<a data-message="Are you sure you would like to delete this document?" data-color="red" data-url="/document/del/{{ .driver.Id }}/' + doc.id + '" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a>'
-                ]).draw().node();
-                var jRowNode = $(rowNode);
-                jRowNode.addClass('clickable').attr('data-url', '/document/' + doc.id).attr('data-target', '_blank');
-                jRowNode.children().last().addClass('text-center');
-            }
-
-            function renderFileRow(file) {
-                var rowNode = table.row.add([
-                    file.name,
-                    prettySize(file.size),
-                    '<a data-message="Are you sure you would like to delete this file?" data-color="red" data-url="/driver/file/{{ .driver.Id }}/' + file.name + '" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</a>'
-                ]).draw().node();
-                var jRowNode = $(rowNode);
-                jRowNode.addClass('clickable').attr('data-url', '/driver/file/{{ .driver.Id }}/' + file.name).attr('data-target', '_blank');
-                jRowNode.children().last().addClass('text-center');
-            }
-
-            var docId = [];
-			$('button[id="addDoc"]').click(function() {
-                var b = $(this);
-                if (b.attr('data-added') == '0') {
-					docId.push(b.attr('data-docId'));
-                    b.removeClass('btn-default');
-                    b.addClass('btn-success');
-					b.attr('data-added', '1');
-					$('button[id="done"]').removeAttr('disabled');
-					$('button[id="done"]').text('Add Documents To Driver');
-				} else {
-                    var idx = docId.indexOf(b.attr('data-docId'));
-                    if (idx > -1) {
-                        docId.splice(idx, 1);
-                    }
-                    b.removeClass('btn-success');
-					b.addClass('btn-default');
-					b.attr('data-added', '0');
-					if(docId.length < 1) {
-						$('button[id="done"]').attr('disabled', 'disabled');
-						$('button[id="done"]').text('Please Select Documents');
-					}
-				}
-			});
-
-            $('button[id="done"]').click(function(e){
-				e.preventDefault();
-                $.ajax({
-                    url: '/driver/document',
-                    method: 'POST',
-                    data: {
-                        docIds :docId.join(','),
-                        id: '{{ .driver.Id }}'
-                    },
-                    success: function(resp) {
-                        if (resp.status === 'success')  {
-                            renderTable(resp.data);
-                            docId = [];
-                            $('button.check').removeClass('btn-success');
-                            $('button.check').addClass('btn-default');
-                            $('button#done').attr('disabled', 'disabled');
-    						$('button#done').text('Please Select Documents');
-                            $.Notification.autoHideNotify('success', 'top right', resp.msg);
-                            return
-                        }
-                        if (resp.status === 'error' && resp.type == 'marshal') {
-                            docId = [];
-                            $('button.check').removeClass('btn-success');
-                            $('button.check').addClass('btn-default');
-                            $('button#done').attr('disabled', 'disabled');
-    						$('button#done').text('Please Select Documents');
-                            $.Notification.confirm('success', 'top right', resp.msg, 'Reload Now');
-                            return
-                        }
-                        $.Notification.autoHideNotify('error', 'top right', resp.msg);
-                    },
-                    error: function(d) {
-                        alert('error');
-                    }
-                })
-			});
-
-            Dropzone.options.dropzone = false;
-            var myDropzone = new Dropzone('#dropzone', {
-                createImageThumbnails: false,
-                filesixeBase: 1024,
-                init: function() {
-                    this.on('success', function(file, resp) {
-                        if (resp.status === 'success')  {
-                            renderTable(resp.data);
-                            $.Notification.autoHideNotify('success', 'top right', resp.msg);
-                            return
-                        }
-                        if (status === 'error' && (resp.type === 'marshal' || resp.type === 'readDir')) {
-                            $.Notification.confirm('success', 'top right', resp.msg, 'Reload Now');
-                            return
-                        }
-                        $.Notification.autoHideNotify('error', 'top right', resp.msg);
-                    });
-                    this.on('removedfile', function(file) {
-                        alert(file.name);
-
-                    });
-                },
-            });
-
-            function prettySize(size) {
-                var c = 0;
-                while (size >= 1024) {
-                    size = size / 1024;
-                    c++;
-                }
-                var ind = '';
-                switch (c) {
-                    case 0:
-                        ind = 'B';
-                        break;
-                    case 1:
-                        ind = 'KB';
-                        break;
-                    case 2:
-                        ind = 'MB';
-                        break;
-                    case 3:
-                        ind = 'GB';
-                        break;
-                }
-                var s =+ round(size, 1);
-                return s + ' ' + ind;
-            }
-
-            function round(n, place) {
-                var t = Math.pow(10, place)
-                return Math.round(n *t) / t;
-            }
-
-            $(document).on('click', '.notifyjs-metro-base .yes', function() {
-                location.reload();
             });
 
             confirm.yes = function(btn) {
-                $.ajax({
-					method:'POST',
-					url: btn.attr('data-url'),
-					success: function(resp) {
-						if (resp.status == 'success') {
-							swal("Deleted!", resp.msg, "success");
-                            renderTable(resp.data);
-							return
-						}
-						if (resp.status === 'error' && (resp.type === 'marshal' || resp.type === 'readDir')) {
-                            swal({
-				                title: '',
-				                text: resp.msg,
-				                type: 'success',
-				                showCancelButton: true,
-				                confirmButtonColor: 'green',
-				                confirmButtonText: 'Reload Now',
-				                closeOnConfirm: false
-				            }, function(){
-								location.reload();
-								return
-							})
-							return
-						}
-    					swal("Error!", resp.msg, "error");
-    					return
-					},
-					error: function() {
-						swal("Error!", 'Error deleteing. Please try again', "error");
-						return
-					}
-				});
+                $('<form method="post" action="' + btn.attr('data-url') + '"><input name="companyId" value="{{ .company.Id }}"></form>').submit();
             }
-
         </script>
 
     </body>

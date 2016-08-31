@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
     <head>
 
@@ -6,13 +7,13 @@
 
         <!-- sweet alerts -->
         <link href="/static/sweet-alert/sweet-alert.min.css" rel="stylesheet">
-        <!-- DataTables -->
-        <link href="/static/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
 
-        <link href="/static/toggles/toggles.css" rel="stylesheet" />
+        <link href="/static/timepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
 
-        <title>Company</title>
+        <!-- <link href="/static/toggles/toggles.css" rel="stylesheet" /> -->
+
+        <title>Customer</title>
     </head>
     <body>
 
@@ -28,210 +29,506 @@
                     <div class="col-sm-12">
 
                         <p class="lead">
-                            Company: {{ if .company.Id}}{{ .company.Name }}{{ else }}NEW{{ end }}
+                            Customer: {{ if .company.Id}}{{ .company.Name }}{{ else }}NEW{{ end }}
                         </p>
 
                         <div class="panel panel-default p-0">
                             <div class="panel-body p-0">
                                 <ul class="nav nav-tabs profile-tabs">
-                                    <li class="active"><a id="infoTab" class="view" data-toggle="tab" href="#infoPane">Information</a></li>
-                                    <li class=""><a id="driversTab" class="view" data-table="driversTable" data-toggle="tab" href="#driversPane">Drivers</a></li>
-                                    <li class=""><a id="vehiclesTab" class="view" data-table="vehiclesTable" data-toggle="tab" href="#vehiclesPane">Vehicles</a></li>
-                                    <li class=""><a id="notesTab" class="view" data-toggle="tab" href="#notesPane">Notes</a></li>
-                                    <li class=""><a id="settingsTab" class="view" data-toggle="tab" href="#settingsPane">Settings</a></li>
+                                    <li class="active"><a class="tab" >Customer Center</a></li>
+                                    <li class=""><a class="tab"  href="/cns/company/{{ .company.Id }}/service">Service</a></li>
+                                    <li class=""><a class="tab"  href="/cns/company/{{ .company.Id }}/vehicle">Vehicles</a></li>
+                                    <li class=""><a class="tab"  href="/cns/company/{{ .company.Id }}/driver">Drivers</a></li>
+                                    <li class=""><a class="tab"  href="/cns/company/{{ .company.Id }}/form">Forms</a></li>
                                 </ul>
-                                <div class="tab-content m-0">
+                                <div class="tabPane clearfix">
+                                    <div id="view"  class="profile-desk">
+                                        <div class="row">
+                                            <div id="infoPane" class="col-lg-6">
+                                                <h1 class="clearfix">
+                                                    {{ if .company.Id }}{{ .company.Name }}{{ else }}New{{ end }}
+                                                    <button class="btn btn-primary btn-xs pull-right" id="editButton">Edit</button>
+                                                </h1>
+                                                <table class="table table-condensed" style="margin-bottom:0;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><b>DOT #</b></td>
+                                                            <td>{{ .company.DOTNum }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Name</b></td>
+                                                            <td>{{ .company.Name }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>DBA</b></td>
+                                                            <td>{{ .company.DBA }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Primary Contact</b></td>
+                                                            <td>
+                                                                {{ .company.ContactName }}<br>
+                                                                <!-- {{ .company.ContactTitle }}<br> -->
+                                                                {{ .company.ContactPhone }}
+                                                                <!-- {{ if .company.ContactAddress.Street }}
+                                                                    <br><br>
+                                                                    {{ .company.ContactAddress.AddrHTML }}
+                                                                {{ end }} -->
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Secondary Contact</b></td>
+                                                            <td>
+                                                                {{ .company.SecondName }}<br>
+                                                                <!-- {{ .company.SecondTitle }}<br> -->
+                                                                {{ .company.SecondPhone }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Physical Address</b></td>
+                                                            <td>{{ .company.PhysicalAddress.AddrHTML }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Mailing Address</b></td>
+                                                            <td>{{ .company.MailingAddress.AddrHTML }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Business Type</b></td>
+                                                            <td>{{ .company.GetBusinessType }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <b>MC #</b> &nbsp;&nbsp;{{ .company.MCNum }}
+                                                            </td>
+                                                            <td>
+                                                                <b>PUC #</b> &nbsp;&nbsp;{{ .company.PUCNum }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <b>Fax</b> &nbsp;&nbsp;{{ .company.Fax }}
+                                                            </td>
+                                                            <td>
+                                                                <b>Email</b> &nbsp;&nbsp;{{ .company.Email }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <b>EIN #</b> &nbsp;&nbsp;{{ .company.EINNum }}
+                                                            </td>
+                                                            <td>
 
-                                    <div id="infoPane" class="tab-pane active">
-                                        <div class="profile-desk">
-                                            <h1>{{ .company.Name }}</h1>
-                                            <table class="table table-condensed">
-                                                <tbody>
-                                                    <tr>
-                                                        <td><b>Contact Name</b></td>
-                                                        <td>{{ .company.Contact }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Contact Email</b></td>
-                                                        <td>{{ .company.Email }}</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Phone</b></td>
-                                                        <td>{{ .company.Phone }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Address</b></td>
-                                                        <td>{{ .company.AddrHTML }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                                                            </td>
+                                                            <!-- <td>
+                                                                <b>ARP Account #</b> &nbsp;&nbsp;{{ .company.ARPAccountNum }}
+                                                            </td> -->
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <b>Entity #</b> &nbsp;&nbsp;{{ .company.EntityNum }}
+                                                            </td>
+                                                            <td>
+                                                                <b>Carrier Type</b> &nbsp;&nbsp;{{ .company.GetCarrierType }}
+                                                            </td>
+                                                        </tr>
+                                                        <!-- <tr>
+                                                            <td><b>NY OSCAR Username</b></td>
+                                                            <td>{{ .company.NYOscarUsername }}</td>
+                                                        </tr> -->
+                                                        <tr>
+                                                            <td><b>NY OSCAR Password</b></td>
+                                                            <td>{{ .company.NYOscarPassword }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
 
-                                    <div id="driversPane" class="tab-pane">
-                                        <table id="driversTable" class="table table-bordered table-hover" style="background-color:white;">
-                                            <thead>
-                                                <tr id="search">
-                                                    <th></th>
-                                                    <th>name</th>
-                                                    <th>email</th>
-                                                    <th>phone</th>
-                                                </tr>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Name</th>
-                                                    <th>Email</th>
-                                                    <th>Phone</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{ range $driver := .drivers }}
-                                                    <tr id="{{ $driver.Id }}" class="clickable" data-url="/cns/driver/{{ $driver.Id }}">
-                                                        <td>{{ $driver.Id }}</td>
-                                                        <td>{{ $driver.FirstName }} {{ $driver.LastName }}</td>
-                                                        <td>{{ $driver.Email }}</td>
-                                                        <td>{{ $driver.Phone }}</td>
-                                                    </tr>
-                                                {{ end }}
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div id="vehiclesPane" class="tab-pane">
-                                        <table id="vehiclesTable" class="table table-bordered table-hover" style="background-color:white;">
-                                            <thead>
-                                                <tr id="search">
-                                                    <th></th>
-                                                    <th>type</th>
-                                                    <th>make</th>
-                                                    <th>vin</th>
-                                                    <th>title</th>
-                                                </tr>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Type</th>
-                                                    <th>Make</th>
-                                                    <th>VIN</th>
-                                                    <th>Title</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{ range $vehicle := .vehicles }}
-                                                    <tr>
-                                                        <td>{{ $vehicle.Id }}</td>
-                                                        <td>{{ $vehicle.VehicleType }}</td>
-                                                        <td>{{ $vehicle.Make }}</td>
-                                                        <td>{{ $vehicle.VIN }}</td>
-                                                        <td>{{ $vehicle.Title }}</td>
-                                                    </tr>
-                                                {{ end }}
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div id="notesPane" class="tab-pane">
-                                        <div class="row m-t-10">
-                                            <div class="col-lg-6">
-                                                <div class="table-responsive">
-                                                    <table id="filesTable" class="table table-bordered table-hover">
-                                                        <thead>
-                                                            <tr id="search" class="search">
-                                                                <th></th>
-                                                                <th>Data</th>
-                                                                <th></th>
+                                            <div class="col-lg-6 clearfix">
+                                                <div class="profile-desk">
+                                                    <div style="height:315px;">
+                                                        <h1 class="clearfix">
+                                                            Notes
+                                                            <button class="btn btn-primary btn-xs pull-right" id="addNote">Add</button>
+                                                        </h1>
+                                                        <div style="height:285px; overflow:auto;">
+                                                            <table class="table table-condensed table-hover table-bordered" style="margin-bottom:0;">
+                                                                <tbody>
+                                                                    {{ range $note := .notes }}
+                                                                        <tr class="clickable" data-note='{{ toJson $note }}'>
+                                                                            <td>
+                                                                                {{ $note.Body }}
+                                                                            </td>
+                                                                            <td>
+                                                                                Recored Time:<br>
+                                                                                {{ $note.StartTimePretty }}
+                                                                            </td>
+                                                                            <td>
+                                                                                Saved Time:<br>
+                                                                                {{ idTime $note.Id }}
+                                                                            </td>
+                                                                        </tr>
+                                                                    {{ end }}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <table class="table table-condensed" style="margin-bottom:0;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><b>Credit Card</b></td>
+                                                                <td>
+                                                                    {{ if.company.CreditCard.Number }}
+                                                                        {{ .company.CreditCard.Number }} &nbsp;Security Code: {{ .company.CreditCard.SecurityCode }}<br>
+                                                                        Exp. {{ .company.CreditCard.ExpirationDate}}<br>
+                                                                    {{ end }}
+                                                                </td>
                                                             </tr>
                                                             <tr>
-                                                                <th>ID</th>
-                                                                <th>Data</th>
-                                                                <th></th>
+                                                                <td><b>DOT Pin</b></td>
+                                                                <td>{{ .company.DOTPin }}</td>
                                                             </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {{ range $note := .notes }}
-                                                                <tr>
-                                                                    <td>{{ $note.Id }}</td>
-                                                                    <td>{{ $note.Body }}</td>
-                                                                    <td></td>
-                                                                </tr>
-                                                            {{ end }}
+                                                            <tr>
+                                                                <td><b>MC Pin</b></td>
+                                                                <td>{{ .company.MCPin }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>IRP Account Number</b></td>
+                                                                <td>{{ .company.IRPNum }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>FMCSA Username</b></td>
+                                                                <td>{{ .company.FMCSAUsername }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>FMCSA Password</b></td>
+                                                                <td>{{ .company.FMCSAPassword }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>NY HUT Username</b></td>
+                                                                <td>{{ .company.NYHutUsername }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>NY HUT Password</b></td>
+                                                                <td>{{ .company.NYHutPassword }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>NM Hut Username</b></td>
+                                                                <td>{{ .company.NMHutUsername }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>NM Hut Password</b></td>
+                                                                <td>{{ .company.NMHutPassword }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>KY Use Tax Num</b></td>
+                                                                <td>{{ .company.KYUseNum }}</td>
+                                                            </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6">
-                                                <form action="/cns/company/note" method="post">
-                                                    <textarea id="text" class="form-control" name="body" rows="8"></textarea>
-                                                    <input type="hidden" name="id" value="{{ .company.Id }}">
-                                                    <br>
-                                                    <div class="col-lg-12">
-                                                        <div class="row">
-                                                            <div data-note="cool" class="customNote btn btn-success">note1</div>
-                                                            <div data-note="neat" class="customNote btn btn-warning">note2</div>
-                                                            <div data-note="dumb" class="customNote btn btn-danger">note3</div>
-                                                        </div>
-                                                        <br>
-                                                    </div>
-                                                    <button class="btn btn-primary" type="submit">Save</button>
-                                                </form>
-                                            </div>
                                         </div>
                                     </div>
 
-                                    <div id="settingsPane" class="tab-pane">
-                                        <div class="user-profile-content">
-                                            <form role="form" action="/cns/company" method="post">
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            <label for="FullName">Name</label>
-                                                            <input type="text" value="{{ .company.Name }}" name="name" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="FullName">Contact Name</label>
-                                                            <input type="text" value="{{ .company.Contact }}" name="contact" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="Email">Contact Email</label>
-                                                            <input type="email" value="{{ .company.Email }}" name="auth.Email" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="Email">Phone</label>
-                                                            <input type="text" value="{{ .company.Phone }}" name="phone"  class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="control-label">Company Login</label>
-                                                            <div class="control-label">
-                                                                <div class="toggle toggle-default"></div>
-                                                            </div>
-                                                            <input id="switch" type="checkbox" name="auth.Active" {{ if .company.Active }}checked{{ end }} value="true" class="hide">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            <label for="FullName">Street</label>
-                                                            <input type="text" value="{{ .company.Street }}" name="address.Street" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="FullName">City</label>
-                                                            <input type="text" value="{{ .company.City }}" name="address.City" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="Email">State</label>
-                                                            <input type="text" value="{{ .company.State }}" name="address.State" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="Email">Zip</label>
-                                                            <input type="text" value="{{ .company.Zip }}" name="address.Zip" class="form-control">
-                                                        </div>
+                                    <div id="edit"  class="profile-desk hide">
+                                        <div class="row">
+                                            <form id="edit" action="/cns/company" method="post">
+                                                <div class="col-lg-6">
+                                                    <h1 class="clearfix">
+                                                        {{ if .company.Id }}{{ .company.Name }}{{ else }}New{{ end }}
+                                                        <a class="btn btn-danger btn-xs pull-right" id="cancelButton">Cancel</a>
+                                                    </h1>
+                                                    <table  class="table table-condensed" style="margin-bottom:0;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><b>DOT #</b></td>
+                                                                <td>
+                                                                    <span class="text-danger">{{ .formErrors.dOTNum }}</span>
+                                                                    <input type="text" class="form-control" name="dOTNum" value="{{ .company.DOTNum }}" placeholder="DOT#">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Name</b></td>
+                                                                <td>
+                                                                    <span class="text-danger">{{ .formErrors.name }}</span>
+                                                                    <input type="text" class="form-control" name="name" value="{{ .company.Name }}" placeholder="Name">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>DBA</b></td>
+                                                                <td>
+                                                                    <span class="text-danger">{{ .formErrors.dBA }}</span>
+                                                                    <input type="text" class="form-control" name="dBA" value="{{ .company.DBA }}" placeholder="DBA">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Primary Contact</b></td>
+                                                                <td>
+                                                                    <input type="text" class="form-control" name="contactName" value="{{ .company.ContactName }}" placeholder="Name"><br>
+                                                                    <input type="text" class="form-control" name="contactTitle" value="{{ .company.ContactTitle }}" placeholder="Title"><br>
+                                                                    <input type="text" class="form-control" name="contactPhone" value="{{ .company.ContactPhone }}" placeholder="Phone">
+                                                                    <br><br>
+                                                                    <input type="text" class="form-control" name="contactAddress.street" value="{{ .company.ContactAddress.Street }}" placeholder="Street"><br>
+                                                                    <input type="text" class="form-control" name="contactAddress.city" value="{{ .company.ContactAddress.City }}" placeholder="City"><br>
+                                                                    <input type="text" class="form-control" name="contactAddress.county" value="{{ .company.ContactAddress.County }}" placeholder="County"><br>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6">
+                                                                            <input type="text" class="form-control" name="contactAddress.state" value="{{ .company.ContactAddress.State }}" placeholder="State">
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <input type="text" class="form-control" name="contactAddress.zip" value="{{ .company.ContactAddress.Zip }}" placeholder="Zip">
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Secondary Contact</b></td>
+                                                                <td>
+                                                                    <input type="text" class="form-control" name="secondName" value="{{ .company.SecondName }}" placeholder="Name"><br>
+                                                                    <input type="text" class="form-control" name="secondTitle" value="{{ .company.SecondTitle }}" placeholder="Title"><br>
+                                                                    <input type="text" class="form-control" name="secondPhone" value="{{ .company.SecondPhone }}" placeholder="Phone">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Physical Address</b></td>
+                                                                <td>
+                                                                    <input type="text" class="form-control" name="physicalAddress.street" value="{{ .company.PhysicalAddress.Street }}" placeholder="Street"><br>
+                                                                    <input type="text" class="form-control" name="physicalAddress.city" value="{{ .company.PhysicalAddress.City }}" placeholder="City"><br>
+                                                                    <input type="text" class="form-control" name="physicalAddress.county" value="{{ .company.PhysicalAddress.County }}" placeholder="County"><br>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6">
+                                                                            <input type="text" class="form-control" name="physicalAddress.state" value="{{ .company.PhysicalAddress.State }}" placeholder="State">
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <input type="text" class="form-control" name="physicalAddress.zip" value="{{ .company.PhysicalAddress.Zip }}" placeholder="Zip">
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Mailing Address</b></td>
+                                                                <td>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6">
+                                                                            Same as Physical
+                                                                        </div>
+                                                                        <div class="radio-inline">
+                                                                            <label class="cr-styled" for="sameYes">
+                                                                                <input type="radio" name="sameAddress" value="true" id="sameYes" {{ if .company.SameAddress}}checked{{ end }}>
+                                                                                <i class="fa"></i>
+                                                                                Yes
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="radio-inline">
+                                                                            <label class="cr-styled" for="sameNo">
+                                                                                <input type="radio" name="sameAddress" value="false" id="sameNo" {{ if not .company.SameAddress}}checked{{ end }}>
+                                                                                <i class="fa"></i>
+                                                                                No
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <span id="mailingAddress" {{ if .company.SameAddress }}class="hide"{{ end }}>
+                                                                        <br>
+                                                                        <input type="text" class="form-control" name="mailingAddress.street" value="{{ .company.MailingAddress.Street }}" placeholder="Street"><br>
+                                                                        <input type="text" class="form-control" name="mailingAddress.city" value="{{ .company.MailingAddress.City }}" placeholder="City"><br>
+                                                                        <input type="text" class="form-control" name="mailingAddress.county" value="{{ .company.MailingAddress.County }}" placeholder="County"><br>
+                                                                        <div class="row">
+                                                                            <div class="col-lg-6">
+                                                                                <input type="text" class="form-control" name="mailingAddress.state" value="{{ .company.MailingAddress.State }}" placeholder="State">
+                                                                            </div>
+                                                                            <div class="col-lg-6">
+                                                                                <input type="text" class="form-control" name="mailingAddress.zip" value="{{ .company.MailingAddress.Zip }}" placeholder="Zip">
+                                                                            </div>
+                                                                        </div>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Business Type</b></td>
+                                                                <td>
+                                                                    {{ $isBusinessOther := eq .company.BusinessType .companyConsts.BUSINESS_OTHER }}
+                                                                    <div id="businessTypeDiv" class="{{ if $isBusinessOther }}form-group{{ end }}">
+                                                                        <select id="businessType" class="form-control" name="businessType">
+                                                                            <option value="{{ .companyConsts.SOLE_PROPRIETOR }}" {{ if eq .company.BusinessType .companyConsts.SOLE_PROPRIETOR }}selected{{ end }}>Sole Proprietor</option>
+                                                                            <option value="{{ .companyConsts.CORPORATION }}" {{ if eq .company.BusinessType .companyConsts.CORPORATION }}selected{{ end }}>Corporation</option>
+                                                                            <option value="{{ .companyConsts.PARTNERSHIP }}" {{ if eq .company.BusinessType .companyConsts.PARTNERSHIP }}selected{{ end }}>Partnership</option>
+                                                                            <option value="{{ .companyConsts.LLC }}" {{ if eq .company.BusinessType .companyConsts.LLC }}selected{{ end }}>LLC</option>
+                                                                            <option value="{{ .companyConsts.LLP }}" {{ if eq .company.BusinessType .companyConsts.LLP }}selected{{ end }}>LLP</option>
+                                                                            <option value="{{ .companyConsts.BUSINESS_OTHER }}" {{ if eq .company.BusinessType .companyConsts.BUSINESS_OTHER }}selected{{ end }}>Other</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <input id="businessTypeOther" class="form-control {{if not $isBusinessOther}}hide{{ end }}" type="text" name="businessTypeOther" value="{{ .company.BusinessTypeOther }}" placeholder="Business Type">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <b>MC #</b>
+                                                                    <input type="text" class="form-control" name="mCNum" value="{{ .company.MCNum }}" placeholder="MC#">
+                                                                </td>
+                                                                <td>
+                                                                    <b>PUC #</b>
+                                                                    <input type="text" class="form-control" name="pUCNum" value="{{ .company.PUCNum }}" placeholder="PUC#">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <b>Fax</b>
+                                                                    <input type="text" class="form-control" name="fax" value="{{ .company.Fax }}" placeholder="Fax">
+                                                                </td>
+                                                                <td>
+                                                                    <b>Email</b>
+                                                                    <input type="email" class="form-control" name="email" value="{{ .company.Email }}" placeholder="Email">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <b>EIN #</b>
+                                                                    <input type="text" class="form-control" name="eINNum" value="{{ .company.EINNum }}" placeholder="EIN#">
+                                                                </td>
+                                                                <!-- <td>
+                                                                    <b>ARP Account #</b>
+                                                                    <input type="text" class="form-control" name="aRPAccountNum" value="{{ .company.ARPAccountNum }}" placeholder="ARP Account #">
+                                                                </td> -->
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <b>Entity #</b>
+                                                                    <input type="text" class="form-control" name="entityNum" value="{{ .company.EntityNum }}" placeholder="Entity #">
+                                                                </td>
+                                                                <td>
+                                                                    <b>Carrier Type</b>
+                                                                    {{ $isCarrierOther := eq .company.CarrierType .companyConsts.CARRIER_OTHER }}
+                                                                    <div id="carrierTypeDiv" class="{{ if $isCarrierOther }}form-group{{ end }}">
+                                                                        <select id="carrierType" class="form-control" name="carrierType">
+                                                                            <option value="{{ .companyConsts.PRIVATE }}" {{ if eq .company.CarrierType .companyConsts.PRIVATE}}selected{{ end }}>Private</option>
+                                                                            <option value="{{ .companyConsts.COMMON }}" {{ if eq .company.CarrierType .companyConsts.COMMON}}selected{{ end }}>Common</option>
+                                                                            <option value="{{ .companyConsts.CONTRACT }}" {{ if eq .company.CarrierType .companyConsts.CONTRACT}}selected{{ end }}>Contract</option>
+                                                                            <option value="{{ .companyConsts.CARRIER_OTHER }}" {{ if eq .company.CarrierType .companyConsts.CARRIER_OTHER}}selected{{ end }}>Other</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <input id="carrierTypeOther" class="form-control {{ if not $isCarrierOther }}hide{{ end }}" type="text" name="carrierTypeOther" value="{{ .company.CarrierTypeOther }}" placeholder="Carrier Type">
+                                                                </td>
+                                                            </tr>
+                                                            <!-- <tr>
+                                                                <td><b>NY OSCAR Username</b></td>
+                                                                <td><input type="text" class="form-control" name="nYOscarUsername" value="{{ .company.NYOscarUsername }}" placeholder="NY OSCAR Username"></td>
+                                                            </tr> -->
+                                                            <tr>
+                                                                <td><b>NY OSCAR Password</b></td>
+                                                                <td><input type="text" class="form-control" name="nYOscarPassword" value="{{ .company.NYOscarPassword }}" placeholder="NY OSCAR Password"></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    {{ if .company.Id }}
                                                         <input type="hidden" name="id" value="{{ .company.Id }}">
+                                                    {{ end }}
+                                                    <button class="btn btn-success btn-block">Save</button>
+                                                </div>
+
+                                                <div class="col-lg-6">
+                                                    <div class="profile-desk">
+                                                        <div style="height:315px;">
+                                                            <!-- <h1 class="clearfix">
+                                                                Notes
+                                                                <button class="btn btn-primary btn-xs pull-right" id="addNote">Add</button>
+                                                            </h1>
+                                                            <div style="height:285px; overflow:auto;">
+                                                                <table class="table table-condensed table-hover table-bordered" style="margin-bottom:0;">
+                                                                    <tbody>
+                                                                        {{ range $note := .notes }}
+                                                                            <tr class="clickable" data-note='{{ toJson $note }}'>
+                                                                                <td>
+                                                                                    {{ $note.Body }}
+                                                                                </td>
+                                                                                <td>{{ $note.StartTimePretty }}</td>
+                                                                            </tr>
+                                                                        {{ end }}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div> -->
+                                                        </div>
+                                                        <br>
+                                                        <table class="table table-condensed" style="margin-bottom:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><b>Credit Card</b></td>
+                                                                    <td>
+                                                                        <div class="row">
+                                                                            <div class="col-lg-8">
+                                                                                <input type="text" class="form-control" name="creditCard.number" value="{{ .company.CreditCard.Number }}" placeholder="Number"><br>
+                                                                            </div>
+                                                                            <div class="col-lg-4">
+                                                                                <input type="text" class="form-control" name="creditCard.securityCode" value="{{ .company.CreditCard.SecurityCode }}" placeholder="Code">
+                                                                            </div>
+                                                                        </div>
+                                                                            <!-- <div class="col-lg-6">
+                                                                                <div class="input-group">
+                                                                                    <input type="text" id="ccDate" class="form-control datepicker" name="creditCard.expirationDate" value="{{ .company.CreditCard.ExpirationDate }}" placeholder="Expiration Date">
+                                                                                    <input type="date" class="form-control" name="name" value="">
+                                                                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                                </div>
+                                                                            </div> -->
+                                                                        <div class="row">
+                                                                            <label class="col-lg-2 control-label">Month</label>
+                                                                            <div class="col-lg-4">
+                                                                                <input class="form-control" type="number" name="creditCard.expirationMonth" min="1" max="12" value="{{ .company.CreditCard.ExpirationMonth }}" placeholder="Exp Month">
+                                                                            </div>
+                                                                            <label class="col-lg-2 control-label">Year</label>
+                                                                            <div class="col-lg-4">
+                                                                                <input class="form-control" type="number" name="creditCard.expirationYear" min="2016" max="9999" value="{{ .company.CreditCard.ExpirationYear }}" placeholder="Exp Year">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>DOT Pin</b></td>
+                                                                    <td><input type="text" class="form-control" name="dOTPin" value="{{ .company.DOTPin }}" placeholder="DOT Pin"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>MC Pin</b></td>
+                                                                    <td><input type="text" class="form-control" name="mCPin" value="{{ .company.MCPin }}" placeholder="MC Pin"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>IRP Account Number</b></td>
+                                                                    <td><input type="text" class="form-control" name="iRPNum" value="{{ .company.IRPNum }}" placeholder="IRP Account Number"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>FMCSA Username</b></td>
+                                                                    <td><input type="text" class="form-control" name="fMCSAUsername" value="{{ .company.FMCSAUsername }}" placeholder="FMCSA Username"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>FMCSA Password</b></td>
+                                                                    <td><input type="text" class="form-control" name="fMCSAPassword" value="{{ .company.FMCSAPassword }}" placeholder="FMCSA Password"></td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><b>NY HUT Username</b></td>
+                                                                    <td><input type="text" class="form-control" name="nYHutUsername" value="{{ .company.NYHutUsername }}" placeholder="NY HUT Username"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>NY HUT Password</b></td>
+                                                                    <td><input type="text" class="form-control" name="nYHutPassword" value="{{ .company.NYHutPassword }}" placeholder="NY HUT Password"></td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><b>NM Hut Username</b></td>
+                                                                    <td><input type="text" class="form-control" name="nMHutUsername" value="{{ .company.NMHutUsername }}" placeholder="NM HUT Username"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>NM Hut Password</b></td>
+                                                                    <td><input type="text" class="form-control" name="nMHutPassword" value="{{ .company.NMHutPassword }}" placeholder="NM HUT Password"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>KY Use Tax Num</b></td>
+                                                                    <td><input type="text" class="form-control" name="kYUseNum" value="{{ .company.KYUseNum }}" placeholder="KY Use Tax Num"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
-                                                <button class="btn btn-primary" type="submit">Save</button>
                                             </form>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -239,91 +536,335 @@
                 </div>
             </div>
 
+
             {{ template "footer.tmpl" . }}
 
         </section>
+
+        <div class="modal fade" id="noteModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="noteModalTitle">New Note</h4>
+                    </div>
+                    <div class="modal-body clearfix" id="noteModalBody">
+                        <form id="noteForm" action="/cns/company/note" method="post">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label>Communication</label>
+                                        <select id="communication" class="form-control input-sm">
+                                            <option value="called">Called</option>
+                                            <option value="emailed">Emailed</option>
+                                            <option value="walkIn">Walked In</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                        <input id="communication" type="hidden" name="communication" value="called">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Representative</label>
+                                        <input id="representative" class="form-control input-sm" type="text" name="representative" value="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Date and Time</label>
+                                        <div class="input-group date" id="datetimepicker">
+                                            <input type="text" class="form-control input-sm" name="dateTime" id="dateTime"/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="">Pupose</label>
+                                        <select id="purpose" class="form-control input-sm">
+                                            <option value="question">Question</option>
+                                            <option value="service">Service</option>
+                                            <option value="sales">Sales</option>
+                                            <option value="consult">Consult</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                        <input id="purpose" type="hidden" name="purpose" value="question">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Call Back Phone Number</label>
+                                        <input id="callBack" class="form-control input-sm" type="text" name="callBack" value="">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label>Email Another Employee</label><br>
+                                        <div style="height:34px;">
+                                            <div class="radio-inline">
+                                                <label class="cr-styled" for="emailEmployeeTrue">
+                                                    <input type="radio" id="emailEmployeeTrue" name="emailEmployee" value="true">
+                                                    <i class="fa"></i>
+                                                    Yes
+                                                </label>
+                                            </div>
+                                            <div class="radio-inline">
+                                                <label class="cr-styled" for="emailEmployeeFalse">
+                                                    <input type="radio" id="emailEmployeeFalse" name="emailEmployee" value="false" checked>
+                                                    <i class="fa"></i>
+                                                    No
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Billable</label><br>
+                                        <div style="height:34px;">
+                                            <div class="radio-inline">
+                                                <label class="cr-styled" for="billableTrue">
+                                                    <input type="radio" id="billableTrue" name="billable" value="true">
+                                                    <i class="fa"></i>
+                                                    Yes
+                                                </label>
+                                            </div>
+                                            <div class="radio-inline">
+                                                <label class="cr-styled" for="billableFalse">
+                                                    <input type="radio" id="billableFalse" name="billable" value="false" checked>
+                                                    <i class="fa"></i>
+                                                    No
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        {{ if eq .session.ROLE "ADMIN" "DEVELOPER" }}
+                                        <label>Employee</label>
+                                        <select id="employeeId" class="form-control input-sm" name="employeeId">
+                                            {{ $userId := .userId }}
+                                            {{ range $employee := .employees}}
+                                                <option value="{{ $employee.Id }}" {{ if eq $userId $employee.Id }}selected{{ end }}>{{ $employee.FirstName }} {{ $employee.LastName }}</option>
+                                            {{ end }}
+                                        </select>
+                                        {{ end }}
+                                        <input id="employeeId" type="hidden" name="employeeId" value="{{ .userId }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <div id="pre-body"></div>
+                                        <textarea id="body" name="body" rows="6" class="form-control"></textarea>
+                                    </div>
+                                    <button class="btn btn-primary btn-xs">Save</button>
+                                </div>
+                            </div>
+                            <input type="hidden" name="companyId" value="{{ .company.Id }}">
+                            <input id="id" type="hidden" name="id">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        {{ range $quickNote := .quickNotes }}
+                            <button class="btn btn-default btn-xs quickNote" data-note="{{ $quickNote.Body }}">{{ $quickNote.Name }}</button>
+                        {{ end }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="session-warning-modal" class="modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="sessWarnLabel">Your session is about to expire<a class="sectionlink" title="Section permalink" href="#sessWarnLabel"></a></h4>
+                    </div>
+                    <div class="modal-body">
+                        Your session will expire in <span id="remaining-time"></span> minutes due to inactivity.
+                    </div>
+                    <div class="modal-footer">
+                        <button id="log-out" class="btn btn-default" type="button" data-dismiss="modal">Log Out</button>
+                        <button id="stay-logged-in" class="btn btn-warning" type="button" data-dismiss="modal">Stay Logged In</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Main Content Ends -->
 
         {{ template "scripts.tmpl" . }}
 
         <script src="/static/js/jquery.scrollTo.min.js"></script>
-        <script src="/static/datatables/jquery.dataTables.min.js"></script>
-        <script src="/static/datatables/dataTables.bootstrap.js"></script>
-        <script src="/static/js/confirm.js" charset="utf-8"></script>
-        <script src="/static/datatables/custom.js" charset="utf-8"></script>
+        <script src="/static/date-time-picker/moment-with-locales.js" charset="utf-8"></script>
+        <script type="text/javascript" src="/static/date-time-picker/bootstrap-datetimepicker.js"></script>
+        <script src="/static/timepicker/bootstrap-datepicker.js"></script>
 
-        <script src="/static/toggles/toggles.min.js"></script>
-
-
-        {{ if not .company.Id}}
-            <script type="text/javascript">
-                $('a#settingsTab').tab('show');
-            </script>
-        {{ end }}
+        {{ template "session.tmpl" . }}
 
         <script type="text/javascript">
 
-                // Form Toggles
-                jQuery('.toggle').toggles({
-                    {{ if .company.Active }}on: true,{{ end }}
-                    checkbox:$('#switch')
-                });
+            var formErrors = {{ if .formErrors }}true{{ else }}false{{ end }}
 
-                var selectedTable = '';
-                var table = {};
-                var tableState = {
-                    'driversTable': {
-                        'table':{},
-                        'search':''
-                    },
-                    'vehiclesTable': {
-                        'table':{},
-                        'search':''
-                    }
+            jQuery('.datepicker').datepicker();
+
+            var newComp = {{ if .company.Id }}false{{ else }}true{{ end }};
+
+            $('input#sameYes').click(function() {
+                $('span#mailingAddress').addClass('hide');
+                var inputs = $('span#mailingAddress').find('input');
+                for (var i = 0; i < inputs.length; i++) {
+                    inputs[i].value = inputs[i].defaultValue;
+                }
+            });
+
+            $('input#sameNo').click(function() {
+                $('span#mailingAddress').removeClass('hide');
+            });
+
+            $('button#editButton').click(function() {
+                $('div#view').addClass('hide');
+                $('div#edit').removeClass('hide');
+                if ($('select#businessType').val() === '{{ .companyConsts.BUSINESS_OTHER }}') {
+                    $('#businessTypeDiv').addClass('form-group');
+                    $('#businessTypeOther').removeClass('hide');
+                    $('#businessTypeOther').prop('required', true);
                 }
 
-                $('a.view').click(function() {
-                    newTable = $(this).attr('data-table');
-                    if (newTable !== selectedTable && newTable !== undefined) {
-                        if (selectedTable !== '') {
-                            tableState[selectedTable]['search'] = $('input#filter').val();
-                        }
-                        $('input#filter').val(tableState[newTable]['search']);
-                        table = tableState[newTable]['table'];
-                        selectedTable = newTable;
-                    }
-                });
-
-                tableState['driversTable']['table'] = $('#driversTable').DataTable({
-                    "lengthMenu":[5,10,15,20],
-                    "dom": 'lrtip',
-                    "columnDefs": [
-                        { "orderable": false, "targets": [3] },
-                        { "name": "email",   "targets": 2 },
-                        { "name": "name",  "targets": 1 },
-                        { "name": "phone",   "targets": 3 },
-                    ]
-                });
-
-                tableState['vehiclesTable']['table'] = $('#vehiclesTable').DataTable({
-                    "lengthMenu":[5,10,15,20],
-                    "dom": 'lrtip',
-                    "columnDefs": [
-                        { "orderable": false, "targets": [3,4] },
-                        { "name": "type",   "targets": 1 },
-                        { "name": "make",  "targets": 2 },
-                        { "name": "vin",  "targets": 3 },
-                        { "name": "title",  "targets": 4 },
-                    ]
-                });
-        </script>
-
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('.customNote').click(function() {
-                    $('#text').val($(this).attr('data-note'));
-                });
+                if ($('select#carrierType').val() === '{{ .companyConsts.CARRIER_OTHER }}') {
+                    $('#carrierTypeDiv').addClass('form-group');
+                    $('#carrierTypeOther').removeClass('hide');
+                    $('#carrierTypeOther').prop('required', true);
+                }
             });
+
+            $('a#cancelButton').click(function() {
+                if (newComp) {
+                    window.location.href = '/cns/company';
+                    return;
+                }
+                $('div#edit').addClass('hide');
+                $('div#view').removeClass('hide');
+                $('form#edit')[0].reset();
+                if ($('input#sameYes')[0].checked) {
+                    $('span#mailingAddress').addClass('hide');
+                }
+                if ($('select#businessTypr').val() !== '{{ .companyConsts.BUSINESS_OTHER }}') {
+                    $('#businessTypeDiv').removeClass('form-group');
+                    $('#businessTypeOther').addClass('hide');
+                    $('#businessTypeOther').prop('required', false);
+                }
+
+                if ($('select#carrierType').val() !== '{{ .companyConsts.CARRIER_OTHER }}') {
+                    $('#carrierTypeDiv').removeClass('form-group');
+                    $('#carrierTypeOther').addClass('hide');
+                    $('#carrierTypeOther').prop('required', false);
+                }
+            });
+
+            if (newComp || formErrors) {
+                $('div#view').addClass('hide');
+                $('div#edit').removeClass('hide');
+            }
+
+            $('a.tab').click(function(e) {
+                if (newComp) {
+                    e.preventDefault()
+                    $.Notification.autoHideNotify('error', 'top right', 'Please save company first');
+                }
+            });
+
+            $(function () {
+                $('#datetimepicker').datetimepicker();
+            });
+
+            $('#noteModal').on('hidden.bs.modal', function (e) {
+                $('form#noteForm')[0].reset();
+                $('form#noteForm input').removeAttr('readonly');
+                $('form#noteForm select').removeAttr('disabled');
+                $('form#noteForm div#pre-body').html('');
+
+                $('form#noteForm input#communication').val('called');
+                $('form#noteForm input#purpose').val('question');
+                $('form#noteForm input#employeeId').val('{{ .userId }}');
+            })
+
+            $(document).on('click', 'tr.clickable', function() {
+
+                var note = {};
+                try {
+                    note = JSON.parse($(this).attr('data-note'));
+                } catch(err) {
+                    alert('Error retrieving note. Please refresh the page');
+                    return
+                }
+                $('form#noteForm input#dateTime').val(note.startTimePretty);
+                $('form#noteForm input#communication').val(note.communication);
+                $('form#noteForm input#purpose').val(note.purpose);
+                $('form#noteForm input#employeeId').val(note.employeeId);
+                $('form#noteForm input#representative').val(note.representative);
+                $('form#noteForm input#callBack').val(note.callBack);
+                $('form#noteForm div#pre-body').html('Previous Note:<br><span id="pre-body">' + note.body + '</span><br><br>');
+                //$('form#noteForm textarea#body').val(note.body);
+                $('form#noteForm input#id').val(note.id);
+                if (note.emailEmployee) {
+                    $('form#noteForm input#emailEmployeeTrue')[0].checked = true;
+                }
+                if (note.billable) {
+                    $('form#noteForm input#billableTrue')[0].checked = true;
+                }
+                $('form#noteForm input').attr('readonly', 'readonly');
+                $('form#noteForm select').attr('disabled', 'disabled');
+                $('#noteModal').modal('show');
+            });
+
+            $('button.quickNote').click(function() {
+                var note = $(this).attr('data-note');
+                if ($('form#noteForm textarea#body').val() !== '') {
+                    note = $('form#noteForm textarea#body').val() + ' ' + note
+                }
+                $('form#noteForm textarea#body').val(note);
+            });
+
+            $('#addNote').click(function() {
+                $('form#noteForm input#dateTime').val(moment().format('MM/DD/YYYY hh:mm A'));
+                $('#noteModal').modal('show');
+            });
+
+            $('form#noteForm select').change(function() {
+                var s = $(this);
+                $('form#noteForm input#' + s.attr('id')).val(s.val());
+            });
+
+            $('form#noteForm').submit(function(e) {
+                $('#noteModal').modal('hide');
+                if ($('span#pre-body').text() !== '') {
+                    $('form#noteForm textarea#body').val($('span#pre-body').text() + ' ' + $('form#noteForm textarea#body').val());
+                }
+            })
+
+            $('select#businessType').change(function() {
+                if ($(this).val() === '{{ .companyConsts.BUSINESS_OTHER }}') {
+                    $('#businessTypeDiv').addClass('form-group');
+                    $('#businessTypeOther').removeClass('hide');
+                    $('#businessTypeOther').val('');
+                    $('#businessTypeOther').prop('required', true);
+                } else {
+                    $('#businessTypeDiv').removeClass('form-group');
+                    $('#businessTypeOther').addClass('hide');
+                    $('#businessTypeOther').val('');
+                    $('#businessTypeOther').prop('required', false);
+                }
+            });
+
+            $('select#carrierType').change(function() {
+                if ($(this).val() === '{{ .companyConsts.CARRIER_OTHER }}') {
+                    $('#carrierTypeDiv').addClass('form-group');
+                    $('#carrierTypeOther').removeClass('hide');
+                    $('#carrierTypeOther').val('');
+                    $('#carrierTypeOther').prop('required', true);
+                } else {
+                    $('#carrierTypeDiv').removeClass('form-group');
+                    $('#carrierTypeOther').addClass('hide');
+                    $('#carrierTypeOther').val('');
+                    $('#carrierTypeOther').prop('required', false);
+                }
+            });
+
         </script>
 
   </body>

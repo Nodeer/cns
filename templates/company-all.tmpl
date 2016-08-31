@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        {{ template "head.tmpl" . }}
+
+        <!--Morris Chart CSS -->
+        <link rel="stylesheet" href="/static/morris/morris.css">
+        <!-- DataTables -->
+        <link href="/static/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="/static/datatables/custom.css" charset="utf-8">
+        <title>All Customers</title>
+
+    </head>
+
+    <body>
+
+        {{ template "side-nav.tmpl" . }}
+
+        <!--Main Content Start -->
+        <section class="content">
+
+            {{ template "nav.tmpl" . }}
+
+
+            <div class="wraper container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <p class="lead">
+                            Customers
+                            <span class="pull-right">
+                                <a href="/cns/company/new">Add <i class="fa fa-plus"></i></a>
+                            </span>
+                        </p>
+
+                        <table id="companies" class="table table-bordered table-hover" width="100%" style="width: 100%;background-color:white;">
+                            <thead>
+                                <tr id="search">
+                                    <th>dot</th>
+                                    <th>name</th>
+                                    <th>contact</th>
+                                    <th>email</th>
+                                    <th>phone</th>
+                                </tr>
+                                <tr>
+                                    <th>DOT#</th>
+                                    <th>Name</th>
+                                    <th>Contact</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ range $company := .companies }}
+                                    <tr id="{{ $company.Id }}" class="clickable" data-url="/cns/company/{{ $company.Id }}">
+                                        <td>{{ $company.DOTNum }}</td>
+                                        <td>{{ $company.Name }}</td>
+                                        <td>{{ $company.ContactName }}</td>
+                                        <td>{{ $company.Email }}</td>
+                                        <td>{{ $company.ContactPhone }}</td>
+                                    </tr>
+                                {{ end }}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {{ template "footer.tmpl" . }}
+
+        </section>
+
+        {{ template "scripts.tmpl" . }}
+
+        <script src="/static/datatables/jquery.dataTables.min.js"></script>
+        <script src="/static/datatables/dataTables.bootstrap.js"></script>
+        <script src="/static/datatables/custom.js" charset="utf-8"></script>
+
+        {{ template "session.tmpl" . }}
+
+        <script type="text/javascript">
+
+                var table = $('#companies').DataTable({
+                    "lengthMenu":[10,15,20],
+                    //"dom": 'lrtip',
+                    "columnDefs": [
+                        { "orderable": false, "targets": [3] },
+                        { "name": "dot",      "targets": 0 },
+                        { "name": "name",     "targets": 1 },
+                        { "name": "contact",  "targets": 2 },
+                        { "name": "email",    "targets": 3 },
+                        { "name": "phone",    "targets": 4 }
+                    ]
+                });
+
+        </script>
+
+    </body>
+</html>

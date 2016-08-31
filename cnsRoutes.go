@@ -3,8 +3,12 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
+	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/cagnosolutions/adb"
@@ -12,164 +16,263 @@ import (
 )
 
 var index = web.Route{"GET", "/", func(w http.ResponseWriter, r *http.Request) {
-	tc.Render(w, r, "index.tmpl", web.Model{})
+	http.Redirect(w, r, "/cns/company", 303)
 }}
 
-var login = web.Route{"GET", "/login", func(w http.ResponseWriter, r *http.Request) {
-	tc.Render(w, r, "login.tmpl", web.Model{})
-}}
+/* --- Company Management --- */
 
-var loginPost = web.Route{"POST", "/login", func(w http.ResponseWriter, r *http.Request) {
-	email, pass := r.FormValue("email"), r.FormValue("password")
-	var employee Employee
-	if !db.Auth("employee", email, pass, &employee) {
-		web.SetErrorRedirect(w, r, "/login", "Incorrect username or password")
-		return
-	}
-	sess := web.Login(w, r, employee.Role)
-	sess["id"] = employee.Id
-	sess["email"] = employee.Email
-	web.PutMultiSess(w, r, sess)
-	redirect := "/cns/company"
-	if employee.Home != "" {
-		redirect = employee.Home
-	}
-	web.SetSuccessRedirect(w, r, redirect, "Welcome "+employee.FirstName)
-	return
-}}
-
-var allEmployee = web.Route{"GET", "/cns/employee", func(w http.ResponseWriter, r *http.Request) {
-	var employees []Employee
-	//ok := db.Match("user", `"role":"EMPLOYEE"`, &employees)
-	ok := db.TestQuery("employee", &employees, adb.Eq("role", "EMPLOYEE"))
-	if !ok {
-		fmt.Println("error")
-	}
-	tc.Render(w, r, "all-employee.tmpl", web.Model{
-		"employees": employees,
-	})
-}}
-
-var viewEmployee = web.Route{"GET", "/cns/employee/:id", func(w http.ResponseWriter, r *http.Request) {
-	var employee Employee
-	employeeId := r.FormValue(":id")
-	if employeeId != "add" {
-		ok := db.Get("employee", r.FormValue(":id"), &employee)
-		if !ok {
-			web.SetErrorRedirect(w, r, "/employee", "Error finding employee")
-			return
-		}
-	}
-	tc.Render(w, r, "employee.tmpl", web.Model{
-		"employee": employee,
-	})
-}}
-
-var settings = web.Route{"GET", "/cns/settings", func(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/cns/employee/"+web.GetSess(r, "id").(string), 303)
-}}
-
-var saveEmployee = web.Route{"POST", "/cns/employee", func(w http.ResponseWriter, r *http.Request) {
-	empId := r.FormValue("id")
-	var employee Employee
-	db.Get("employee", empId, &employee)
-	FormToStruct(&employee, r.Form, "")
-	if employee.Id == "" && empId == "" {
-		employee.Id = strconv.Itoa(int(time.Now().UnixNano()))
-		employee.Password = employee.Email
-		employee.Role = "EMPLOYEE"
-		employee.Active = true
-	}
-
-	var employees []Employee
-	db.TestQuery("employee", &employees, adb.Eq("email", employee.Email), adb.Ne("id", `"`+employee.Id+`"`))
-	if len(employees) > 0 {
-		web.SetErrorRedirect(w, r, "/cns/employee/"+employee.Id, "Error saving employee. Email is already registered")
-		return
-	}
-	db.Set("employee", employee.Id, employee)
-	web.SetSuccessRedirect(w, r, "/cns/employee/"+employee.Id, "Successfully saved employee")
-	return
-}}
-
-var allCompany = web.Route{"GET", "/cns/company", func(w http.ResponseWriter, r *http.Request) {
+var companyAll = web.Route{"GET", "/cns/company", func(w http.ResponseWriter, r *http.Request) {
 	var companies []Company
-	//ok := db.Match("user", `"role":"COMPANY"`, &companies)
-	ok := db.TestQuery("company", &companies, adb.Eq("role", "COMPANY"))
-	if !ok {
-		fmt.Println("error")
-	}
-	tc.Render(w, r, "all-company.tmpl", web.Model{
+	db.All("company", &companies)
+	tc.Render(w, r, "company-all.tmpl", web.Model{
 		"companies": companies,
 	})
 }}
 
-var viewCompany = web.Route{"GET", "/cns/company/:id", func(w http.ResponseWriter, r *http.Request) {
+var companyView = web.Route{"GET", "/cns/company/:id", func(w http.ResponseWriter, r *http.Request) {
 	var company Company
-	var drivers []Driver
-	var vehicles []Vehicle
-	var notes []Note
 	compId := r.FormValue(":id")
-	if compId != "add" {
-		ok := db.Get("company", compId, &company)
-		if !ok || company.Role != "COMPANY" {
-			web.SetErrorRedirect(w, r, "/company", "Error finding company")
-			return
-		}
-		db.TestQuery("driver", &drivers, adb.Eq("companyId", `"`+company.Id+`"`))
-		db.TestQuery("vehicle", &vehicles, adb.Eq("companyId", `"`+company.Id+`"`))
-		db.TestQuery("note", &notes, adb.Eq("companyId", `"`+company.Id+`"`))
+	if compId != "new" && !db.Get("company", compId, &company) {
+		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
+		return
 	}
+	var notes NoteSort
+	var employees []Employee
+	db.TestQuery("note", &notes, adb.Eq("companyId", `"`+company.Id+`"`))
+	sort.Stable(sort.Reverse(notes))
+	db.All("employee", &employees)
 	tc.Render(w, r, "company.tmpl", web.Model{
-		"company":  company,
-		"drivers":  drivers,
-		"vehicles": vehicles,
-		"notes":    notes,
+		"company":       company,
+		"notes":         notes,
+		"employees":     employees,
+		"quickNotes":    quickNotes,
+		"userId":        web.GetSess(r, "id"),
+		"companyConsts": GetCompanyConsts(),
 	})
 }}
 
-var saveNote = web.Route{"POST", "/cns/company/note", func(w http.ResponseWriter, r *http.Request) {
-	id := strconv.Itoa(int(time.Now().UnixNano()))
-	note := Note{
-		Id:        id,
-		CompanyId: r.FormValue("id"),
-		Body:      r.FormValue("body"),
+var companyService = web.Route{"GET", "/cns/company/:id/service", func(w http.ResponseWriter, r *http.Request) {
+	var company Company
+	compId := r.FormValue(":id")
+	if !db.Get("company", compId, &company) {
+		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
+		return
 	}
-	db.Add("note", id, note)
-	web.SetSuccessRedirect(w, r, "/cns/company/"+r.FormValue("id"), "Successfully saved note")
+	tc.Render(w, r, "company-service.tmpl", web.Model{
+		"company": company,
+	})
 }}
 
-var saveCompany = web.Route{"POST", "/cns/company", func(w http.ResponseWriter, r *http.Request) {
+var companyVehicle = web.Route{"GET", "/cns/company/:id/vehicle", func(w http.ResponseWriter, r *http.Request) {
+	var company Company
+	var vehicles []Vehicle
+	compId := r.FormValue(":id")
+	if !db.Get("company", compId, &company) {
+		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
+		return
+	}
+	db.TestQuery("vehicle", &vehicles, adb.Eq("companyId", `"`+company.Id+`"`))
+
+	tc.Render(w, r, "company-vehicle.tmpl", web.Model{
+		"company":  company,
+		"vehicles": vehicles,
+	})
+}}
+
+var companyDriver = web.Route{"GET", "/cns/company/:id/driver", func(w http.ResponseWriter, r *http.Request) {
+	var company Company
+	var drivers []Driver
+	compId := r.FormValue(":id")
+	if !db.Get("company", compId, &company) {
+		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
+		return
+	}
+	db.TestQuery("driver", &drivers, adb.Eq("companyId", `"`+company.Id+`"`))
+	tc.Render(w, r, "company-driver.tmpl", web.Model{
+		"company": company,
+		"drivers": drivers,
+	})
+}}
+
+var companyForm = web.Route{"GET", "/cns/company/:id/form", func(w http.ResponseWriter, r *http.Request) {
+	var company Company
+	companyId := r.FormValue(":id")
+	var docs []Document
+	if !db.Get("company", companyId, &company) {
+		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
+		return
+	}
+	db.TestQuery("document", &docs, adb.Eq("companyId", `"`+company.Id+`"`), adb.Eq("stateForm", "true"))
+	var vehicles []Vehicle
+	db.TestQuery("vehicle", &vehicles, adb.Eq("companyId", `"`+company.Id+`"`))
+	tc.Render(w, r, "company-form.tmpl", web.Model{
+		"company":  company,
+		"docs":     docs,
+		"forms":    CompanyForms,
+		"vehicles": vehicles,
+	})
+
+}}
+
+var companySaveNote = web.Route{"POST", "/cns/company/note", func(w http.ResponseWriter, r *http.Request) {
+	var note Note
+	r.ParseForm()
+	FormToStruct(&note, r.Form, "")
+	if note.Id == "" {
+		note.Id = strconv.Itoa(int(time.Now().UnixNano()))
+	}
+	dt, err := time.Parse("01/02/2006 3:04 PM", r.FormValue("dateTime"))
+	if err != nil {
+		log.Printf("cnsRoutes.go >> companySaveNotes >> time.Parse() >> %v\n", err)
+	}
+	note.StartTime = dt.Unix()
+	note.EndTime = dt.Unix()
+	note.StartTimePretty = r.FormValue("dateTime")
+	note.EndTimePretty = r.FormValue("dateTime")
+	db.Set("note", note.Id, note)
+	web.SetSuccessRedirect(w, r, "/cns/company/"+r.FormValue("companyId"), "Successfully saved note")
+}}
+
+var companySave = web.Route{"POST", "/cns/company", func(w http.ResponseWriter, r *http.Request) {
 	compId := r.FormValue("id")
 	var company Company
 	db.Get("company", compId, &company)
+	if errors, ok := FormToStruct(&company, r.Form, "main"); !ok {
+		web.SetFormErrors(w, errors)
+		if r.FormValue("from") == "vehicle" {
+			web.SetErrorRedirect(w, r, "/cns/company/"+company.Id+"/vehicle", "Error updating insurance information")
+			return
+		}
+		if r.FormValue("from") == "service" {
+			web.SetErrorRedirect(w, r, "/cns/company/"+company.Id+"/service", "Error updating service information")
+			return
+		}
+		id := company.Id
+		if company.Id == "" {
+			id = "new"
+		}
+		web.SetErrorRedirect(w, r, "/cns/company/"+id, "Error saving company")
+		return
+	}
+
 	if compId == "" && company.Id == "" {
 		company.Id = strconv.Itoa(int(time.Now().UnixNano()))
-		company.Password = company.Email
-		company.Role = "COMPANY"
-		company.CreateSlug()
 	}
-	FormToStruct(&company, r.Form, "")
+
 	var companies []Company
 	db.TestQuery("company", &companies, adb.Eq("email", company.Email), adb.Ne("id", `"`+company.Id+`"`))
 	if len(companies) > 0 {
 		web.SetErrorRedirect(w, r, "/cns/company/"+company.Id, "Error saving company. Email is already registered")
 		return
 	}
-	company.Active = r.FormValue("auth.Active") == "true"
+	if company.SameAddress {
+		company.MailingAddress = company.PhysicalAddress
+	}
+	if company.CreditCard.ExpirationMonth > 0 && company.CreditCard.ExpirationYear > 0 {
+		company.CreditCard.ExpirationDate = strconv.Itoa(company.CreditCard.ExpirationMonth) + "/" + strconv.Itoa(company.CreditCard.ExpirationYear)
+	}
 	db.Set("company", company.Id, company)
+	if r.FormValue("from") == "vehicle" {
+		web.SetSuccessRedirect(w, r, "/cns/company/"+company.Id+"/vehicle", "Successfully updated insurance information")
+		return
+	}
+	if r.FormValue("from") == "service" {
+		web.SetSuccessRedirect(w, r, "/cns/company/"+company.Id+"/service", "Successfully updated service information")
+		return
+	}
 	web.SetSuccessRedirect(w, r, "/cns/company/"+company.Id, "Successfully saved company")
 	return
 }}
 
+var companyVehicleView = web.Route{"GET", "/cns/company/:compId/vehicle/:vId", func(w http.ResponseWriter, r *http.Request) {
+	var company Company
+	compId := r.FormValue(":compId")
+	if !db.Get("company", compId, &company) {
+		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
+		return
+	}
+	vehicleId := r.FormValue(":vId")
+	var vehicle Vehicle
+	if vehicleId != "new" && !db.Get("vehicle", vehicleId, &vehicle) {
+		web.SetErrorRedirect(w, r, "/cns/company/"+compId+"/vehicle", "Error finding vehicle")
+		return
+	}
+
+	tc.Render(w, r, "company-vehicle-view.tmpl", web.Model{
+		"company":       company,
+		"vehicle":       vehicle,
+		"vehicleConsts": GetVehicleConsts(),
+	})
+}}
+
+var companyVehicleSave = web.Route{"POST", "/cns/company/:compId/vehicle", func(w http.ResponseWriter, r *http.Request) {
+	var company Company
+	compId := r.FormValue(":compId")
+	if !db.Get("company", compId, &company) {
+		web.SetErrorRedirect(w, r, "/cns/company", "Error finding company")
+		return
+	}
+	var vehicle Vehicle
+	vehicleId := r.FormValue("id")
+	db.Get("vehicle", vehicleId, &vehicle)
+	if vehicleId == "" || vehicle.Id == "" {
+		vehicle.Id = strconv.Itoa(int(time.Now().UnixNano()))
+		vehicle.CompanyId = compId
+	}
+	FormToStruct(&vehicle, r.Form, "")
+	vehicle.PlateExpire = vehicle.PlateExpireMonth + "/" + vehicle.PlateExpireYear
+	fmt.Println(vehicle.PlateExpireMonth)
+	db.Set("vehicle", vehicle.Id, vehicle)
+	web.SetSuccessRedirect(w, r, "/cns/company/"+compId+"/vehicle/"+vehicle.Id, "Successfully saved vehicle")
+	return
+}}
+
+var companyAddForm = web.Route{"POST", "/cns/company/:id/form", func(w http.ResponseWriter, r *http.Request) {
+	compId := r.FormValue(":id")
+	var company Company
+	if !db.Get("company", compId, &company) {
+		web.SetErrorRedirect(w, r, "/cns/company/", "Error finding company")
+		return
+	}
+
+	id := strconv.Itoa(int(time.Now().UnixNano()))
+	docId := r.FormValue("name")
+	var vehicleIds []string
+	if r.FormValue("vehicleIds") != "" {
+		vehicleIds = strings.Split(r.FormValue("vehicleIds"), ",")
+	}
+	doc := Document{
+		Id:         id,
+		Name:       docId,
+		DocumentId: "st-" + strings.ToLower(strings.Replace(docId, " ", "_", -1)),
+		Complete:   false,
+		CompanyId:  compId,
+		VehicleIds: vehicleIds,
+		StateForm:  true,
+	}
+	db.Add("document", id, doc)
+	web.SetSuccessRedirect(w, r, "/cns/company/"+company.Id+"/form", "Successfully added forms")
+	return
+}}
+
+var companyFormDel = web.Route{"POST", "/cns/company/:companyId/form/:formId", func(w http.ResponseWriter, r *http.Request) {
+	var form Document
+	if !db.Get("document", r.FormValue(":formId"), &form) || form.CompanyId != r.FormValue(":companyId") {
+		web.SetErrorRedirect(w, r, "/cns/company/"+r.FormValue(":companyId")+"/form", "Error deleting from")
+		return
+	}
+	db.Del("document", form.Id)
+	web.SetSuccessRedirect(w, r, "/cns/company/"+r.FormValue(":companyId")+"/form", "Successfully deleted form")
+	return
+
+}}
+
+/* --- Driver Management --- */
+
 var allDriver = web.Route{"GET", "/cns/driver", func(w http.ResponseWriter, r *http.Request) {
 	var drivers []Driver
-	//ok := db.Match("user", `"role":"DRIVER"`, &drivers)
-	ok := db.TestQuery("driver", &drivers, adb.Eq("role", "DRIVER"))
-	if !ok {
-		fmt.Println("error")
-	}
-	tc.Render(w, r, "all-driver.tmpl", web.Model{
+	db.All("driver", &drivers)
+	tc.Render(w, r, "driver-all.tmpl", web.Model{
 		"drivers": drivers,
 	})
 }}
@@ -177,30 +280,67 @@ var allDriver = web.Route{"GET", "/cns/driver", func(w http.ResponseWriter, r *h
 var viewDriver = web.Route{"GET", "/cns/driver/:id", func(w http.ResponseWriter, r *http.Request) {
 	var driver Driver
 	driverId := r.FormValue(":id")
-	var files []map[string]interface{}
-	var docs []Document
-	if driverId != "add" {
-		ok := db.Get("driver", driverId, &driver)
-		if !ok || driver.Role != "DRIVER" {
-			web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
-			return
-		}
-		if fileInfos, err := ioutil.ReadDir("upload/driver/" + driverId); err == nil {
-			for _, fileInfo := range fileInfos {
-				var info = make(map[string]interface{})
-				info["name"] = fileInfo.Name()
-				info["size"] = fileInfo.Size()
-				files = append(files, info)
-			}
-		}
-		//db.Match("document", `"driverId":"`+driver.Id+`"`, &docs)
-		db.TestQuery("document", &docs, adb.Eq("driverId", `"`+driver.Id+`"`))
+	if driverId != "new" && !db.Get("driver", driverId, &driver) {
+		web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
+		return
 	}
+	companyId := r.FormValue("cid")
+	var company Company
+	var companies []Company
+	var alert string
+	// if driverId == "new" && r.FormValue("cid") == "" {
+	// 	//web.SetErrorRedirect(w, r, "/cns/company", "Error adding new driver. Please try again")
+	// 	//return
+	// 	alert = "You are adding a driver without a customer.<br> If you continue this driver will not be associated with any customer"
+	// }
+	db.All("company", &companies)
+	db.Get("company", driver.CompanyId, &company)
+
 	tc.Render(w, r, "driver.tmpl", web.Model{
+		"driver":       driver,
+		"companyId":    companyId,
+		"company":      company,
+		"alertWarning": alert,
+		"companies":    companies,
+	})
+}}
+
+var driverForms = web.Route{"GET", "/cns/driver/:id/form", func(w http.ResponseWriter, r *http.Request) {
+	var driver Driver
+	driverId := r.FormValue(":id")
+	var docs []Document
+	if !db.Get("driver", driverId, &driver) {
+		web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
+		return
+	}
+	db.TestQuery("document", &docs, adb.Eq("driverId", `"`+driver.Id+`"`), adb.Eq("companyId", `"`+driver.CompanyId+`"`))
+	tc.Render(w, r, "driver-form.tmpl", web.Model{
 		"driver": driver,
-		"files":  files,
 		"dqfs":   DQFS,
 		"docs":   docs,
+	})
+
+}}
+
+var driverFiles = web.Route{"GET", "/cns/driver/:id/file", func(w http.ResponseWriter, r *http.Request) {
+	var driver Driver
+	driverId := r.FormValue(":id")
+	var files []map[string]interface{}
+	if !db.Get("driver", driverId, &driver) {
+		web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
+		return
+	}
+	if fileInfos, err := ioutil.ReadDir("upload/driver/" + driverId); err == nil {
+		for _, fileInfo := range fileInfos {
+			var info = make(map[string]interface{})
+			info["name"] = fileInfo.Name()
+			info["size"] = fileInfo.Size()
+			files = append(files, info)
+		}
+	}
+	tc.Render(w, r, "driver-file.tmpl", web.Model{
+		"driver": driver,
+		"files":  files,
 	})
 }}
 
@@ -216,5 +356,42 @@ var saveDriver = web.Route{"POST", "/cns/driver", func(w http.ResponseWriter, r 
 	}
 	db.Set("driver", driver.Id, driver)
 	web.SetSuccessRedirect(w, r, "/cns/driver/"+driver.Id, "Successfully saved driver")
+	return
+}}
+
+var delDriver = web.Route{"POST", "/cns/driver/:id", func(w http.ResponseWriter, r *http.Request) {
+	driverId := r.FormValue(":id")
+	var documents []Document
+	db.TestQuery("document", &documents, adb.Eq("DriverId", `"`+driverId+`"`))
+
+	for _, doc := range documents {
+		db.Del("document", doc.Id)
+	}
+
+	os.RemoveAll("upload/driver/" + driverId + "/")
+
+	db.Del("driver", driverId)
+
+	web.SetSuccessRedirect(w, r, "/cns/company/"+r.FormValue("companyId")+"/driver", "Successfully deleted driver and all of the associated forms and files")
+	return
+
+}}
+
+var transferDriver = web.Route{"POST", "/cns/driver/:id/transfer", func(w http.ResponseWriter, r *http.Request) {
+	driverId := r.FormValue(":id")
+	companyId := r.FormValue("companyId")
+	var documents []Document
+	db.TestQuery("document", &documents, adb.Eq("driverId", `"`+driverId+`"`))
+	for _, doc := range documents {
+		docId := strconv.Itoa(int(time.Now().UnixNano()))
+		doc.Id = docId
+		doc.CompanyId = companyId
+		db.Set("document", docId, doc)
+	}
+	var driver Driver
+	db.Get("driver", driverId, &driver)
+	driver.CompanyId = companyId
+	db.Set("driver", driverId, driver)
+	web.SetSuccessRedirect(w, r, "/cns/driver/"+driverId, "Successfully transfered driver")
 	return
 }}

@@ -1,0 +1,14 @@
+.tabPane {
+    padding:30px;
+}
+
+textarea {
+    resize:none;
+}
+
+.navbar-toggle {
+    margin: 0;
+    display: block;
+    padding: 15px 25px;
+    float: inherit;
+}

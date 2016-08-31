@@ -5,6 +5,7 @@
 {{ if .alert }}
     <script type="text/javascript">
         $.Notification.autoHideNotify('info', 'top right', '{{ .alert }}');
+        console.log('alert');
     </script>
 {{ else if .alertError }}
     <script type="text/javascript">
@@ -14,4 +15,13 @@
     <script type="text/javascript">
         $.Notification.autoHideNotify('success', 'top right', '{{ .alertSuccess }}');
     </script>
+{{ else if .alertWarning }}
+    <script type="text/javascript">
+        $.Notification.autoHideNotify('warning', 'top right', '{{ .alertWarning }}');
+    </script>
+{{ else if .alertTimeout }}
+    <script type="text/javascript">
+        $.Notification.notify('warning','top center', 'You have been logged out')
+    </script>
+
 {{ end }}

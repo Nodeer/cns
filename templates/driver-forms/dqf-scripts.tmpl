@@ -1,0 +1,14 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="/static/js/input-tools.js"></script>
+<script>
+    {{ if eq .session.ROLE "DEVELOPER" "ADMIN" "EMPLOYEE" }}
+        var redirect = '/cns/driver/{{ .driver.Id }}/form';
+    {{ else }}
+        var redirect = '/document/';
+    {{ end }}
+    var url = '/document';
+    var id = '{{ .document.Id }}';
+    var data = {{ if .document.Data }}{{ .document.Data }}{{ else }}{}{{ end }}
+</script>
+<script src="/static/js/document.js"></script>

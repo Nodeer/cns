@@ -42,4 +42,4 @@ Confirm.prototype = {
 	}
 };
 
-var Confirm = new Confirm();
+var confirm = new Confirm();

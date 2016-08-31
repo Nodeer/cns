@@ -17,3 +17,41 @@
 		});
 	</script>
 {{ end }}
+<script type="text/javascript">
+	$('#collapse').click(function() {
+		$.ajax({
+			url: "/collapse",
+			type: "GET",
+			success:function(resp) {
+				if (resp.error) {
+					console.log('error');
+					return
+				}
+				console.log('success');
+			},
+			error: function(e, e2) {
+				console.log(e2);
+			}
+		});
+	});
+
+	$('#saveHome').click(function() {
+		$.ajax({
+			url: "/cns/employee/{{ .session.id }}/homepage",
+			type: "POST",
+			data:"url=" + window.location.pathname,
+			success:function(resp) {
+				if (resp.error) {
+					console.log(resp);
+					$.Notification.autoHideNotify('error', 'top right', 'Error saving homepage. Please try again later');
+					return
+				}
+			    $.Notification.autoHideNotify('success', 'top right', 'Successfully saved homepage');
+			},
+			error: function(e, e2) {
+				console.log(e2);
+				$.Notification.autoHideNotify('error', 'top right', 'Error saving homepage. Please try again later');
+			}
+		});
+	});
+</script>

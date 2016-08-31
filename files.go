@@ -1,3 +1,5 @@
+// I dont think we are using this file
+
 package main
 
 import (
@@ -7,10 +9,6 @@ import (
 
 	"github.com/cagnosolutions/web"
 )
-
-func init() {
-	mx.AddRoutes(files, filesApi, uploadApi)
-}
 
 type Node struct {
 	Id       string `json:"id,omitempty"`

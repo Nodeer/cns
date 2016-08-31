@@ -1,26 +1,46 @@
-<aside class="left-panel">
+<aside class="left-panel {{ if .session.collapse }}collapsed{{ end }}">
     <div class="logo">
-        <a href="/index" class="logo-expanded">
+        <a class="logo-expanded">
             <span class="nav-label">CNS Internal</span>
+            <!-- <button type="button" class="navbar-toggle" style="margin-top: 0;">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button> -->
         </a>
     </div>
-    <nav class="navigation">
+    <nav class="navigation" style="margin-top: 0;">
         <ul class="list-unstyled">
             <li>
-                <a href="/cns/company"><i class="fa fa-building-o text-center"></i><span class="nav-label">Company</span></a>
+                <a id="collapse" class="navbar-toggle"><i class="fa fa-bars text-center"></i><span class="nav-label">Collapse</span></a>
             </li>
             <li>
-                <a href="/cns/driver"><i class="ion-man text-center"></i><span class="nav-label">Driver</span></a>
+                <a href="/cns/company"><i class="fa fa-building-o text-center"></i><span class="nav-label">Customer</span></a>
             </li>
+            {{ if eq .session.ROLE "ADMIN" "DEVELOPER" }}
             <li>
                 <a href="/cns/employee"><i class="ion-person text-center"></i><span class="nav-label">Employee</span></a>
             </li>
+            <li>
+                <a href="/admin/template"><i class="fa fa-envelope-o text-center"></i><span class="nav-label">Emails</span></a>
+            </li>
+            {{ end }}
+            <li>
+                <a href="#"><i class="fa fa-search text-center"></i><span class="nav-label">Search</span></a>
+            </li>
+            <li>
+                <a id="saveHome"><i class="fa fa-floppy-o text-center"></i><span class="nav-label">Save Home Page</span></a>
+            </li>
+
+            <!--
             <li>
                 <a href="/cns/calendar"><i class="fa fa-calendar text-center"></i><span class="nav-label">Calendar</span></a>
             </li>
             <li>
                 <a href="/cns/settings"><i class="fa fa-cog text-center"></i><span class="nav-label">My Settings</span></a>
-            </li>
+            </li> -->
+
             <li>
                 <a href="/logout"><i class="fa fa-sign-out text-center"></i><span class="nav-label">Logout</span></a>
             </li>

@@ -20,14 +20,14 @@ var EMPLOYEE = web.Auth{
 	Msg:      "Please Login",
 }
 
-var COMPANY = web.Auth{
-	Roles:    []string{"DEVELOPER", "COMPANY"},
-	Redirect: "/company/login",
-	Msg:      "Please Login",
-}
-
-var AJAX = web.Auth{
+var ALL = web.Auth{
 	Roles:    []string{"DEVELOPER", "ADMIN", "EMPLOYEE", "COMPANY"},
 	Redirect: "/login",
 	Msg:      "ERROR",
 }
+
+// var COMPANY = web.Auth{
+// 	Roles:    []string{"DEVELOPER", "COMPANY"},
+// 	Redirect: "/company/login",
+// 	Msg:      "Please Login",
+// }

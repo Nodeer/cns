@@ -30,92 +30,148 @@
 
                         <div class="panel panel-default p-0">
                             <div class="panel-body p-0">
-                                <ul class="nav nav-tabs profile-tabs">
-                                    <li class="active"><a id="infoTab" data-toggle="tab" href="#infoPane">About Me</a></li>
-                                    <li class=""><a id="settingsTab" data-toggle="tab" href="#settingsPane">Settings</a></li>
-                                </ul>
+                                <div class="tabPane clearfix">
+                                    <div id="view" class="profile-desk">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <h1 class="clearfix">
+                                                    {{ .employee.FirstName}} {{ .employee.LastName }}
+                                                    <span class="pull-right">
+                                                        <button class="btn btn-primary btn-xs" id="editButton">Edit</button>
+                                                        <button data-message="Are you sure you would like to delete this employee? This CANNOT be undone" data-color="red" data-url="/cns/employee/{{ .employee.Id}}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</button>
+                                                    </span>
+                                                </h1>
 
-                                <div class="tab-content m-0">
-
-                                    <div id="infoPane" class="tab-pane active">
-                                        <div class="profile-desk">
-                                            <h1>{{ .employee.FirstName}} {{ .employee.LastName }}</h1>
-
-                                            <table class="table table-condensed">
-                                                <tbody>
-                                                    <tr>
-                                                        <td><b>Email</b></td>
-                                                        <td>{{ .employee.Email }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Phone</b></td>
-                                                        <td>{{ .employee.Phone }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Address</b></td>
-                                                        <td>{{ .employee.AddrHTML }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                                    <div id="settingsPane" class="tab-pane">
-                                        <div class="user-profile-content">
-                                            <form role="form" action="/cns/employee" method="post">
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            <label>First Name</label>
-                                                            <input type="text" value="{{ .employee.FirstName }}" name="firstName" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Last Name</label>
-                                                            <input type="text" value="{{ .employee.LastName }}" name="lastName" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Email</label>
-                                                            <input type="email" value="{{ .employee.Email }}" name="auth.Email" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Phone</label>
-                                                            <input type="text" value="{{ .employee.Phone }}" name="phone" class="form-control">
-                                                        </div>
-                                                        <button class="btn btn-primary" type="submit">Save</button>
-                                                    </form>
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <div class="form-group">
-                                                        <label>Street</label>
-                                                        <input type="text" value="{{ .employee.Street }}" name="address.Street" class="form-control">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>City</label>
-                                                        <input type="text" value="{{ .employee.City }}" name="address.City" class="form-control">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>State</label>
-                                                        <input type="text" value="{{ .employee.State }}" name="address.State" class="form-control">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Zip</label>
-                                                        <input type="text" value="{{ .employee.Zip }}" name="address.Zip" class="form-control">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Home Page</label>
-                                                        <select class="form-control" name="home">
-                                                            <option {{ if eq .employee.Home "/cns/company" }}selected {{ end }}value="/cns/company">Company</option>
-                                                            <option {{ if eq .employee.Home "/cns/employee" }}selected {{ end }}value="/cns/employee">Employee</option>
-                                                            <option {{ if eq .employee.Home "/cns/driver" }}selected {{ end }}value="/cns/driver">Driver</option>
-                                                            <option {{ if eq .employee.Home "/cns/calendar" }}selected {{ end }}value="/cns/calendar">Calendar</option>
-                                                        </select>
-                                                    </div>
-                                                    <input type="hidden" name="id" value="{{ .employee.Id }}">
-                                                </div>
+                                                <table class="table table-condensed">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><b>First Name</b></td>
+                                                            <td>{{ .employee.FirstName }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Last Name</b></td>
+                                                            <td>{{ .employee.LastName }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Email</b></td>
+                                                            <td>{{ .employee.Email }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Phone</b></td>
+                                                            <td>{{ .employee.Phone }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Address</b></td>
+                                                            <td>{{ .employee.AddrHTML }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Role</b></td>
+                                                            <td>{{ .employee.Auth.Role }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Active</b></td>
+                                                            <td>{{ .employee.Auth.Active }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <div id="edit" class="profile-desk hide">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <h1 class="clearfix">
+                                                    {{ .employee.FirstName}} {{ .employee.LastName }}
+                                                    <button class="btn btn-danger btn-xs pull-right" id="cancelButton">Cancel</button>
+                                                </h1>
+                                                <form id="employeeForm" action="/cns/employee" method="post">
+                                                    <table class="table table-condensed">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><b>First Name</b></td>
+                                                                <td><input name="firstName" class="form-control" placeholder="First Name" value="{{ .employee.FirstName }}"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Last Name</b></td>
+                                                                <td><input name="lastName" class="form-control" placeholder="Last Name" value="{{ .employee.LastName }}"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Email</b></td>
+                                                                <td><input name="auth.email" class="form-control" placeholder="Email" value="{{ .employee.Email }}"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Password</b></td>
+                                                                <td>
+                                                                    <div class="input-group">
+                														<input type="password" id="password" name="auth.password" class="form-control" placeholder="Password" {{ if not .employee.Id}}required{{ end }}/>
+                														<span class="input-group-btn">
+                															<button id="toggle-pass" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="right"
+                																	title="Click to show/hide your password">
+                																<i class="fa fa-eye-slash"></i>
+                															</button>
+                														</span>
+                													</div>
+                                                                    {{ if .employee.Id }}*Leave blank to keep current password{{ end }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Phone</b></td>
+                                                                <td><input name="phone" class="form-control" placeholder="Phone" value="{{ .employee.Phone }}"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Address</b></td>
+                                                                <td>
+                                                                    <input type="text" class="form-control" name="address.street" value="{{ .employee.Address.Street }}" placeholder="Street"><br>
+                                                                    <input type="text" class="form-control" name="address.city" value="{{ .employee.Address.City }}" placeholder="City"><br>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6">
+                                                                            <input type="text" class="form-control" name="address.state" value="{{ .employee.Address.State }}" placeholder="State">
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <input type="text" class="form-control" name="address.zip" value="{{ .employee.Address.Zip }}" placeholder="Zip">
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Role</b></td>
+                                                                <td>
+                                                                    <select class="form-control" name="auth.role">
+                                                                        <option {{if eq .employee.Auth.Role "EMPLOYEE" }}selected{{ end }} value="EMPLOYEE">Employee</option>
+                                                                        <option {{if eq .employee.Auth.Role "ADMIN" }}selected{{ end }} value="ADMIN">Admin</option>
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Active</b></td>
+                                                                <td>
+                                                                    <div class="radio-inline">
+                                                                        <label class="cr-styled" for="activeYes">
+                                                                            <input type="radio" name="auth.active" value="true" id="activeYes" {{ if .employee.Auth.Active }}checked{{ end }}>
+                                                                            <i class="fa"></i>
+                                                                            Yes
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="radio-inline">
+                                                                        <label class="cr-styled" for="activeNo">
+                                                                            <input type="radio" name="auth.active" value="false" id="activeNo" {{ if not .employee.Auth.Active  }}checked{{ end }}>
+                                                                            <i class="fa"></i>
+                                                                            No
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <button id="save" class="btn btn-success btn-block">Save</button>
+                                                    {{ if .employee.Id }}
+                                                        <input type="hidden" name="id" value="{{ .employee.Id }}">
+                                                    {{ end }}
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -131,11 +187,49 @@
         {{ template "scripts.tmpl" . }}
         <script src="/static/js/jquery.scrollTo.min.js"></script>
 
-        {{ if not .employee.Id}}
-            <script type="text/javascript">
-                $('a#settingsTab').tab('show');
-            </script>
-        {{ end }}
+        {{ template "session.tmpl" . }}
+        <script src="/static/js/confirm.js" charset="utf-8"></script>
+        <script type="text/javascript">
+            var newEmployee = {{ if .employee.Id }}false{{ else }}true{{ end }};
+
+            $('button#editButton').click(function() {
+                $('div#view').addClass('hide');
+                $('div#edit').removeClass('hide');
+            });
+
+            $('#cancelButton').click(function() {
+                if (newEmployee) {
+                    window.location.href = '/cns/employee';
+                    return;
+                }
+                $('div#edit').addClass('hide');
+                $('div#view').removeClass('hide');
+                $('form#edit')[0].reset();
+            });
+
+            if (newEmployee) {
+                $('div#view').addClass('hide');
+                $('div#edit').removeClass('hide');
+            }
+
+            $(document).ready(function() {
+                $('button[id="toggle-pass"]').on("click", function() {
+                    var s = $('button#toggle-pass > i'),
+                    a = $('input#password');
+                    s.hasClass("fa-eye-slash") ? (s.removeClass("fa-eye-slash").addClass("fa-eye"), a.attr("type", "text")) : (s.removeClass("fa-eye").addClass("fa-eye-slash"), a.attr("type", "password"))
+                })
+            });
+
+            $('form#employeeForm').submit(function() {
+                if ($('input#password').val() === '') {
+                    $('input#password').attr('name', '');
+                }
+            });
+
+            confirm.yes = function(btn) {
+                $('<form method="post" action="' + btn.attr('data-url') + '"></form>').submit();
+            }
+        </script>
 
 
     </body>

@@ -13,15 +13,16 @@
             <br>
             <div class="panel panel-color">
                 <form class="form-horizontal m-t-10" method="post" action="/login">
-                    <div class="form-group ">
+                    <div class="form-group">
                         <div class="col-xs-12">
-                            <input class="form-control" type="text" placeholder="Username" name="email">
+                            <input class="form-control" type="email" placeholder="Email" name="email">
                         </div>
                     </div>
                     <div class="form-group ">
 
                         <div class="col-xs-12">
-                            <input class="form-control" type="password" placeholder="Password" name="password">
+                            <span id="capsWarn" class="text-danger hide">Caps Lock is On</span>
+                            <input id="password" class="form-control" type="password" placeholder="Password" name="password">
                         </div>
                     </div>
 
@@ -38,6 +39,30 @@
         </div>
 
         {{ template "scripts.tmpl" . }}
+
+        <script type="text/javascript">
+            var caps = false;
+            $('#password').keypress(function(e) {
+                var s = String.fromCharCode( e.which );
+                if ( (s.toUpperCase() === s && s.toLowerCase() !== s && !e.shiftKey) || (s.toLowerCase() === s && s.toUpperCase() !== s && e.shiftKey) ) {
+                    $('#capsWarn').removeClass('hide');
+                    caps = true;
+                } //else {
+                //     $('#capsWarn').addClass('hide');
+                //     caps = false;
+                // }
+            });
+
+            function onKeyDown(e) {
+                if (e.keyCode == 20 && caps) {
+                    caps = false;
+                    $('#capsWarn').addClass('hide');
+                }
+            }
+
+            document.addEventListener('keydown', onKeyDown, false);
+
+        </script>
 
     </body>
 </html>

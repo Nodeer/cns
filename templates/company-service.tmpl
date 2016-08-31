@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        {{ template "head.tmpl" . }}
+
+        <!-- sweet alerts -->
+        <link href="/static/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+        <style media="screen">
+            label.radio-label {
+                width:20px;
+            }
+        </style>
+        <title>Customer</title>
+    </head>
+    <body>
+
+        {{ template "side-nav.tmpl" . }}
+
+        <!--Main Content Start -->
+        <section class="content">
+
+            {{ template "nav.tmpl" . }}
+
+            <div class="wraper container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <p class="lead">
+                            Company: {{ if .company.Id}}{{ .company.Name }}{{ else }}NEW{{ end }}
+                        </p>
+
+                        <div class="panel panel-default p-0">
+                            <div class="panel-body p-0">
+                                <ul class="nav nav-tabs profile-tabs">
+                                    <li class=""><a id="infoTab" href="/cns/company/{{ .company.Id }}">Customer Center</a></li>
+                                    <li class="active"><a id="serviceTab">Service</a></li>
+                                    <li class=""><a id="vehiclesTab" href="/cns/company/{{ .company.Id }}/vehicle" >Vehicles</a></li>
+                                    <li class=""><a id="notesTab" href="/cns/company/{{ .company.Id }}/driver">Drivers</a></li>
+                                    <li class=""><a class="tab"  href="/cns/company/{{ .company.Id }}/form">Forms</a></li>
+                                </ul>
+
+                                <div class="tabPane clearfix">
+                                    <div class="profile-desk">
+                                        <form action="/cns/company" method="post">
+                                            <div class="col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Apportion</label><br>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="apportionTrue">
+                                                            <input type="radio" id="apportionTrue" name="service.apportion" value="true" {{ if .company.Service.Apportion }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="apportionFalse">
+                                                            <input type="radio" id="apportionFalse" name="service.apportion" value="false" {{ if not .company.Service.Apportion }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control datepicker" name="service.apportionDateOne" value="{{ .company.Service.ApportionDateOne }}" placeholder="Apportion Date 1">
+                                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control datepicker" name="service.apportionDateTwo" value="{{ .company.Service.ApportionDateTwo }}" placeholder="Apportion Date 2">
+                                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>Fuel Tax Program</label><br>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="fuelTaxTrue">
+                                                            <input type="radio" id="fuelTaxTrue" name="service.fuelTaxProgram" value="true" {{ if .company.Service.FuelTaxProgram }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="fuelTaxFalse">
+                                                            <input type="radio" id="fuelTaxFalse" name="service.fuelTaxProgram" value="false" {{ if not .company.Service.FuelTaxProgram }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                    <br>
+                                                    <label class="radio-label">NY</label>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="fuelTaxNYTrue">
+                                                            <input type="radio" id="fuelTaxNYTrue" name="service.fuelTaxNY" value="true" {{ if .company.Service.FuelTaxNY }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="fuelTaxNYFalse">
+                                                            <input type="radio" id="fuelTaxNYFalse" name="service.fuelTaxNY" value="false" {{ if not .company.Service.FuelTaxNY }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                    <br>
+                                                    <label class="radio-label">KY</label>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="fuelTaxKYTrue">
+                                                            <input type="radio" id="fuelTaxKYTrue" name="service.fuelTaxKY" value="true" {{ if .company.Service.FuelTaxKY }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="fuelTaxKYFalse">
+                                                            <input type="radio" id="fuelTaxKYFalse" name="service.fuelTaxKY" value="false" {{ if not .company.Service.FuelTaxKY }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                    <br>
+                                                    <label class="radio-label">NM</label>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="fuelTaxNMTrue">
+                                                            <input type="radio" id="fuelTaxNMTrue" name="service.fuelTaxNM" value="true" {{ if .company.Service.FuelTaxNM }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="fuelTaxNMFalse">
+                                                            <input type="radio" id="fuelTaxNMFalse" name="service.fuelTaxNM" value="false" {{ if not .company.Service.FuelTaxNM }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>Drug Consortium</label><br>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="drugConsortiumTrue">
+                                                            <input type="radio" id="drugConsortiumTrue" name="service.drugConsortium" value="true" {{ if .company.Service.DrugConsortium }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="drugConsortiumFalse">
+                                                            <input type="radio" id="drugConsortiumFalse" name="service.drugConsortium" value="false" {{ if not .company.Service.DrugConsortium }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control datepicker" name="service.drugConsortiumDate" value="{{ .company.Service.DrugConsortiumDate }}" placeholder="Drug Consortium Date">
+                                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Driver File Management</label><br>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="driverFileManagementTrue">
+                                                            <input type="radio" id="driverFileManagementTrue" name="service.driverFileManagement" value="true" {{ if .company.Service.DriverFileManagement }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="driverFileManagementFalse">
+                                                            <input type="radio" id="driverFileManagementFalse" name="service.driverFileManagement" value="false" {{ if not .company.Service.DriverFileManagement }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control datepicker" name="service.driverFileManagementDate" value="{{ .company.Service.DriverFileManagementDate }}" placeholder="Driver File Management Date">
+                                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>DOT Update</label><br>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="dotUpdateTrue">
+                                                            <input type="radio" id="dotUpdateTrue" name="service.dOTUpdate" value="true" {{ if .company.Service.DOTUpdate }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="dotUpdateFalse">
+                                                            <input type="radio" id="dotUpdateFalse" name="service.dOTUpdate" value="false" {{ if not .company.Service.DOTUpdate }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control datepicker" name="service.dOTUpdateDate" value="{{ .company.Service.DOTUpdateDate }}" placeholder="DOT Update Date">
+                                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>2290</label><br>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="2290True">
+                                                            <input type="radio" id="2290True" name="service.twentyTwoNinety" value="true" {{ if .company.Service.TwentyTwoNinety }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="2290False">
+                                                            <input type="radio" id="2290False" name="service.twentyTwoNinety" value="false" {{ if not .company.Service.TwentyTwoNinety }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-lg-3">
+                                                <div class="form-group">
+                                                    <label>UCR</label><br>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="UCRTrue">
+                                                            <input type="radio" id="UCRTrue" name="service.uCR" value="true" {{ if .company.Service.UCR }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="UCRFalse">
+                                                            <input type="radio" id="UCRFalse" name="service.uCR" value="false" {{ if not .company.Service.UCR }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>Log Auditing</label><br>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="logAuditingTrue">
+                                                            <input type="radio" id="logAuditingTrue" name="service.logAuditing" value="true" {{ if .company.Service.LogAuditing }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="logAuditingFalse">
+                                                            <input type="radio" id="logAuditingFalse" name="service.logAuditing" value="false" {{ if not .company.Service.LogAuditing }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>CSA Service</label><br>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="cSAServiceTrue">
+                                                            <input type="radio" id="cSAServiceTrue" name="service.cSAService" value="true" {{ if .company.Service.CSAService }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="cSAServiceFalse">
+                                                            <input type="radio" id="cSAServiceFalse" name="service.cSAService" value="false" {{ if not .company.Service.CSAService }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control datepicker" name="service.cSAServiceDate" value="{{ .company.Service.CSAServiceDate }}" placeholder="CSA Service Date">
+                                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>IFTA Renewal</label><br>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="iftaRenewalTrue">
+                                                            <input type="radio" id="iftaRenewalTrue" name="service.iFTARenewal" value="true" {{ if .company.Service.IFTARenewal }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="iftaRenewalFalse">
+                                                            <input type="radio" id="iftaRenewalFalse" name="service.iFTARenewal" value="false" {{ if not .company.Service.IFTARenewal }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-lg-3">
+
+                                                <div class="form-group">
+                                                    <label>NY</label><br>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="nyTrue">
+                                                            <input type="radio" id="nyTrue" name="service.nY" value="true" {{ if .company.Service.NY }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="nyFalse">
+                                                            <input type="radio" id="nyFalse" name="service.nY" value="false" {{ if not .company.Service.NY }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control datepicker" name="service.nYDate" value="{{ .company.Service.NYDate }}" placeholder="NY Date">
+                                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>GPS</label><br>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="gpsTrue">
+                                                            <input type="radio" id="gpsTrue" name="service.gPS" value="true" {{ if .company.Service.GPS }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="gpsFalse">
+                                                            <input type="radio" id="gpsFalse" name="service.gPS" value="false" {{ if not .company.Service.GPS }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control datepicker" name="service.gPSDate" value="{{ .company.Service.GPSDate }}" placeholder="GPS Date">
+                                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>Training</label><br>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="trainingTrue">
+                                                            <input type="radio" id="trainingTrue" name="service.training" value="true"{{ if .company.Service.Training }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label class="cr-styled" for="trainingFalse">
+                                                            <input type="radio" id="trainingFalse" name="service.training" value="false"{{ if not .company.Service.Training }}checked{{ end }}>
+                                                            <i class="fa"></i>
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control datepicker" name="service.trainingDate" value="{{ .company.Service.TrainingDate }}" placeholder="Training Date">
+                                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-success btn-block">Update</button>
+                                            </div>
+                                            <input type="hidden" name="id" value="{{ .company.Id }}">
+                                            <input type="hidden" name="from" value="service">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{ template "footer.tmpl" . }}
+
+        </section>
+        <!-- Main Content Ends -->
+
+        {{ template "scripts.tmpl" . }}
+
+        <script src="/static/js/jquery.scrollTo.min.js"></script>
+        <script src="/static/js/confirm.js" charset="utf-8"></script>
+        <script src="/static/timepicker/bootstrap-datepicker.js"></script>
+
+        {{ template "session.tmpl" . }}
+
+        <script type="text/javascript">
+            jQuery('.datepicker').datepicker();
+        </script>
+
+  </body>
+</html>
