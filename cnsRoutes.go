@@ -352,11 +352,8 @@ var viewDriver = web.Route{"GET", "/cns/driver/:id", func(w http.ResponseWriter,
 	// 	//return
 	// 	alert = "You are adding a driver without a customer.<br> If you continue this driver will not be associated with any customer"
 	// }
-	if driver.CompanyId == "" {
-		db.All("company", &companies)
-	} else {
-		db.Get("company", driver.CompanyId, &company)
-	}
+	db.All("company", &companies)
+	db.Get("company", driver.CompanyId, &company)
 
 	tc.Render(w, r, "driver.tmpl", web.Model{
 		"driver":       driver,
@@ -375,7 +372,7 @@ var driverForms = web.Route{"GET", "/cns/driver/:id/form", func(w http.ResponseW
 		web.SetErrorRedirect(w, r, "/driver", "Error finding driver")
 		return
 	}
-	db.TestQuery("document", &docs, adb.Eq("driverId", `"`+driver.Id+`"`))
+	db.TestQuery("document", &docs, adb.Eq("driverId", `"`+driver.Id+`"`), adb.Eq("companyId", `"`+driver.CompanyId+`"`))
 	tc.Render(w, r, "driver-form.tmpl", web.Model{
 		"driver": driver,
 		"dqfs":   DQFS,
@@ -437,4 +434,23 @@ var delDriver = web.Route{"POST", "/cns/driver/:id", func(w http.ResponseWriter,
 	web.SetSuccessRedirect(w, r, "/cns/company/"+r.FormValue("companyId")+"/driver", "Successfully deleted driver and all of the associated forms and files")
 	return
 
+}}
+
+var transferDriver = web.Route{"POST", "/cns/driver/:id/transfer", func(w http.ResponseWriter, r *http.Request) {
+	driverId := r.FormValue(":id")
+	companyId := r.FormValue("companyId")
+	var documents []Document
+	db.TestQuery("document", &documents, adb.Eq("driverId", `"`+driverId+`"`))
+	for _, doc := range documents {
+		docId := strconv.Itoa(int(time.Now().UnixNano()))
+		doc.Id = docId
+		doc.CompanyId = companyId
+		db.Set("document", docId, doc)
+	}
+	var driver Driver
+	db.Get("driver", driverId, &driver)
+	driver.CompanyId = companyId
+	db.Set("driver", driverId, driver)
+	web.SetSuccessRedirect(w, r, "/cns/driver/"+driverId, "Successfully transfered driver")
+	return
 }}

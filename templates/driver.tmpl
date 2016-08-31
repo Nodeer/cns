@@ -44,7 +44,7 @@
                                                 {{ if  .company.Id }}Works For: <a href="/cns/company/{{ .company.Id }}" style="color:blue;">{{ .company.Name }}</a>{{ end }}
                                                 <span class="pull-right">
                                                     <button class="btn btn-primary btn-xs" id="editButton">Edit</button>
-                                                    <button class="btn btn-warning btn-xs" id="editButton">Transfer</button>
+                                                    <button class="btn btn-warning btn-xs" data-toggle="modal" data-target="#transferModal">Transfer</button>
                                                     <button data-message="Are you sure you would like to delete this driver? This will also delete all forms and files associated with this driver. This CANNOT be undone" data-color="red" data-url="/cns/driver/{{ .driver.Id}}" class="confirm-action btn btn-danger btn-xs" data-type="warning">Delete</button>
                                                 </span>
                                             </h1>
@@ -306,6 +306,29 @@
             </div>
 
             {{ template "footer.tmpl" . }}
+
+            <div class="modal fade" id="transferModal" tabindex="-1" role="dialog" >
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="transferModalLabel">Transfer Driver</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="" action="/cns/driver/{{ .driver.Id }}/transfer" method="post">
+                                <div class="form-group">
+                                    <select class="form-control" name="companyId">
+                                        {{ range $company := .companies }}
+                                            <option value="{{ $company.Id }}">{{ $company.Name }}</option>
+                                        {{ end }}
+                                    </select>
+                                </div>
+                                <button class="btn btn-block btn-primary">Transfer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </section>
 

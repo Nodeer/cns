@@ -93,7 +93,7 @@ func init() {
 	mx.AddSecureRoutes(EMPLOYEE, companyVehicle, companyVehicleView, companyVehicleSave)
 
 	// driver management routes
-	mx.AddSecureRoutes(EMPLOYEE, allDriver, viewDriver, saveDriver, driverFiles, driverForms, delDriver)
+	mx.AddSecureRoutes(EMPLOYEE, allDriver, viewDriver, saveDriver, driverFiles, driverForms, delDriver, transferDriver)
 	mx.AddSecureRoutes(ALL, uploadDriverFile, viewDriverFile, delDriverFile, addDriverDocument)
 
 	// document management routes
