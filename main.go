@@ -49,9 +49,11 @@ func init() {
 	db.AddStore("event")
 	db.AddStore("note")
 	db.AddStore("comment")
+	db.AddStore("emailTemplate")
 
 	// *** ADD EMPLOYEES
 	//addEmployees()
+
 	//converVehicles()
 	//convertCCExpire()
 
@@ -82,8 +84,10 @@ func init() {
 	// main page
 	mx.AddSecureRoutes(EMPLOYEE, index)
 
+	mx.AddSecureRoutes(ADMIN, emailTemplates, emailTemplatesView, emailTemplateSave)
+
 	// employee management routes
-	mx.AddSecureRoutes(EMPLOYEE, allEmployee, viewEmployee, saveEmployee, delEmployee, saveHomePage)
+	mx.AddSecureRoutes(ADMIN, allEmployee, viewEmployee, saveEmployee, delEmployee)
 
 	// company management routes
 	mx.AddSecureRoutes(EMPLOYEE, companyAll, companyView, companyDriver, companySave, companySaveNote, companyService)
@@ -101,6 +105,9 @@ func init() {
 
 	// update session
 	mx.AddSecureRoutes(ALL, updateSession, collapse)
+
+	// misc routes
+	mx.AddSecureRoutes(EMPLOYEE, saveHomePage)
 
 	// development routes
 	mx.AddSecureRoutes(DEVELOPER, DevComments)

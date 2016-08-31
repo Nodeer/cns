@@ -10,7 +10,7 @@
             </button> -->
         </a>
     </div>
-    <nav class="navigation">
+    <nav class="navigation" style="margin-top: 0;">
         <ul class="list-unstyled">
             <li>
                 <a id="collapse" class="navbar-toggle"><i class="fa fa-bars text-center"></i><span class="nav-label">Collapse</span></a>
@@ -18,17 +18,20 @@
             <li>
                 <a href="/cns/company"><i class="fa fa-building-o text-center"></i><span class="nav-label">Customer</span></a>
             </li>
+            {{ if eq .session.ROLE "ADMIN" "DEVELOPER" }}
+            <li>
+                <a href="/cns/employee"><i class="ion-person text-center"></i><span class="nav-label">Employee</span></a>
+            </li>
+            <li>
+                <a href="/admin/template"><i class="fa fa-envelope-o text-center"></i><span class="nav-label">Emails</span></a>
+            </li>
+            {{ end }}
             <li>
                 <a href="#"><i class="fa fa-search text-center"></i><span class="nav-label">Search</span></a>
             </li>
             <li>
                 <a id="saveHome"><i class="fa fa-floppy-o text-center"></i><span class="nav-label">Save Home Page</span></a>
             </li>
-            {{ if eq .session.ROLE "ADMIN" "DEVELOPER" }}
-                <li>
-                    <a href="/cns/employee"><i class="ion-person text-center"></i><span class="nav-label">Employee</span></a>
-                </li>
-            {{ end }}
 
             <!--
             <li>

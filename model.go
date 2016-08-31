@@ -395,3 +395,9 @@ var CompanyForms = [][]string{
 	[]string{"PUC App", ""},
 	//[]string{"MCS-150", ""},
 }
+
+type EmailTemplate struct {
+	Id   string
+	Name string
+	Body string
+}
